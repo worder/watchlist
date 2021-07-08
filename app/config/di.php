@@ -7,6 +7,9 @@ use function DI\get;
 
 use Wl\Api\Client\Shikimori\ShikimoriClient;
 use Wl\Api\Client\Shikimori\ShikimoriClientConfig;
+use Wl\Cache\ICache;
+use Wl\Cache\Memcached\MemcachedClient;
+use Wl\Cache\Memcached\MemcachedServer;
 use Wl\Config\ConfigService;
 use Wl\Config\IConfig;
 use Wl\Config\Provider\IConfigProvider;
@@ -34,11 +37,23 @@ return [
         );
     },
 
+    ICache::class => function (IConfig $conf) {
+        $mc = new MemcachedClient();
+        $mc->addServer(
+            new MemcachedServer(
+                $conf->get("CACHE_MEMCACHED_HOST"),
+                $conf->get("CACHE_MEMCACHED_PORT")
+            )
+        );
+        $mc->setNamespace('wl2_');
+        return $mc;
+    },
+
     IHttpClient::class => get(HttpClient::class),
 
     "Database" => get(Manipulator::class),
 
-    ShikimoriClientConfig::class => function(IConfig $conf) {
+    ShikimoriClientConfig::class => function (IConfig $conf) {
         return new ShikimoriClientConfig($conf->get("API_SHIKIMORI_APP_NAME"));
     }
 ];

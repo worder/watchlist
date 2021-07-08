@@ -2,54 +2,19 @@
 
 namespace Wl\Api\Search\Result;
 
-class SearchItem implements ISearchItem
+use Wl\Media\Media;
+
+class SearchItem extends Media implements ISearchItem
 {
-    // private $origTitle;
-    // private $origLanguage;
+    private $id;
 
-    // private $title;
-    // private $overview;
-    private $releaseDate;
-
-    private $localizedData;
-
-    private $datasourceName;
-    private $datasourceSnapshot;
-
-    private $origLocale;
-    private $locales = [];
-
-
-    public function __construct()
+    public function getId()
     {
-
+        return $this->id;
     }
 
-    // public function getOriginalTitle()
-    // {
-    //     return $this->origTitle;
-    // }
-
-    // public function getOriginalLanguage()
-    // {
-    //     return $this->origLanguage;
-    // }
-
-    public function getOrigLocale()
+    public function setId($id)
     {
-        return $this->origLocale;
+        $this->id = $id;
     }
-
-    public function hasLocale($locale)
-    {
-        return isset($this->locales[$locale]);
-    }
-
-    public function getLocale($locale)
-    {
-        return $this->locales[$locale];
-    }
-
-    
-
 }

@@ -1,9 +1,8 @@
 <?php
 
 namespace Wl\Media;
-
 interface IMedia
-{   
+{
     public function getReleaseDate();
 
     public function getOrigLocalization(): IMediaLocalization;

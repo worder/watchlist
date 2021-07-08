@@ -1,7 +1,6 @@
 <?php
 
 namespace Wl\Media;
-
 interface IMediaLocalization
 {
     public function getLocale();

@@ -3,12 +3,18 @@
 namespace Wl\Api\Client\Shikimori;
 
 use Wl\Api\Search\Query\ISearchQuery;
+use Wl\Api\Search\Result\SearchCollection;
+use Wl\Api\Search\Result\SearchItem;
 use Wl\HttpClient\IHttpClient;
 use Wl\HttpClient\Request\IRequest;
 use Wl\HttpClient\Request\Request;
+use Wl\Media\MediaLocalization;
+use Wl\Media\MediaType;
 
 class ShikimoriClient 
 {
+    const DATASOURCE_NAME = 'API_SHIKIMORI';
+
     private $transport;
     private $config;
 
@@ -32,10 +38,35 @@ class ShikimoriClient
 
         $result = $this->transport->dispatch($request);
 
+        $data = [];
         if ($result->getHttpCode() === 200) {
             $data = json_decode($result->getBody(), true);
-            return $data;
         }
+
+        return $this->buildResult($data, $q);
+    }
+
+    private function buildResult($items, ISearchQuery $q)
+    {
+        $col = new SearchCollection();
+        $col->setPage($q->getPage());
+
+        foreach ($items as $data) {
+            $item = new SearchItem();
+            $item->setDatasourceName(self::DATASOURCE_NAME);
+            $item->setDatasourceSnapshot($data);
+            $item->setMediaType(MediaType::ANIME_SERIES);
+            
+            $item->setOriginalLocalization(new MediaLocalization('en', $data['name']));
+            $item->addLocalization(new MediaLocalization('ru', $data['russian']));
+
+            $item->setId($data['id']);
+            $item->setReleaseDate($data['aired_on']);
+
+            $col->addItem($item);
+        }
+
+        return $col;
     }
 
 

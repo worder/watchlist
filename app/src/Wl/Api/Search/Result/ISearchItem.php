@@ -6,4 +6,5 @@ use Wl\Media\IMedia;
 
 interface ISearchItem extends IMedia
 {
+    public function getId();
 }
