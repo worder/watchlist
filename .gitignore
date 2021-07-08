@@ -1,0 +1,8 @@
+app/src/Wl/Controller/Api/TestController.php
+app/data/exports/*
+app/config/config.json
+app/vendor/*
+build-dev.sh
+.vscode
+.dump
+TODO.md
