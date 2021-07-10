@@ -3,17 +3,15 @@
 use function DI\create;
 use function DI\get;
 
-// use Wl\Config\ConfigService;
-
-use Wl\Api\Client\Shikimori\ShikimoriClient;
 use Wl\Api\Client\Shikimori\ShikimoriClientConfig;
-use Wl\Cache\ICache;
-use Wl\Cache\Memcached\MemcachedClient;
-use Wl\Cache\Memcached\MemcachedServer;
 use Wl\Config\ConfigService;
 use Wl\Config\IConfig;
 use Wl\Config\Provider\IConfigProvider;
 use Wl\Config\Provider\JsonFileProvider;
+use Wl\Datasource\KeyValue\IStorage;
+use Wl\Datasource\KeyValue\KeyDecoratedStorage;
+use Wl\Datasource\KeyValue\Memcached\MemcachedClient;
+use Wl\Datasource\KeyValue\Memcached\MemcachedServer;
 use Wl\Db\Pdo\Config\IPdoConfig;
 use Wl\Db\Pdo\Config\MysqlConfig;
 use Wl\Db\Pdo\Manipulator;
@@ -37,7 +35,7 @@ return [
         );
     },
 
-    ICache::class => function (IConfig $conf) {
+    IStorage::class => function (IConfig $conf) {
         $mc = new MemcachedClient();
         $mc->addServer(
             new MemcachedServer(
@@ -45,8 +43,8 @@ return [
                 $conf->get("CACHE_MEMCACHED_PORT")
             )
         );
-        $mc->setNamespace('wl2_');
-        return $mc;
+        $decorated = new KeyDecoratedStorage($mc, $conf->get("CACHE_MEMCACHED_PREFIX"));
+        return $decorated;
     },
 
     IHttpClient::class => get(HttpClient::class),

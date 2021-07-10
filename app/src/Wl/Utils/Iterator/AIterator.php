@@ -10,7 +10,7 @@ abstract class AIterator implements Iterator
 
     public function current()
     {
-        $this->getStorage()[$this->position];
+        return $this->getStorage()[$this->position];
     }
 
     public function key()

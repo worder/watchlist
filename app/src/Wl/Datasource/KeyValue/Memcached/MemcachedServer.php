@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\Cache\Memcached;
+namespace Wl\Datasource\KeyValue\Memcached;
 
 class MemcachedServer
 {

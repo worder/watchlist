@@ -7,4 +7,5 @@ interface ISearchQuery
     public function getMediaType();
     public function getTerm();
     public function getPage();
+    public function getLimit();
 }

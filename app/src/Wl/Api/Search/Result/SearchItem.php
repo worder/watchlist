@@ -6,15 +6,26 @@ use Wl\Media\Media;
 
 class SearchItem extends Media implements ISearchItem
 {
-    private $id;
+    private $dataContainer;
 
-    public function getId()
+    public function __construct(ISearchItemDataContainer $datacon)
     {
-        return $this->id;
+        $this->dataContainer = $datacon;
     }
 
-    public function setId($id)
+    public function isCached()
     {
-        $this->id = $id;
+        return $this->dataContainer->isCached();
+    }
+
+   
+    public function getCacheExpirationTime()
+    {
+        return $this->dataContainer->getCacheExpirationTime();
+    }
+
+    public function getDatasourceSnapshot()
+    {
+        return $this->dataContainer->getDatasourceSnapshot();
     }
 }

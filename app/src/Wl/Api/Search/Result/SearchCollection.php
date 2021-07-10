@@ -44,7 +44,10 @@ class SearchCollection extends AIterator implements ISearchCollection, Iterator
 
     public function setItems($items)
     {
-        $this->items = $items;
+        $this->items = [];
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
     }
 
     public function addItem(ISearchItem $item)

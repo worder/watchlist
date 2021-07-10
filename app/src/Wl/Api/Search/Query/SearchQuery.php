@@ -4,13 +4,17 @@ namespace Wl\Api\Search\Query;
 
 class SearchQuery implements ISearchQuery
 {
-    private $term = null;
-    private $page = 1;
+    private $term;
+    private $page;
+    private $limit;
     private $type;
 
-    public function __construct()
+    public function __construct($term = '', $page = 1, $limit = 10, $type = null)
     {
-
+        $this->term = $term;
+        $this->page = $page;
+        $this->limit = $limit;
+        $this->type = $type;
     }
 
     public function getTerm()
@@ -41,5 +45,15 @@ class SearchQuery implements ISearchQuery
     public function setMediaType($type)
     {
         $this->type = $type;
+    }
+
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
     }
 }

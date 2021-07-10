@@ -4,7 +4,6 @@ namespace Wl\Api\Search\Result;
 
 use Wl\Media\IMedia;
 
-interface ISearchItem extends IMedia
+interface ISearchItem extends IMedia, ISearchItemDataContainer
 {
-    public function getId();
 }

@@ -37,7 +37,7 @@ class Request implements IRequest
 
                 return substr($this->url, 0, stripos($this->url, '?')) . '?' . http_build_query($mergedParams);
             } else {
-                return $this->url . '?' . http_build_query($this->params);
+                return $this->url . (!empty($this->params) ? ('?' . http_build_query($this->params)) : '');
             }
         }
 

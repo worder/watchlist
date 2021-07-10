@@ -9,7 +9,7 @@ interface ISearchCollection
     public function getCount();
     
     /**
-     * @return ISearchItem []
+     * @return ISearchItem[]
      */
     public function getItems();
 }

@@ -6,6 +6,7 @@ class Media implements IMedia
 {
     private $datasourceName;
     private $datasourceSnapshot;
+    private $mediaId;
     
     private $mediaType;
     private $releaseDate;
@@ -79,5 +80,15 @@ class Media implements IMedia
     public function setDatasourceSnapshot($data)
     {
         $this->datasourceSnapshot = $data;
+    }
+
+    public function getMediaId()
+    {
+        return $this->mediaId;
+    }
+
+    public function setMediaId($id)
+    {
+        $this->mediaId = $id;
     }
 }
