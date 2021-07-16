@@ -71,6 +71,12 @@ class Request implements IRequest
         return $this;
     }
 
+    public function setParam($param, $value)
+    {
+        $this->params[$param] = $value;
+        return $this;
+    }
+
     public static function get($url, $params = [])
     {
         $r = new self(self::METHOD_GET);

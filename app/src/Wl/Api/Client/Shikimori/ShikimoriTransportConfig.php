@@ -2,7 +2,7 @@
 
 namespace Wl\Api\Client\Shikimori;
 
-class ShikimoriClientConfig
+class ShikimoriTransportConfig
 {
     private $appName;
 

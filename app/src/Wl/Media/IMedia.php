@@ -1,19 +1,25 @@
 <?php
 
 namespace Wl\Media;
+
+use Wl\Api\Data\DataContainer\IDataContainer;
+
 interface IMedia
 {
     public function getMediaType();
     public function getReleaseDate();
 
-    public function getOrigLocalization(): IMediaLocalization;
-    public function getLocalization($locale): IMediaLocalization;
+    public function getLocalization($locale = 'en'): IMediaLocalization;
     public function hasLocalization($locale);
 
     // datasource related
-    public function getDatasourceName();
-    public function getDatasourceSnapshot();
     public function getMediaId(); // media id in datasource
+    public function getDataContainer(): IDataContainer;
 
-    // public function getAssetsCollection(); // associated posters and stuff TODO
+    public function getSeasonsCount();
+    public function getSeasonNumber();
+    public function getEpisodesCount();
+
+    // public function getDetails();
+    // public function getAssets();
 }

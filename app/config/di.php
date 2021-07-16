@@ -3,7 +3,7 @@
 use function DI\create;
 use function DI\get;
 
-use Wl\Api\Client\Shikimori\ShikimoriClientConfig;
+use Wl\Api\Client\Shikimori\ShikimoriTransportConfig;
 use Wl\Config\ConfigService;
 use Wl\Config\IConfig;
 use Wl\Config\Provider\IConfigProvider;
@@ -51,7 +51,7 @@ return [
 
     "Database" => get(Manipulator::class),
 
-    ShikimoriClientConfig::class => function (IConfig $conf) {
-        return new ShikimoriClientConfig($conf->get("API_SHIKIMORI_APP_NAME"));
+    ShikimoriTransportConfig::class => function (IConfig $conf) {
+        return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
     }
 ];
