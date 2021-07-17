@@ -71,6 +71,14 @@ class Request implements IRequest
         return $this;
     }
 
+    public function addParams($params)
+    {
+        foreach ($params as $key => $value) {
+            $this->setParam($key, $value);
+        }
+        return $this;
+    }
+
     public function setParam($param, $value)
     {
         $this->params[$param] = $value;

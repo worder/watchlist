@@ -4,6 +4,7 @@ use function DI\create;
 use function DI\get;
 
 use Wl\Api\Client\Shikimori\ShikimoriTransportConfig;
+use Wl\Api\Client\Tmdb\TmdbTransport;
 use Wl\Config\ConfigService;
 use Wl\Config\IConfig;
 use Wl\Config\Provider\IConfigProvider;
@@ -53,5 +54,10 @@ return [
 
     ShikimoriTransportConfig::class => function (IConfig $conf) {
         return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
+    },
+
+    TmdbTransport::class => function (IHttpClient $httpClient, Iconfig $conf) {
+        return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
     }
+
 ];

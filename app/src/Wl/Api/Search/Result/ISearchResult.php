@@ -9,5 +9,5 @@ interface ISearchResult extends IDataContainersCollection
 {
     public function getPages();
     public function getPage();
-    public function getCount();
+    public function getTotal();
 }

@@ -10,6 +10,7 @@ class SearchResult extends AIterator implements ISearchResult, Iterator
 {
     private $pages = 0;
     private $page = 0;
+    private $total = 0;
 
     private $items;
 
@@ -38,9 +39,14 @@ class SearchResult extends AIterator implements ISearchResult, Iterator
         $this->page = $page;
     }
 
-    public function getCount()
+    public function getTotal()
     {
-        return count($this->items);
+        return $this->total;
+    }
+
+    public function setTotal($number)
+    {
+        $this->total = $number;
     }
 
     public function getContainers()
