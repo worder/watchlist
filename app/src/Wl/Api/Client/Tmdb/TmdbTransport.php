@@ -20,6 +20,9 @@ class TmdbTransport implements ITransport
 {
     const DATASOURCE_TYPE = 'API_TMDB';
 
+    const CONTAINER_META_PARAM_REQUEST_LOCALE  = 'request_locale';
+    const CONTAINER_META_PARAM_MEDIA_TYPE = 'media_type';
+
     const URL_BASE = 'https://api.themoviedb.org/3';
 
     private $apiKey;
@@ -67,8 +70,8 @@ class TmdbTransport implements ITransport
         $params = [
             "language" => "ru-RU",
         ];
-        $response = $this->call('movie/' . $mediaId, $params);
-        return new DataContainer($response, self::DATASOURCE_TYPE);
+        $data = $this->call('movie/' . $mediaId, $params);
+        return $this->createContainer($data, MediaType::MOVIE);
     }
 
     private function getTvDetails($mediaId): IDataContainer
@@ -76,8 +79,8 @@ class TmdbTransport implements ITransport
         $params = [
             "language" => "ru-RU",
         ];
-        $response = $this->call('tv/' . $mediaId, $params);
-        return new DataContainer($response, self::DATASOURCE_TYPE);
+        $data = $this->call('tv/' . $mediaId, $params);
+        return $this->createContainer($data, MediaType::TV_SERIES);
     }
 
     private function searchMovie(ISearchQuery $q): ISearchResult
@@ -95,7 +98,7 @@ class TmdbTransport implements ITransport
         $result->setPages($response['total_pages']);
         $result->setTotal($response['total_results']);
         foreach ($result['results'] as $data) {
-            $result->addContainer(new DataContainer($data, self::DATASOURCE_TYPE));
+            $result->addContainer($this->createContainer($data, MediaType::MOVIE));
         }
         return $result;
     }
@@ -115,7 +118,7 @@ class TmdbTransport implements ITransport
         $result->setPages($response['total_pages']);
         $result->setTotal($response['total_results']);
         foreach ($response['results'] as $data) {
-            $result->addContainer(new DataContainer($data, self::DATASOURCE_TYPE));
+            $result->addContainer($this->createContainer($data, MediaType::TV_SERIES));
         }
         return $result;
     }
@@ -139,5 +142,13 @@ class TmdbTransport implements ITransport
         }
 
         return false;
+    }
+
+    private function createContainer($data, $mediaType)
+    {
+        $container = new DataContainer($data, self::DATASOURCE_TYPE);
+        $container->setMetadataParam(self::CONTAINER_META_PARAM_MEDIA_TYPE, $mediaType);
+        $container->setMetadataParam(self::CONTAINER_META_PARAM_REQUEST_LOCALE, 'ru');
+        return $container;
     }
 }

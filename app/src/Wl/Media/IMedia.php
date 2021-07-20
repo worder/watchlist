@@ -3,6 +3,7 @@
 namespace Wl\Media;
 
 use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\Details\IDetails;
 
 interface IMedia
 {
@@ -11,15 +12,12 @@ interface IMedia
 
     public function getLocalization($locale = 'en'): IMediaLocalization;
     public function hasLocalization($locale);
+    public function getOriginalLocale();
 
     // datasource related
     public function getMediaId(); // media id in datasource
     public function getDataContainer(): IDataContainer;
 
-    public function getSeasonsCount();
-    public function getSeasonNumber();
-    public function getEpisodesCount();
-
-    // public function getDetails();
+    public function getDetails(): ?IDetails;
     // public function getAssets();
 }

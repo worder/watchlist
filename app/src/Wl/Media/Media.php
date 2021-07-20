@@ -3,6 +3,7 @@
 namespace Wl\Media;
 
 use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\Details\IDetails;
 
 class Media implements IMedia
 {
@@ -13,10 +14,13 @@ class Media implements IMedia
     private $releaseDate;
     
     private $locales = [];
+    private $origLocale;
 
-    private $seasonsCount;
-    private $episodesCount;
-    private $seasonNumber;
+    // private $seasonsCount;
+    // private $episodesCount;
+    // private $seasonNumber;
+
+    private $details;
 
     public function __construct(IDataContainer $dataContainer)
     {
@@ -65,6 +69,16 @@ class Media implements IMedia
         }
     }
 
+    public function getOriginalLocale()
+    {
+        return $this->origLocale;
+    }
+
+    public function setOriginalLocale($locale)
+    {
+        $this->origLocale = $locale;
+    }
+
     public function getDataContainer(): IDataContainer
     {
         return $this->dataContainer;
@@ -80,33 +94,43 @@ class Media implements IMedia
         $this->mediaId = $id;
     }
 
-    public function getSeasonsCount()
+    // public function getSeasonsCount()
+    // {
+    //     return $this->seasonsCount;
+    // }
+
+    // public function setSeasonsCount($count)
+    // {
+    //     $this->seasonsCount = $count;
+    // }
+
+    // public function getSeasonNumber()
+    // {
+    //     return $this->seasonNumber;
+    // }
+
+    // public function setSeasonNumber($number)
+    // {
+    //     $this->seasonNumber = $number;
+    // }
+
+    // public function getEpisodesCount()
+    // {
+    //     return $this->episodesCount;
+    // }
+
+    // public function setEpisodesCount($count)
+    // {
+    //     $this->episodesCount = $count;
+    // }
+
+    public function getDetails(): ?IDetails
     {
-        return $this->seasonsCount;
+        return $this->details;
     }
 
-    public function setSeasonsCount($count)
+    public function setDetails(IDetails $details)
     {
-        $this->seasonsCount = $count;
-    }
-
-    public function getSeasonNumber()
-    {
-        return $this->seasonNumber;
-    }
-
-    public function setSeasonNumber($number)
-    {
-        $this->seasonNumber = $number;
-    }
-
-    public function getEpisodesCount()
-    {
-        return $this->episodesCount;
-    }
-
-    public function setEpisodesCount($count)
-    {
-        $this->episodesCount = $count;
+        $this->details = $details;
     }
 }

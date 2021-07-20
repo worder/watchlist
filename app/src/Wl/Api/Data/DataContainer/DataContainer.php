@@ -9,6 +9,7 @@ class DataContainer implements IDataContainer
     private $data;
     private $datasourceType;
     private $cacheExpirationTime;
+    private $metadata = [];
 
     public function __construct($data, $datasourceType)
     {
@@ -34,5 +35,25 @@ class DataContainer implements IDataContainer
     public function setCacheExpirationTime($time)
     {
         return $this->cacheExpirationTime = $time;
+    }
+
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(array $meta)
+    {
+        $this->metadata = $meta;
+    }
+
+    public function setMetadataParam($key, $value)
+    {
+        $this->metadata[$key] = $value;
+    }
+
+    public function getMetadataParam($key) 
+    {
+        return $this->metadata[$key] ?: null;
     }
 }
