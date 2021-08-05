@@ -4,5 +4,9 @@ namespace Wl\User\Credentials;
 
 interface ICredentials
 {
-    public function getToken();
+    const TYPE_DIGEST = 0;
+
+    public function getAccountId();
+    public function getValue();
+    public function getType();
 }

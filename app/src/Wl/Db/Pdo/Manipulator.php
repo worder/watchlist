@@ -5,7 +5,7 @@ use \Exception;
 use \PDO;
 use Wl\Db\Pdo\Config\IPdoConfig;
 
-class Manipulator
+class Manipulator implements IManipulator
 {
     public $pdo = false;
     public $queriesCount = 0;
@@ -62,7 +62,8 @@ class Manipulator
         $value = false;
         $row = $this->getRow($query, $params);
         if (!empty($row)) {
-            list($key, $value) = each($row);
+            reset($row);
+            $value = current($row);
         }
 
         return $value;
@@ -73,10 +74,10 @@ class Manipulator
      *
      * @param string $query - SQL query
      * @param array [$params] - statement values
-     * @return Worder\Db\Pdo\Result
+     * @return Worder\Db\Pdo\IResult
      *
      * */
-    public function exec($query, $params=array())
+    public function exec($query, $params=array()): IResult
     {
         $s = $this->prepare($query);
         foreach ($params as $placeholder => $value) {

@@ -3,7 +3,7 @@ namespace Wl\Db\Pdo;
 
 use \Exception;
 
-class Statement
+class Statement implements IStatement
 {
     private $pdo;
     private $statement;
@@ -40,13 +40,15 @@ class Statement
      * @param string [$placeholder] - placeholder name (if named placeholders used)
      *
      * */
-    function bindParam($value, $placeholder=false)
+    function bindParam($value, $placeholder=false): IStatement
     {
         if (!$placeholder) {
             $placeholder = $this->valuesCounter;
         }
         $this->statement->bindValue($placeholder, $value);
         $this->valuesCounter++;
+
+        return $this;
     }
 
 
@@ -56,7 +58,7 @@ class Statement
      * @return object Db_Pdo_Result
      *
      * */
-    function execute()
+    function execute(): IResult
     {
         $flag =  $this->statement->execute();
         if ($flag) {

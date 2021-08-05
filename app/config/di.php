@@ -15,9 +15,13 @@ use Wl\Datasource\KeyValue\Memcached\MemcachedClient;
 use Wl\Datasource\KeyValue\Memcached\MemcachedServer;
 use Wl\Db\Pdo\Config\IPdoConfig;
 use Wl\Db\Pdo\Config\MysqlConfig;
+use Wl\Db\Pdo\IManipulator;
 use Wl\Db\Pdo\Manipulator;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
+use Wl\User\AccountService;
+use Wl\User\IAccountService;
+use Wl\User\IAuthService;
 
 return [
     "app.config.path" => "app/config/config.json",
@@ -50,14 +54,18 @@ return [
 
     IHttpClient::class => get(HttpClient::class),
 
-    "Database" => get(Manipulator::class),
+    IManipulator::class => get(Manipulator::class),
 
     ShikimoriTransportConfig::class => function (IConfig $conf) {
         return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
     },
 
-    TmdbTransport::class => function (IHttpClient $httpClient, Iconfig $conf) {
+    TmdbTransport::class => function (IHttpClient $httpClient, IConfig $conf) {
         return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
+    },
+
+    IAccountService::class => function(IManipulator $db, IConfig $conf) {
+        return new AccountService($db, $conf->get("AUTH_TOKEN_SALT"));
     }
 
 ];

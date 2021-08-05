@@ -3,7 +3,7 @@ namespace Wl\Db\Pdo;
 
 use \PDO;
 
-class Result
+class Result implements IResult
 {
     private $statement;
     private $pdo;
@@ -21,7 +21,7 @@ class Result
      * @return array
      *
      * */
-    public function getRow()
+    public function getRow(): array
     {
         return $this->statement->fetch(PDO::FETCH_ASSOC);
     }
@@ -33,7 +33,7 @@ class Result
      * @return array
      *
      * */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->statement->fetchAll(PDO::FETCH_ASSOC);
     }
