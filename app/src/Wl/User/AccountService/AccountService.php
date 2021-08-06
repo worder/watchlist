@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User;
+namespace Wl\User\AccountService;
 
 use Wl\Db\Pdo\IManipulator;
 use Wl\User\Account\Account;
@@ -12,7 +12,6 @@ use Wl\User\Exception\EmailCollisionException;
 class AccountService implements IAccountService
 {
     private $db;
-    private $salt;
 
     public function __construct(IManipulator $db)
     {
@@ -24,8 +23,8 @@ class AccountService implements IAccountService
         $accData = $this->db->getRow("
             SELECT a.* 
               FROM accounts a 
-        RIGHT JOIN token t 
-             WHERE a.id=t.accountId AND t.value=:value", ["value" => $credencials->getValue()]);
+        RIGHT JOIN token t ON a.id=t.accountId
+             WHERE t.value=:value", ["value" => $credencials->getValue()]);
 
         return $accData ? $this->buildAccount($accData) : null;
     }
@@ -54,7 +53,7 @@ class AccountService implements IAccountService
         return $accData ? $this->buildAccount($accData) : null;
     }
 
-    public function addAccount(IAccount $acc, ICredentials $credentials): IAccount
+    public function addAccount(IAccount $acc): IAccount
     {
         if ($this->getAccountByEmail($acc->getEmail())) {
             throw new EmailCollisionException();
@@ -70,22 +69,29 @@ class AccountService implements IAccountService
         ]);
 
         if ($accResult) {
-            $credResult = $this->addCredentials($credentials);
-            if ($credResult) {
-                $acc = $this->getAccountById($accResult->getId());
-                if ($acc) {
-                    return $acc;
-                }
+            $acc = $this->getAccountById($accResult->getId());
+            if ($acc) {
+                return $acc;
             }
         } 
 
         throw new AccountCreateException();
     }
 
+    public function validateAccount(IAccount $account)
+    {
+        return true; // TODO
+    }
+
     public function addCredentials(ICredentials $credentials)
     {
         $q = "INSERT INTO credentials (`accountId`, `type`, `value`) VALUES (:id, :type, :value)";
         $this->db->exec($q, ['id' => $credentials->get]);
+    }
+
+    public function validateCredentials(ICredentials $credentials)
+    {
+        return true; // TODO
     }
 
     protected function buildAccount($data)

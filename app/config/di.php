@@ -19,9 +19,12 @@ use Wl\Db\Pdo\IManipulator;
 use Wl\Db\Pdo\Manipulator;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
-use Wl\User\AccountService;
-use Wl\User\IAccountService;
+use Wl\User\CredentialsFactory;
+use Wl\User\AccountService\IAccountService;
+use Wl\User\AccountService\AccountService;
+use Wl\User\AuthService;
 use Wl\User\IAuthService;
+use Wl\User\ICredentialsFactory;
 
 return [
     "app.config.path" => "app/config/config.json",
@@ -64,8 +67,14 @@ return [
         return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
     },
 
-    IAccountService::class => function(IManipulator $db, IConfig $conf) {
-        return new AccountService($db, $conf->get("AUTH_TOKEN_SALT"));
-    }
+    IAccountService::class => function (IManipulator $db) {
+        return new AccountService($db);
+    },
+
+    ICredentialsFactory::class => function (IConfig $conf) {
+        return new CredentialsFactory($conf->get("AUTH_TOKEN_SALT"));
+    },
+
+    IAuthService::class => get(AuthService::class),
 
 ];

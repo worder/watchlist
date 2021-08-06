@@ -7,8 +7,6 @@ use Wl\User\Credentials\ICredentials;
 
 interface IAuthService 
 {
-    public function authenticate(ICredentials $credentials): bool;   
+    public function authenticate(ICredentials $credentials): ?IAccount;   
     public function getAccount(): ?IAccount;
-
-    public function createDigestCredentials($login, $password): ICredentials;
 }

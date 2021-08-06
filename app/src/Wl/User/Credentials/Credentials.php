@@ -4,23 +4,22 @@ namespace Wl\User\Credentials;
 
 class Credentials implements ICredentials
 {
-   
+
     private $accountId;
     private $type;
     private $value;
 
-    public function __construct($data)
+    public function __construct($data = [])
     {
         if (isset($data['accountId'])) {
-            $this->accountId = $data['accountId'];
+            $this->setAccountId($data['accountId']);
         }
         if (isset($data['type'])) {
-            $this->type = $data['type'];
+            $this->setType($data['type']);
         }
         if (isset($data['value'])) {
-            $this->value = $data['value'];
+            $this->setValue($data['value']);
         }
-        
     }
 
     public function getAccountId()
@@ -36,5 +35,23 @@ class Credentials implements ICredentials
     public function getType()
     {
         return $this->type;
+    }
+
+    public function setAccountId($id)
+    {
+        $this->accountId = $id;
+        return $this;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 }
