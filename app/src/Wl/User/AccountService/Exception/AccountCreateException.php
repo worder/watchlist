@@ -1,5 +1,5 @@
 <?php
 
-namespace Wl\User\Exception;
+namespace Wl\User\AccountService\Exception;
 
 class AccountCreateException extends \Exception {}

@@ -5,9 +5,9 @@ namespace Wl\User\AccountService;
 use Wl\Db\Pdo\IManipulator;
 use Wl\User\Account\Account;
 use Wl\User\Account\IAccount;
+use Wl\User\AccountService\Exception\AccountCreateException;
+use Wl\User\AccountService\Exception\CredentialsCreateException;
 use Wl\User\Credentials\ICredentials;
-use Wl\User\Exception\AccountCreateException;
-use Wl\User\Exception\EmailCollisionException;
 
 class AccountService implements IAccountService
 {
@@ -20,46 +20,46 @@ class AccountService implements IAccountService
 
     public function getAccountByCredentials(ICredentials $credencials): ?IAccount
     {
-        $accData = $this->db->getRow("
-            SELECT a.* 
-              FROM accounts a 
-        RIGHT JOIN token t ON a.id=t.accountId
-             WHERE t.value=:value", ["value" => $credencials->getValue()]);
+        $accData = $this->db->getRow(
+            "SELECT a.* 
+               FROM accounts a 
+         RIGHT JOIN credentials c ON a.id=c.accountId
+              WHERE c.value=:value", ["value" => $credencials->getValue()]);
 
         return $accData ? $this->buildAccount($accData) : null;
     }
 
     public function getAccountById($id): ?IAccount
     {
-        $accData = $this->db->getRow(
-            "SELECT id, username, email
-               FROM accounts
-              WHERE id=:id",
-            ["id" => intval($id)]
-        );
-
-        return $accData ? $this->buildAccount($accData) : null;
+        return $this->getAccountByField("id", $id);
     }
 
-    public function getAccountByEmail($email)
+    public function getAccountByEmail($email): ?IAccount
+    {
+        return $this->getAccountByField("email", $email);
+    }
+
+    public function getAccountByUsername($username): ?IAccount
+    {
+        return $this->getAccountByField("username", $username);
+    }
+
+    private function getAccountByField($field, $value): ?IAccount
     {
         $accData = $this->db->getRow(
             "SELECT id, username, email
                FROM accounts
-              WHERE email=:email",
-            ["email" => $email]
+              WHERE {$field}=:val",
+            ["val" => $value]
         );
 
         return $accData ? $this->buildAccount($accData) : null;
     }
+
 
     public function addAccount(IAccount $acc): IAccount
     {
-        if ($this->getAccountByEmail($acc->getEmail())) {
-            throw new EmailCollisionException();
-        }
-
-        $q = "INSERT INTO account (`email`, `username`, `added`) 
+        $q = "INSERT INTO accounts (`email`, `username`, `added`) 
                    VALUES (:email, :username, :added)";
 
         $accResult = $this->db->exec($q, [
@@ -73,25 +73,22 @@ class AccountService implements IAccountService
             if ($acc) {
                 return $acc;
             }
-        } 
+        }
 
         throw new AccountCreateException();
     }
 
-    public function validateAccount(IAccount $account)
+    public function addCredentials($accountId, ICredentials $credentials)
     {
-        return true; // TODO
-    }
+        $q = "INSERT INTO credentials (`accountId`, `type`, `value`) 
+              VALUES (:id, :type, :value)";
+        $this->db->exec($q, [
+            'id' => $accountId,
+            'type' => $credentials->getType(),
+            'value' => $credentials->getValue()
+        ]);
 
-    public function addCredentials(ICredentials $credentials)
-    {
-        $q = "INSERT INTO credentials (`accountId`, `type`, `value`) VALUES (:id, :type, :value)";
-        $this->db->exec($q, ['id' => $credentials->get]);
-    }
-
-    public function validateCredentials(ICredentials $credentials)
-    {
-        return true; // TODO
+        return true; // or db exeption
     }
 
     protected function buildAccount($data)

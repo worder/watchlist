@@ -62,8 +62,7 @@ class Statement implements IStatement
     {
         $flag =  $this->statement->execute();
         if ($flag) {
-            $result = new Result($this->statement, $this->pdo);
-            return $result;
+            return new Result($this->statement, $this->pdo);
         } else {
             throw new Exception("Database query failed: " . print_r($this->statement->errorInfo(), true) . "\n Qeury: {$this->query}");
         }

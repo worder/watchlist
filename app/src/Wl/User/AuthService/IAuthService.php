@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User;
+namespace Wl\User\AuthService;
 
 use Wl\User\Account\IAccount;
 use Wl\User\Credentials\ICredentials;

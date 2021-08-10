@@ -2,7 +2,7 @@
 
 namespace Wl\User;
 
-use Wl\User\Credentials\Credentials;
+use Wl\User\Credentials\DigestCredentials;
 use Wl\User\Credentials\ICredentials;
 
 class CredentialsFactory implements ICredentialsFactory
@@ -17,9 +17,10 @@ class CredentialsFactory implements ICredentialsFactory
     public function createDigestToken($login, $password): ICredentials
     {
         $base = "{$login}@{$password}@{$this->salt}";
-        $token = new Credentials();
+        $token = new DigestCredentials();
         return $token
             ->setValue(md5($base))
-            ->setType(self::CREDENTIALS_TYPE_DIGEST);
+            ->setType(self::CREDENTIALS_TYPE_DIGEST)
+            ->setPassword($password);
     }
 }

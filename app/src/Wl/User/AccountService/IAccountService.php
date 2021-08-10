@@ -8,11 +8,10 @@ use Wl\User\Credentials\ICredentials;
 interface IAccountService
 {
     public function getAccountById($id): ?IAccount;
+    public function getAccountByEmail($email): ?IAccount;
+    public function getAccountByUsername($username): ?IAccount;
     public function getAccountByCredentials(ICredentials $credencials): ?IAccount;
 
     public function addAccount(IAccount $accountData);
-    public function validateAccount(IAccount $account);
-    
-    public function addCredentials(ICredentials $credentials);
-    public function validateCredentials(ICredentials $credentials);
+    public function addCredentials($accountId, ICredentials $credentials);
 }

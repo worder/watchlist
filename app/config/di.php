@@ -22,8 +22,11 @@ use Wl\HttpClient\IHttpClient;
 use Wl\User\CredentialsFactory;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\AccountService\AccountService;
-use Wl\User\AuthService;
-use Wl\User\IAuthService;
+use Wl\User\AccountService\AccountValidationService;
+use Wl\User\AccountService\Exception\AccountValidationException;
+use Wl\User\AccountService\IAccountValidationService;
+use Wl\User\AuthService\AuthService;
+use Wl\User\AuthService\IAuthService;
 use Wl\User\ICredentialsFactory;
 
 return [
@@ -67,14 +70,14 @@ return [
         return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
     },
 
-    IAccountService::class => function (IManipulator $db) {
-        return new AccountService($db);
-    },
+    IAccountService::class => get(AccountService::class),
 
     ICredentialsFactory::class => function (IConfig $conf) {
         return new CredentialsFactory($conf->get("AUTH_TOKEN_SALT"));
     },
 
     IAuthService::class => get(AuthService::class),
+
+    IAccountValidationService::class => get(AccountValidationService::class),
 
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User;
+namespace Wl\User\AuthService;
 
 use Wl\User\Account\IAccount;
 use Wl\User\AccountService\IAccountService;
@@ -12,7 +12,7 @@ class AuthService implements IAuthService
 
     private $account;
 
-    public function construct(IAccountService $accService)
+    public function __construct(IAccountService $accService)
     {
         $this->accService = $accService;
     }
