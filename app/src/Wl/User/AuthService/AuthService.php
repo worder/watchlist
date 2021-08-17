@@ -4,6 +4,7 @@ namespace Wl\User\AuthService;
 
 use Wl\User\Account\IAccount;
 use Wl\User\AccountService\IAccountService;
+use Wl\User\AuthService\AuthStorage\IAuthStorage;
 use Wl\User\Credentials\ICredentials;
 
 class AuthService implements IAuthService
@@ -11,30 +12,36 @@ class AuthService implements IAuthService
     private $accService;
 
     private $account;
+    private $storage;
 
-    public function __construct(IAccountService $accService)
+
+    public function __construct(IAccountService $accService, IAuthStorage $storage)
     {
         $this->accService = $accService;
+        $this->storage = $storage;
+
+        $this->account = $storage->loadAccount();
     }
 
     public function authenticate(ICredentials $credentials): ?IAccount
     {
-        $acc = $this->accService->getAccountByCredentials($credentials);
-        if ($acc) {
-            $this->setAccount($acc);
-            return $acc;
-        }
-
-        return null;
+        return $this->accService->getAccountByCredentials($credentials);
     }
 
-    public function getAccount(): ?IAccount
+    public function account(): ?IAccount
     {
         return $this->account;
     }
 
-    private function setAccount(IAccount $account)
+    public function login(IAccount $account)
     {
         $this->account = $account;
+        $this->storage->saveAccount($account);
+    }
+
+    public function logout()
+    {
+        $this->account = null;
+        $this->storage->reset();
     }
 }

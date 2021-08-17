@@ -17,15 +17,18 @@ use Wl\Db\Pdo\Config\IPdoConfig;
 use Wl\Db\Pdo\Config\MysqlConfig;
 use Wl\Db\Pdo\IManipulator;
 use Wl\Db\Pdo\Manipulator;
+use Wl\Http\HttpService\HttpService;
+use Wl\Http\HttpService\IHttpService;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
+use Wl\Session\ISession;
+use Wl\Session\Session;
 use Wl\User\CredentialsFactory;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\AccountService\AccountService;
-use Wl\User\AccountService\AccountValidationService;
-use Wl\User\AccountService\Exception\AccountValidationException;
-use Wl\User\AccountService\IAccountValidationService;
 use Wl\User\AuthService\AuthService;
+use Wl\User\AuthService\AuthStorage\AuthSessionStorage;
+use Wl\User\AuthService\AuthStorage\IAuthStorage;
 use Wl\User\AuthService\IAuthService;
 use Wl\User\ICredentialsFactory;
 
@@ -46,6 +49,8 @@ return [
         );
     },
 
+    IManipulator::class => get(Manipulator::class),
+
     IStorage::class => function (IConfig $conf) {
         $mc = new MemcachedClient();
         $mc->addServer(
@@ -58,10 +63,13 @@ return [
         return $decorated;
     },
 
+    ISession::class => get(Session::class),
+
     IHttpClient::class => get(HttpClient::class),
 
-    IManipulator::class => get(Manipulator::class),
+    IHttpService::class => get(HttpService::class),
 
+    // API clients
     ShikimoriTransportConfig::class => function (IConfig $conf) {
         return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
     },
@@ -70,14 +78,12 @@ return [
         return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
     },
 
+    // auth and accounts
     IAccountService::class => get(AccountService::class),
+    IAuthService::class => get(AuthService::class),
+    IAuthStorage::class => get(AuthSessionStorage::class),
 
     ICredentialsFactory::class => function (IConfig $conf) {
         return new CredentialsFactory($conf->get("AUTH_TOKEN_SALT"));
-    },
-
-    IAuthService::class => get(AuthService::class),
-
-    IAccountValidationService::class => get(AccountValidationService::class),
-
+    }
 ];

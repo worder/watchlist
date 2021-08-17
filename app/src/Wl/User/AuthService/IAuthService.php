@@ -8,5 +8,9 @@ use Wl\User\Credentials\ICredentials;
 interface IAuthService 
 {
     public function authenticate(ICredentials $credentials): ?IAccount;   
-    public function getAccount(): ?IAccount;
+    
+    public function account(): ?IAccount;
+
+    public function login(IAccount $account);
+    public function logout();
 }

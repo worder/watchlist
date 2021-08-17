@@ -4,7 +4,7 @@ namespace Wl\Session;
 
 class Session implements ISession
 {
-    public function getValue($key)
+    public function get($key)
     {
         $this->assertSessionStarted();
         if (isset($_SESSION[$key])) {
@@ -12,7 +12,7 @@ class Session implements ISession
         }
     }
 
-    public function setValue($key, $value)
+    public function set($key, $value)
     {
         $this->assertSessionStarted();
         $_SESSION[$key] = $value;

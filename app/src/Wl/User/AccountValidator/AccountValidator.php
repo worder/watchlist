@@ -13,8 +13,8 @@ class AccountValidator implements IAccountValidator
     private $accService;
 
     const ACCOUNT_SCHEMES = [
-        self::ACCOUNT_VALIDATION_SCHEME_ADD,
-        self::ACCOUNT_VALIDATION_SCHEME_EDIT,
+        self::SCHEME_ADD,
+        self::SCHEME_EDIT,
     ];
 
     public function __construct(IAccountService $accService)
@@ -50,7 +50,7 @@ class AccountValidator implements IAccountValidator
         }
 
         // before add checks
-        if ($scheme === self::ACCOUNT_VALIDATION_SCHEME_ADD) {
+        if ($scheme === self::SCHEME_ADD) {
             if ($this->accService->getAccountByEmail($email)) {
                 throw AWE::create(AWE::EMAIL_EXISTS);
             }
