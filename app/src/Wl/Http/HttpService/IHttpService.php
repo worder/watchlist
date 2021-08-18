@@ -6,6 +6,6 @@ use Wl\Http\Request\IRequest;
 
 interface IHttpService
 {
-    public function getRequest(): IRequest;
+    public function request(): IRequest;
 
 }

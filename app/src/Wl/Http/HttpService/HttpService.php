@@ -8,7 +8,7 @@ use Wl\Utils\ParamStore\ParamsStore;
 
 class HttpService implements IHttpService
 {
-    public function getRequest(): IRequest
+    public function request(): IRequest
     {
         $uri = $GLOBALS['_SERVER']['REQUEST_URI'];
         

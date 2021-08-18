@@ -2,19 +2,19 @@
 
 namespace Wl\User\Credentials;
 
+use Wl\Utils\Date\IDate;
+
 class Credentials implements ICredentials
 {
     private $type;
     private $value;
+    private $expire;
 
-    public function __construct($data = [])
+    public function __construct($type, $value, ?IDate $expire)
     {
-        if (isset($data['type'])) {
-            $this->setType($data['type']);
-        }
-        if (isset($data['value'])) {
-            $this->setValue($data['value']);
-        }
+        $this->type = $type;
+        $this->value = $value;
+        $this->expire = $expire;
     }
 
     public function getValue()
@@ -27,15 +27,8 @@ class Credentials implements ICredentials
         return $this->type;
     }
 
-    public function setValue($value)
+    public function getExpire(): IDate
     {
-        $this->value = $value;
-        return $this;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
+        return $this->expire;
     }
 }
