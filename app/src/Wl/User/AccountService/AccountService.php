@@ -7,7 +7,9 @@ use Wl\User\Account\Account;
 use Wl\User\Account\IAccount;
 use Wl\User\AccountService\Exception\AccountCreateException;
 use Wl\User\AccountService\Exception\CredentialsCreateException;
+use Wl\User\Credentials\Credentials;
 use Wl\User\Credentials\ICredentials;
+use Wl\Utils\Date\Date;
 
 class AccountService implements IAccountService
 {
@@ -24,7 +26,10 @@ class AccountService implements IAccountService
             "SELECT a.* 
                FROM accounts a 
          RIGHT JOIN credentials c ON a.id=c.accountId
-              WHERE c.value=:value", ["value" => $credencials->getValue()]);
+              WHERE c.value=:value 
+                    AND `expire` IS NULL OR `expire` > NOW()",
+            ["value" => $credencials->getValue()]
+        );
 
         return $accData ? $this->buildAccount($accData) : null;
     }
@@ -80,19 +85,47 @@ class AccountService implements IAccountService
 
     public function addCredentials($accountId, ICredentials $credentials)
     {
-        $q = "INSERT INTO credentials (`accountId`, `type`, `value`) 
-              VALUES (:id, :type, :value)";
+        $expire = $credentials->getExpire();
+
+        $q = "INSERT INTO credentials (`accountId`, `type`, `value`, `expire`) 
+              VALUES (:id, :type, :value, :expire)";
         $this->db->exec($q, [
             'id' => $accountId,
             'type' => $credentials->getType(),
-            'value' => $credentials->getValue()
+            'value' => $credentials->getValue(),
+            'expire' => $expire ? $expire->date() : null,
         ]);
 
         return true; // or db exeption
     }
 
+    public function getCredentialsByType($accountId, $type): ?ICredentials
+    {
+        $q = "SELECT * 
+                FROM credentials 
+               WHERE `accountId`=:id 
+                     AND `type`=:type 
+                     AND `expire` IS NULL OR `expire` > NOW()";
+
+        $data = $this->db->getRow($q, ['type' => $type, 'id' => $accountId]);
+        if ($data) {
+            return $this->buildCredentials($data);
+        }
+
+        return null;
+    }
+
     protected function buildAccount($data)
     {
         return new Account($data);
+    }
+
+    private function buildCredentials($data)
+    {
+        return new Credentials(
+            $data['type'],
+            $data['value'],
+            $data['expire'] ? Date::fromDate($data['expire']) : null
+        );
     }
 }

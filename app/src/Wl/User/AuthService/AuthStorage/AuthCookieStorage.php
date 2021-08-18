@@ -3,10 +3,10 @@
 namespace Wl\User\AuthService\AuthStorage;
 
 use Wl\Http\HttpService\IHttpService;
-use Wl\Session\ISession;
 use Wl\User\Account\IAccount;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\ICredentialsFactory;
+use Wl\Utils\Date\Date;
 
 class AuthCookieStorage implements IAuthStorage
 {
@@ -26,17 +26,28 @@ class AuthCookieStorage implements IAuthStorage
     public function loadAccount(): ?IAccount
     {
         $token = $this->httpService->request()->cookies()->get(self::AUTH_COOKIE_NAME);
-        $cred = $this->credFactory->createToken($token);
-        return $this->accService->getAccountByCredentials($cred);
+        if (!empty($token)) {
+            $cred = $this->credFactory->getToken($token);
+            return $this->accService->getAccountByCredentials($cred);
+        }
+        return null;
     }
 
     public function saveAccount(IAccount $account)
     {
-        $token = $this->credFactory->generateToken();
+        $accountId = $account->getId();
+        $token = $this->accService->getCredentialsByType($accountId, ICredentialsFactory::CREDENTIALS_TYPE_TOKEN);
+        $expire = Date::now()->plusMonths(2);
+        if (empty($token)) {
+            $token = $this->credFactory->createToken($expire);
+            $this->accService->addCredentials($accountId, $token);
+        }
+
+        setcookie(self::AUTH_COOKIE_NAME, $token->getValue(), $expire->timestamp(), "", "", false, true);
     }
 
     public function reset()
     {
-        
+        setcookie(self::AUTH_COOKIE_NAME, '', 0, "", "", true, true);
     }
 }

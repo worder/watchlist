@@ -19,13 +19,13 @@ class CredentialsFactory implements ICredentialsFactory
         $this->hashAlgo = 'haval128,3';
     }
 
-    public function digestToken($login, $password): ICredentials
+    public function getDigestToken($login, $password): ICredentials
     {
         $base = "{$login}@{$password}@{$this->salt}";
         return new DigestCredentials(self::CREDENTIALS_TYPE_DIGEST, $this->hash($base), null,  $password);
     }
 
-    public function token($value): ICredentials
+    public function getToken($value): ICredentials
     {
         return new Credentials(self::CREDENTIALS_TYPE_TOKEN, $value, null);
     }

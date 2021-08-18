@@ -11,7 +11,9 @@ interface IAccountService
     public function getAccountByEmail($email): ?IAccount;
     public function getAccountByUsername($username): ?IAccount;
     public function getAccountByCredentials(ICredentials $credencials): ?IAccount;
-
+    
     public function addAccount(IAccount $accountData);
     public function addCredentials($accountId, ICredentials $credentials);
+    
+    public function getCredentialsByType($accountId, $type): ?ICredentials;
 }

@@ -27,7 +27,7 @@ class Credentials implements ICredentials
         return $this->type;
     }
 
-    public function getExpire(): IDate
+    public function getExpire(): ?IDate
     {
         return $this->expire;
     }

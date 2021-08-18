@@ -13,13 +13,50 @@ class Date implements IDate
         $this->time = $timestamp;
     }
 
-    public function timestamp()
+    static function fromTimestamp($timestamp)
+    {
+        return new self($timestamp);
+    }
+
+    static function fromDate($date)
+    {
+         return new self(strtotime($date));
+    }
+
+    static function now()
+    {
+        return new self(time());
+    }
+
+
+
+    public function timestamp(): int
     {
         return $this->time;
     }
 
-    public function date()
+    public function date(): string
     {
         return date(self::DATETIME_FORMAT, $this->time);
+    }
+
+    public function plusHours(int $number): IDate
+    {
+        return new self(strtotime("+{$number} hour", $this->time));
+    }
+
+    public function plusMinutes(int $number): IDate
+    {
+        return new self(strtotime("+{$number} minute", $this->time));
+    }
+
+    public function plusDays(int $number): IDate
+    {
+        return new self(strtotime("+{$number} day", $this->time));
+    }
+
+    public function plusMonths(int $number): IDate
+    {
+        return new self(strtotime("+{$number} month", $this->time));
     }
 }

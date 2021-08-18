@@ -9,6 +9,6 @@ create table credentials (
 	`accountId` int(11) NOT NULL,
 	`type` int(8) NOT NULL,
 	`value` varchar(256) UNIQUE NOT NULL,
-	`expire` datetime(),
+	`expire` datetime,
 	PRIMARY KEY(`accountId`, `type`)
 );
