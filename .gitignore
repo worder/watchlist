@@ -1,8 +1,10 @@
+/*.sh
 app/src/Wl/Controller/Api/TestController.php
 app/data/exports/*
 app/config/config.json
 app/vendor/*
-build-dev.sh
+.cache
 .vscode
 .dump
 TODO.md
+!test.sh
