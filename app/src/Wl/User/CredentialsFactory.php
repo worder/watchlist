@@ -22,7 +22,7 @@ class CredentialsFactory implements ICredentialsFactory
     public function getDigestToken($login, $password): ICredentials
     {
         $base = "{$login}@{$password}@{$this->salt}";
-        return new DigestCredentials(self::CREDENTIALS_TYPE_DIGEST, $this->hash($base), null,  $password);
+        return new DigestCredentials(self::CREDENTIALS_TYPE_DIGEST, $this->hash($base), null,  $login, $password);
     }
 
     public function getToken($value): ICredentials

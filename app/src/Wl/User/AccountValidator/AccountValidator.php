@@ -45,7 +45,7 @@ class AccountValidator implements IAccountValidator
         if (empty($email)) {
             throw AWE::create(AWE::EMAIL_EMPTY);
         }
-        if (!preg_match("#^[a-z0-9-_\.]+@[a-z0-9-_\.]+$#i", $email)) {
+        if (!preg_match("#^[a-z0-9-_\.]+@[a-z0-9-_\.]+\.[a-z0-9-_\.]+$#i", $email)) {
             throw AWE::create(AWE::EMAIL_INVALID);
         }
 
@@ -68,6 +68,12 @@ class AccountValidator implements IAccountValidator
             $password = $credentials->getPassword();
             if (empty($password)) {
                 throw AWE::create(AWE::PASSWORD_EMPTY);
+            }
+            if (strlen($password) < 4) {
+                throw AWE::create(AWE::PASSWORD_TOO_SHORT);
+            }
+            if (strlen($password) > 256) {
+                throw AWE::create(AWE::PASSWORD_TOO_LONG);
             }
         }
 

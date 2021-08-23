@@ -4,7 +4,9 @@ namespace Wl\User\AuthService;
 
 use Wl\User\Account\IAccount;
 use Wl\User\AccountService\IAccountService;
-use Wl\User\AuthService\AuthStorage\IAuthStorage;
+use Wl\User\AuthStorage\IAuthStorage;
+use Wl\User\AuthService\Exception\AuthException;
+use Wl\User\Credentials\DigestCredentials;
 use Wl\User\Credentials\ICredentials;
 
 class AuthService implements IAuthService
@@ -23,9 +25,22 @@ class AuthService implements IAuthService
         $this->account = $storage->loadAccount();
     }
 
-    public function authenticate(ICredentials $credentials): ?IAccount
+    public function authenticate(ICredentials $credentials): IAccount
     {
-        return $this->accService->getAccountByCredentials($credentials);
+        $acc = $this->accService->getAccountByCredentials($credentials);
+        if (!$acc) {
+            if ($credentials instanceof DigestCredentials) {
+                if ($this->accService->getAccountByEmail($credentials->getLogin())) {
+                    throw AuthException::invalidPassword();
+                } else {
+                    throw AuthException::invalidLogin();
+                }
+            } else {
+                throw AuthException::invalidToken();
+            }
+        }
+
+        return $acc;
     }
 
     public function account(): ?IAccount

@@ -2,6 +2,7 @@
 
 use function DI\create;
 use function DI\get;
+use function Di\autowire;
 
 use Wl\Api\Client\Shikimori\ShikimoriTransportConfig;
 use Wl\Api\Client\Tmdb\TmdbTransport;
@@ -27,9 +28,11 @@ use Wl\User\CredentialsFactory;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\AccountService\AccountService;
 use Wl\User\AuthService\AuthService;
-use Wl\User\AuthService\AuthStorage\AuthSessionStorage;
-use Wl\User\AuthService\AuthStorage\IAuthStorage;
+use Wl\User\AuthStorage\AuthCookieStorage;
+use Wl\User\AuthStorage\AuthSessionStorage;
+use Wl\User\AuthStorage\IAuthStorage;
 use Wl\User\AuthService\IAuthService;
+use Wl\User\AuthStorage\AuthCompositeStorage;
 use Wl\User\ICredentialsFactory;
 
 return [
@@ -59,8 +62,7 @@ return [
                 $conf->get("CACHE_MEMCACHED_PORT")
             )
         );
-        $decorated = new KeyDecoratedStorage($mc, $conf->get("CACHE_MEMCACHED_PREFIX"));
-        return $decorated;
+        return new KeyDecoratedStorage($mc, $conf->get("CACHE_MEMCACHED_PREFIX"));
     },
 
     ISession::class => get(Session::class),
@@ -81,7 +83,12 @@ return [
     // auth and accounts
     IAccountService::class => get(AccountService::class),
     IAuthService::class => get(AuthService::class),
-    IAuthStorage::class => get(AuthSessionStorage::class),
+
+    IAuthStorage::class => autowire(AuthCompositeStorage::class)
+        ->constructor([
+            get(AuthSessionStorage::class),
+            get(AuthCookieStorage::class),
+        ]),
 
     ICredentialsFactory::class => function (IConfig $conf) {
         return new CredentialsFactory($conf->get("AUTH_TOKEN_SALT"));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User\AuthService\AuthStorage;
+namespace Wl\User\AuthStorage;
 
 use Wl\Http\HttpService\IHttpService;
 use Wl\User\Account\IAccount;
@@ -16,8 +16,11 @@ class AuthCookieStorage implements IAuthStorage
 
     const AUTH_COOKIE_NAME = 'atoken';
 
-    public function __construct(IHttpService $httpService, IAccountService $accService, ICredentialsFactory $credFactory)
-    {
+    public function __construct(
+        IHttpService $httpService,
+        IAccountService $accService,
+        ICredentialsFactory $credFactory
+    ) {
         $this->httpService = $httpService;
         $this->accService = $accService;
         $this->credFactory = $credFactory;
@@ -43,11 +46,11 @@ class AuthCookieStorage implements IAuthStorage
             $this->accService->addCredentials($accountId, $token);
         }
 
-        setcookie(self::AUTH_COOKIE_NAME, $token->getValue(), $expire->timestamp(), "", "", false, true);
+        setcookie(self::AUTH_COOKIE_NAME, $token->getValue(), $expire->timestamp(), "/", "", false, true);
     }
 
-    public function reset()
+    public function reset(): void
     {
-        setcookie(self::AUTH_COOKIE_NAME, '', 0, "", "", true, true);
+        setcookie(self::AUTH_COOKIE_NAME, '', 0, "/", "", true, true);
     }
 }

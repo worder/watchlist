@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User\AuthService\AuthStorage;
+namespace Wl\User\AuthStorage;
 
 use Wl\Session\ISession;
 use Wl\User\Account\IAccount;
@@ -37,7 +37,7 @@ class AuthSessionStorage implements IAuthStorage
         $this->session->stopSession();
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->session->startSession();
         $this->session->set(self::SESSION_USER_KEY, false);

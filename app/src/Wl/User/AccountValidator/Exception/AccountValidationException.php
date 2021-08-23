@@ -16,24 +16,26 @@ class AccountValidationException extends \Exception
     
     const PASSWORD_EMPTY = 'PASSWORD_EMPTY';
     const PASSWORD_INVALID = 'PASSWORD_INVALID';
+    const PASSWORD_TOO_SHORT = 'PASSWORD_TOO_SHORT';
+    const PASSWORD_TOO_LONG = 'PASSWORD_TOO_SHORT';
 
 
-    private $_type;
+    // private $_type;
 
-    private function setType($type)
-    {
-        $this->_type = $type;
-    }
+    // private function setType($type)
+    // {
+    //     $this->_type = $type;
+    // }
 
-    public function getType()
-    {
-        return $this->_type;
-    }
+    // public function getType()
+    // {
+    //     return $this->_type;
+    // }
 
     public static function create($type): AccountValidationException
     {
-        $ex = new self();
-        $ex->setType($type);
+        $ex = new self($type);
+        // $ex->setType($type);
         return $ex;
     }
 }

@@ -7,7 +7,7 @@ use Wl\Utils\Date\Date;
 
 class DateTest extends TestCase
 {
-    public function testSomething(): void
+    public function testDate(): void
     {
         $timestamp = time();
         $timestampDate = date(Date::DATETIME_FORMAT, $timestamp);

@@ -9,6 +9,7 @@ use Wl\User\AccountService\Exception\AccountCreateException;
 use Wl\User\AccountService\Exception\CredentialsCreateException;
 use Wl\User\Credentials\Credentials;
 use Wl\User\Credentials\ICredentials;
+use Wl\User\ICredentialsFactory;
 use Wl\Utils\Date\Date;
 
 class AccountService implements IAccountService
@@ -20,15 +21,15 @@ class AccountService implements IAccountService
         $this->db = $db;
     }
 
-    public function getAccountByCredentials(ICredentials $credencials): ?IAccount
-    {
+    public function getAccountByCredentials(ICredentials $credentials): ?IAccount
+    {       
         $accData = $this->db->getRow(
             "SELECT a.* 
                FROM accounts a 
          RIGHT JOIN credentials c ON a.id=c.accountId
               WHERE c.value=:value 
-                    AND `expire` IS NULL OR `expire` > NOW()",
-            ["value" => $credencials->getValue()]
+                    AND (`expire` IS NULL OR `expire` > NOW())",
+            ["value" => $credentials->getValue()]
         );
 
         return $accData ? $this->buildAccount($accData) : null;
@@ -105,7 +106,7 @@ class AccountService implements IAccountService
                 FROM credentials 
                WHERE `accountId`=:id 
                      AND `type`=:type 
-                     AND `expire` IS NULL OR `expire` > NOW()";
+                     AND (`expire` IS NULL OR `expire` > NOW())";
 
         $data = $this->db->getRow($q, ['type' => $type, 'id' => $accountId]);
         if ($data) {
