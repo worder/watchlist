@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\User\AccountValidator\Exception;
+namespace Wl\User\AccountValidator;
 
 class AccountValidationException extends \Exception
 {

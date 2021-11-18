@@ -8,9 +8,6 @@ use Wl\User\Credentials\ICredentials;
 
 interface IAuthService 
 {
-    const STORAGE_POLICY_SESSION = 'STORAGE_POLICY_SESSION';
-    const STORAGE_POLICY_PERSISTENT = 'STORAGE_POLICY_PERSISTENT';
-
     /**
      * @throws AuthException
      */

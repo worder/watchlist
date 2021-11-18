@@ -9,7 +9,7 @@ use Wl\User\Account\IAccount;
 use Wl\User\AccountService\AccountService;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\AccountValidator\AccountValidator;
-use Wl\User\AccountValidator\Exception\AccountValidationException;
+use Wl\User\AccountValidator\AccountValidationException;
 use Wl\User\Credentials\DigestCredentials;
 use Wl\User\Credentials\ICredentials;
 

@@ -11,5 +11,5 @@ interface IAccountValidator
     const SCHEME_EDIT = 'SCHEME_EDIT';
 
     public function validateAccount(IAccount $account, $scheme);   
-    public function validateCredentials(ICredentials $credentials);
+    public static function validateCredentials(ICredentials $credentials);
 }

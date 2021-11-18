@@ -26,7 +26,7 @@ class ParamsStore extends AIterator implements IParamStore
     public function get($key)
     {
         if ($this->has($key)) {
-            return $key;
+            return $this->storage[$key];
         }
     }
 

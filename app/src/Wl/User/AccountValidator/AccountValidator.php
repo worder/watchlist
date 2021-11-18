@@ -3,7 +3,7 @@
 namespace Wl\User\AccountValidator;
 
 use Wl\User\Account\IAccount;
-use Wl\User\AccountValidator\Exception\AccountValidationException as AWE;
+use Wl\User\AccountValidator\AccountValidationException as AWE;
 use Wl\User\AccountService\IAccountService;
 use Wl\User\Credentials\DigestCredentials;
 use Wl\User\Credentials\ICredentials;
@@ -62,7 +62,7 @@ class AccountValidator implements IAccountValidator
         return true;
     }
 
-    public function validateCredentials(ICredentials $credentials)
+    public static function validateCredentials(ICredentials $credentials)
     {
         if ($credentials instanceof DigestCredentials) {
             $password = $credentials->getPassword();

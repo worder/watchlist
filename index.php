@@ -2,12 +2,13 @@
 
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
-use Wl\Config\ConfigService;
 use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
-use Wl\Db\Pdo\Manipulator;
-use Wl\Mvc\MvcService;
+use Wl\Controller\IndexController;
+use Wl\Mvc\MvcDispatcher;
+use Wl\Mvc\Result\ErrorResult;
+use Wl\Mvc\ResultToResponse;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -24,9 +25,10 @@ $container = $builder->build();
 
 // init router
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
+    $r->addRoute('GET', '/', IndexController::class);
     $r->addGroup('/api', function (RouteCollector $r) {
-        $r->addGroup('/user', function(RouteCollector $r){
-            $r->addRoute('GET', '/auth', AuthController::class);
+        $r->addGroup('/user', function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/auth', AuthController::class);
         });
         $r->addRoute('GET', '/search/{term}', SearchController::class);
         $r->addRoute('GET', '/test[/opt]', TestController::class);
@@ -45,14 +47,26 @@ $uri = rawurldecode($uri);
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 // dispatch controler
-$mvcService = new MvcService($container);
+$mvcDispatcher = new MvcDispatcher($container);
+$rtr = new ResultToResponse();
+$result = null;
+
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
+        $result = new ErrorResult(null, 404);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $result = new ErrorResult(null, 405);
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
-        $mvcService->dispatchController($handler, $httpMethod, $vars);
+        try {
+            $result = $mvcDispatcher->dispatchController($handler, $httpMethod, $vars);
+        } catch (\Exception $e) {
+            // internal error
+            $result = new ErrorResult(null, 502);
+        }
 }
+
+$rtr->getResponse($result)->render();

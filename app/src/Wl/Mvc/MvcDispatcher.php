@@ -4,10 +4,11 @@ namespace Wl\Mvc;
 
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Wl\Mvc\Exception\ControllerException;
 use Wl\Mvc\Exception\ControllerNotFoundException;
 use Wl\Mvc\Exception\MethodNotFoundException;
 
-class MvcService
+class MvcDispatcher
 {
     private $container;
 
@@ -33,7 +34,13 @@ class MvcService
             }
 
             $controllerInstance = $this->container->get($classname);
-            return $controllerInstance->$controllerMethod($vars);
+            try {
+                $result = $controllerInstance->$controllerMethod($vars);
+            } catch (ControllerException $e) { 
+                // only ControllerException should be provided to frontend, any other exception should be considered as internal error
+                $result = $e;
+            } 
+            return $result;
         } else {
             throw new ControllerNotFoundException('Controller "' . $classname . '" does not exists');
         }
