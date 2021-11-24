@@ -3,6 +3,8 @@ app/src/Wl/Controller/Api/TestController.php
 app/data/exports/*
 app/config/config.json
 app/vendor/*
+front/cert/private/*
+node_modules
 *.cache
 .vscode
 .dump

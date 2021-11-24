@@ -86,8 +86,9 @@ class AccountService implements IAccountService
 
     public function addCredentials($accountId, ICredentials $credentials)
     {
-        $expire = $credentials->getExpire();
+        $this->deleteExpiredCredentials($accountId);
 
+        $expire = $credentials->getExpire();
         $q = "INSERT INTO credentials (`accountId`, `type`, `value`, `expire`) 
               VALUES (:id, :type, :value, :expire)";
         $this->db->exec($q, [
@@ -116,7 +117,14 @@ class AccountService implements IAccountService
         return null;
     }
 
-    protected function buildAccount($data)
+    private function deleteExpiredCredentials($accountId)
+    {
+        $q = "DELETE FROM credentials 
+                    WHERE accountId=:id AND `expire` < NOW()";
+        $this->db->exec($q, ['id' => $accountId]);
+    }
+
+    private function buildAccount($data)
     {
         return new Account($data);
     }

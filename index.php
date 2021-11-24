@@ -65,7 +65,8 @@ switch ($routeInfo[0]) {
             $result = $mvcDispatcher->dispatchController($handler, $httpMethod, $vars);
         } catch (\Exception $e) {
             // internal error
-            $result = new ErrorResult(null, 502);
+            // $result = new ErrorResult(null, 502); // prod
+            $result = new ErrorResult($e->getMessage(), 200); // debug
         }
 }
 
