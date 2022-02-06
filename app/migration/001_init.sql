@@ -12,3 +12,73 @@ create table credentials (
 	`expire` datetime,
 	PRIMARY KEY(`accountId`, `type`)
 );
+
+/* draft, TODO
+
+create table media (
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`mediaId` varchar(64),
+	`apiId` varchar(64),
+	`locale` varchar(64),
+	`title` TEXT,
+	`data` MEDIUMTEXT,
+	`added` datetime,
+	`updated` datetime,
+);
+
+
+create table media_localization (
+	`id`,
+	`mediaId`,
+	`apiId`,
+	`locale`,
+	`title`,
+	`overview`,
+)
+
+create table watchlists (
+	`id`,
+	`title`,
+	`description`,
+	`ownerId`,
+);
+
+create table wl_subs (
+	`userId`,
+	`watchlistId`,
+	`flags`,
+);
+
+create table wl_items (
+	`id`,
+	`watchlistId`,
+	`mediaId`,
+	`userId`,
+	`added`,
+);
+
+create table wl_item_status (
+	`id`,
+	`itemId`,
+	`userId`,
+	`status`,
+	`date`,
+)
+
+create table wl_item_progress (
+	`id`,
+	`itemId`,
+	`userId`,
+	`progress`,
+	`date`,
+)
+
+create table wl_item_features (
+	`id`,
+	`itemId`,
+	`type`,
+	`value`,
+	`date`
+)
+
+*/

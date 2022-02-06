@@ -3,9 +3,11 @@
 namespace Wl\Api\Transport;
 
 use Wl\Api\Data\DataContainer\DataContainer;
+use Wl\Api\Data\DataContainer\DataContainerCached;
 use Wl\Api\Data\DataContainer\IDataContainer;
 use Wl\Api\Search\Query\ISearchQuery;
 use Wl\Api\Search\Result\ISearchResult;
+use Wl\Api\Search\Result\SearchResult;
 use Wl\Api\Transport\ITransport;
 use Wl\Datasource\KeyValue\IStorage;
 use Wl\Datasource\KeyValue\KeyDecoratedStorage;
@@ -33,13 +35,18 @@ class CachedTransport implements ITransport
         $data = $this->storage->get($qHash);
         if ($data && ($data instanceof ISearchResult)) { // cache get
             return $data;
-        } 
-        
+        }
+
+        /** @var SearchResult */
         $result = $this->backend->search($q);
         $expire = 60 * 60 * 24;
+        $cachedContainers = [];
         foreach ($result as $con) {
-            $con->setCacheExpirationTime(\time() + $expire);
+            $cachedCon = DataContainerCached::createFromContainer($con);
+            $cachedCon->setCacheExpirationTime(\time() + $expire);
+            $cachedContainers[] = $cachedCon;
         }
+        $result->setContainers($cachedContainers);
         $this->storage->set($qHash, $result, $expire);
         return $result;
     }
@@ -54,12 +61,11 @@ class CachedTransport implements ITransport
         }
 
         $expire = 60 * 60 * 24;
-        $container = $this->backend->getMediaDetails($mediaId, $mediaType);
-        if ($container instanceof DataContainer) {
-            $container->setCacheExpirationTime(\time() + $expire);  
-        }
-        $this->storage->set($qHash, $container, $expire);
+        $cachedContainer = DataContainerCached::createFromContainer($this->backend->getMediaDetails($mediaId, $mediaType));
+        $cachedContainer->setCacheExpirationTime(\time() + $expire);
 
-        return $container;
+        $this->storage->set($qHash, $cachedContainer, $expire);
+
+        return $cachedContainer;
     }
 }

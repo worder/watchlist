@@ -12,7 +12,8 @@ module.exports = merge(common, {
     devServer: {
         host: 'localhost',
         port: 8081,
-        hot: true,
+        hot: 'only',
+        liveReload: false,
         static: false,
         server: {
             type: 'https',

@@ -18,7 +18,7 @@ use Wl\Media\MediaType;
 
 class ShikimoriTransport implements ITransport
 {
-    const DATASOURCE_TYPE = 'API_SHIKIMORI';
+    const API_ID = 'API_SHIKIMORI';
 
     private $transport;
     private $config;
@@ -39,15 +39,21 @@ class ShikimoriTransport implements ITransport
         MediaType::ANIME_SPECIAL => self::MEDIA_TYPE_SPECIAL,
     ];
 
-    public function getType()
-    {
-        return self::DATASOURCE_TYPE;
-    }
-
+    
     public function __construct(IHttpClient $httpc, ShikimoriTransportConfig $config)
     {
         $this->transport = $httpc;
         $this->config = $config;
+    }
+    
+    public function getApiId()
+    {
+        return self::API_ID;
+    }
+
+    public function getSupportedMediaTypes(): array
+    {
+        return array_keys(self::MEDIA_TYPES_DICT);
     }
 
     public function search(ISearchQuery $q): ISearchResult
@@ -79,7 +85,7 @@ class ShikimoriTransport implements ITransport
 
         $items = [];
         foreach ($data as $itemData) {
-            $items[] = new DataContainer($itemData, self::DATASOURCE_TYPE);
+            $items[] = new DataContainer($itemData, self::API_ID);
         }
 
         $result = new SearchResult($items);
@@ -101,7 +107,7 @@ class ShikimoriTransport implements ITransport
         $result = $this->transport->dispatch($request);
         if ($result->getHttpCode() === 200) {
             $data = json_decode($result->getBody(), true);
-            return new DataContainer($data, self::DATASOURCE_TYPE);
+            return new DataContainer($data, self::API_ID);
         } elseif ($result->getHttpCode() === 400) {
             throw new NotFoundException();
         } else {

@@ -8,7 +8,9 @@ use Wl\Api\Search\Result\ISearchResult;
 
 interface ITransport
 {
-    public function getType();
+    public function getApiId();
+    public function getSupportedMediaTypes(): array;
+
     public function search(ISearchQuery $q): ISearchResult;
     public function getMediaDetails($mediaId, $mediaType = null): IDataContainer;
 }

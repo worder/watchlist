@@ -2,6 +2,7 @@
 
 namespace Wl\Api\Client\Tmdb;
 
+use Wl\Api\Data\DataAdapter\Exception\ApiMismatchException;
 use Wl\Api\Data\DataAdapter\Exception\InvalidDatasourceException;
 use Wl\Api\Data\DataAdapter\IDataAdapter;
 use Wl\Api\Data\DataContainer\IDataContainer;
@@ -17,8 +18,8 @@ class TmdbAdapter implements IDataAdapter
 {
     public function getMedia(IDataContainer $container): IMedia
     {
-        if ($container->getDatasourceType() !== TmdbTransport::DATASOURCE_TYPE) {
-            throw new InvalidDatasourceException("\"{$container->getDatasourceType()}\" container is not supported by TmdbAdapter");
+        if ($container->getApiId() !== TmdbTransport::API_ID) {
+            throw new ApiMismatchException("\"{$container->getApiId()}\" container is not supported by TmdbAdapter");
         }
 
         $media = new Media($container);

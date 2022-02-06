@@ -18,7 +18,7 @@ use Wl\Media\MediaType;
 
 class TmdbTransport implements ITransport
 {
-    const DATASOURCE_TYPE = 'API_TMDB';
+    const API_ID = 'API_TMDB';
 
     const CONTAINER_META_PARAM_REQUEST_LOCALE  = 'request_locale';
     const CONTAINER_META_PARAM_MEDIA_TYPE = 'media_type';
@@ -34,9 +34,17 @@ class TmdbTransport implements ITransport
         $this->httpc = $httpc;
     }
 
-    public function getType()
+    public function getApiId()
     {
-        return self::DATASOURCE_TYPE;
+        return self::API_ID;
+    }
+
+    public function getSupportedMediaTypes(): array
+    {
+        return [
+            MediaType::MOVIE,
+            MediaType::TV_SERIES,
+        ];
     }
 
     public function search(ISearchQuery $q): ISearchResult
@@ -146,7 +154,7 @@ class TmdbTransport implements ITransport
 
     private function createContainer($data, $mediaType)
     {
-        $container = new DataContainer($data, self::DATASOURCE_TYPE);
+        $container = new DataContainer($data, self::API_ID);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_MEDIA_TYPE, $mediaType);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_REQUEST_LOCALE, 'ru');
         return $container;

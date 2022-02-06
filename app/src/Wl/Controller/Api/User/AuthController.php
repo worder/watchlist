@@ -37,22 +37,6 @@ class AuthController
      */
     private $authValidator;
 
-    public function get()
-    {
-        $account = $this->authService->account();
-
-        $result = null;
-        if ($account) {
-            $result = [
-                'id' => $account->getId(),
-                'email' => $account->getEmail(),
-                'username' => $account->getUsername(),
-            ];
-        }
-
-        return new JsonResult($result);
-    }
-
     public function post()
     {
         $post = $this->http->request()->post();

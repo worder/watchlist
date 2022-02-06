@@ -7,14 +7,13 @@ use Wl\Api\Data\DataContainer\IDataContainer;
 class DataContainer implements IDataContainer
 {
     private $data;
-    private $datasourceType;
-    private $cacheExpirationTime;
+    private $apiId;
     private $metadata = [];
 
-    public function __construct($data, $datasourceType)
+    public function __construct($data, $apiId)
     {
         $this->data = $data;
-        $this->datasourceType = $datasourceType;
+        $this->apiId = $apiId;
     }
 
     public function getData()
@@ -22,19 +21,9 @@ class DataContainer implements IDataContainer
         return $this->data;
     }
 
-    public function getDatasourceType()
+    public function getApiId()
     {
-        return $this->datasourceType;
-    }
-
-    public function getCacheExpirationTime()
-    {
-        return $this->cacheExpirationTime;
-    }
-
-    public function setCacheExpirationTime($time)
-    {
-        return $this->cacheExpirationTime = $time;
+        return $this->apiId;
     }
 
     public function getMetadata()

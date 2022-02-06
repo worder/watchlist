@@ -2,9 +2,11 @@
 
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
+use Wl\Controller\Api\Search\OptionsController;
 use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
+use Wl\Controller\Api\User\InfoController;
 use Wl\Controller\IndexController;
 use Wl\Mvc\MvcDispatcher;
 use Wl\Mvc\Result\ErrorResult;
@@ -28,9 +30,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/', IndexController::class);
     $r->addGroup('/api', function (RouteCollector $r) {
         $r->addGroup('/user', function (RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'], '/auth', AuthController::class);
+            $r->addRoute(['POST'], '/auth', AuthController::class);
+            $r->addRoute(['GET'], '/info', InfoController::class);
         });
-        $r->addRoute('GET', '/search/{term}', SearchController::class);
+        $r->addGroup('/search', function (RouteCollector $r) {
+            $r->addRoute(['GET'], '/term/{term}', SearchController::class);
+            $r->addRoute(['GET'], '/options', OptionsController::class);
+        });
         $r->addRoute('GET', '/test[/opt]', TestController::class);
     });
 });
