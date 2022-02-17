@@ -7,6 +7,7 @@ use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
 use Wl\Controller\Api\User\InfoController;
+use Wl\Controller\Api\User\SignInController;
 use Wl\Controller\IndexController;
 use Wl\Mvc\MvcDispatcher;
 use Wl\Mvc\Result\ErrorResult;
@@ -30,7 +31,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/', IndexController::class);
     $r->addGroup('/api', function (RouteCollector $r) {
         $r->addGroup('/user', function (RouteCollector $r) {
-            $r->addRoute(['POST'], '/auth', AuthController::class);
+            $r->addRoute(['POST'], '/signin', SignInController::class);
             $r->addRoute(['GET'], '/info', InfoController::class);
         });
         $r->addGroup('/search', function (RouteCollector $r) {
@@ -58,11 +59,27 @@ $rtr = new ResultToResponse();
 $result = null;
 
 switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        $result = new ErrorResult(null, 404);
-        break;
+    // case FastRoute\Dispatcher::NOT_FOUND:
+    //     $result = new ErrorResult(null, 404);
+    //     break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $result = new ErrorResult(null, 405);
+        break;
+    case FastRoute\Dispatcher::NOT_FOUND:
+        if (stripos($uri, '/api') === 0) {
+            $result = new ErrorResult(null, 404);
+            break;
+        }
+        // 404 outside of api path will be handled at client side
+        $handler = IndexController::class;
+        $vars = [];
+        try {
+            $result = $mvcDispatcher->dispatchController($handler, $httpMethod, $vars);
+        } catch (\Exception $e) {
+            // internal error
+            // $result = new ErrorResult(null, 502); // prod
+            $result = new ErrorResult($e->getMessage(), 200); // debug
+        }
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];

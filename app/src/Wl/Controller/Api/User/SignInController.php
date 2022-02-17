@@ -11,7 +11,7 @@ use Wl\User\AuthValidator\AuthValidator;
 use Wl\User\AuthValidator\AuthValidatorException;
 use Wl\User\ICredentialsFactory;
 
-class AuthController
+class SignInController
 {
     /**
      * @Inject
