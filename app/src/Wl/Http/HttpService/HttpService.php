@@ -18,14 +18,20 @@ class HttpService implements IHttpService
             parse_str($uriParts['query'], $getData);
         }
 
+        $method = $GLOBALS['_SERVER']['REQUEST_METHOD'];
+        $path = $uri;
+
         $get = new ParamsStore($getData);
         $post = new ParamsStore($_POST);
         $cookies = new ParamsStore($_COOKIE);
         $files = new ParamsStore($_FILES);
-        $headers = new ParamsStore([]);
+        $headers = new ParamsStore(getallheaders());
+
+        if ($method === 'POST' && $headers->get('Content-Type') === 'application/json') {
+            $json = file_get_contents('php://input');
+            $post = new ParamsStore(json_decode($json, true));
+        }
         
-        $method = $GLOBALS['_SERVER']['REQUEST_METHOD'];
-        $path = $uri;
 
         return new Request($method, $path, null, '', $get, $post, $cookies, $files, $headers);
     }

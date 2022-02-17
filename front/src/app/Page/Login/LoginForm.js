@@ -40,7 +40,7 @@ const LoginForm = () => {
                 </InputContainer>
                 <InputContainer>
                     <LabelContainer>Пароль</LabelContainer>
-                    <TextInput type="text" name="password" />
+                    <TextInput type="password" name="password" />
                 </InputContainer>
                 {!isLoading && <Button>Вход</Button>}
             </Form>

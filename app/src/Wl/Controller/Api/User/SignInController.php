@@ -4,6 +4,7 @@ namespace Wl\Controller\Api\User;
 
 use Wl\Http\HttpService\IHttpService;
 use Wl\Mvc\Exception\ControllerException;
+use Wl\Mvc\Result\ApiResult;
 use Wl\Mvc\Result\JsonResult;
 use Wl\User\AuthService\Exception\AuthException;
 use Wl\User\AuthService\IAuthService;
@@ -48,16 +49,15 @@ class SignInController
         try {
             $this->authValidator->validateCredentials($token);
             $account = $this->authService->authenticate($token);
-            if ($account) {
-                $this->authService->login($account);
-            }
+            $this->authService->login($account);
+            return ApiResult::success('OK');
         } catch (AuthValidatorException $e) {
-            throw new ControllerException('ERROR_INVALID_CREDENTIALS');
+            return ApiResult::error('INVALID_CREDENTIALS');
         } catch (AuthException $e) {
             if ($e->getMessage() === AuthException::INVALID_LOGIN) {
-                throw new ControllerException('ERROR_USER_NOT_FOUND');
+                return ApiResult::error('USER_NOT_FOUND');
             } else {
-                throw new ControllerException('ERROR_INVALID_CREDENTIALS');
+                return ApiResult::error('INVALID_CREDENTIALS');
             }
         }
     }
