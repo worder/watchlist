@@ -2,6 +2,7 @@
 
 namespace Wl\Controller\Api\User;
 
+use Wl\Mvc\Result\ApiResult;
 use Wl\Mvc\Result\JsonResult;
 use Wl\User\AuthService\IAuthService;
 
@@ -24,8 +25,10 @@ class InfoController
                 'email' => $account->getEmail(),
                 'username' => $account->getUsername(),
             ];
+
+            return ApiResult::success($result);
         }
 
-        return new JsonResult($result);
+        return ApiResult::success(null);
     }
 }

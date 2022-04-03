@@ -3,10 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 
-// import HeadContainer from '../Header/HeadContainer';
-// import LogoContainer from '../Header/Logo/LogoContainer';
-// import SearchTop from '../Header/Search/SearchTopContainer';
-
 import HeadContainer from './Header/HeadContainer';
 import LogoContainer from './Header/Logo/LogoContainer';
 import UserContainer from './Header/User/UserContainer';

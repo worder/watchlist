@@ -10,23 +10,20 @@ class ApiResult extends JsonResult
         // restricted
     }
 
-    public static function success($data, $code = 200)
+    public static function success($data = null, $code = 200)
     {
         $json = [
             'data' => $data,
-            'isError' => false,
-            'error' => '',
         ];
 
         return new self($json, $code);
     }
 
-    public static function error($data, $code = 400)
+    public static function error($error, $data = null, $code = 400)
     {
         $json = [
-            'data' => null,
-            'isError' => true,
-            'error' => $data,
+            'error' => $error,
+            'data' => $data,
         ];
 
         return new self($json, $code);

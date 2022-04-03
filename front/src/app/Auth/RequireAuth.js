@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import AuthProvider, { useAuth } from './AuthContext';
+import { useAuth } from './AuthContext';
 
 const RequireAuth = ({ children }) => {
     const { user, isLoading } = useAuth();

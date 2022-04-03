@@ -8,6 +8,7 @@ use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
 use Wl\Controller\Api\User\InfoController;
 use Wl\Controller\Api\User\SignInController;
+use Wl\Controller\Api\User\SignoutController;
 use Wl\Controller\IndexController;
 use Wl\Mvc\MvcDispatcher;
 use Wl\Mvc\Result\ErrorResult;
@@ -32,6 +33,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addGroup('/api', function (RouteCollector $r) {
         $r->addGroup('/user', function (RouteCollector $r) {
             $r->addRoute(['POST'], '/signin', SignInController::class);
+            $r->addRoute(['GET'], '/signout', SignoutController::class);
             $r->addRoute(['GET'], '/info', InfoController::class);
         });
         $r->addGroup('/search', function (RouteCollector $r) {
@@ -89,7 +91,7 @@ switch ($routeInfo[0]) {
         } catch (\Exception $e) {
             // internal error
             // $result = new ErrorResult(null, 502); // prod
-            $result = new ErrorResult($e->getMessage(), 200); // debug
+            $result = new ErrorResult($e->getMessage(), 502); // debug
         }
 }
 

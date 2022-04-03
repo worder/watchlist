@@ -1,17 +1,20 @@
-// import { createStore } from 'redux';
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import {
-  reducerPath as userApiReducerPath,
-  reducer as userApiReducer,
-  middleware as userApiMw,
-} from "../api/user/userApi";
+import userApi from '../api/user/userApi';
+import searchApi from '../api/search/searchApi';
 
 const store = configureStore({
-  reducer: {
-    [userApiReducerPath]: userApiReducer,
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(userApiMw),
+    reducer: {
+        [userApi.reducerPath]: userApi.reducer,
+        [searchApi.reducerPath]: searchApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat([
+            userApi.middleware,
+            searchApi.middleware,
+        ]),
+    devTools: true,
 });
 
 export default store;
+export const { dispatch } = store;
