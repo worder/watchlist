@@ -4,7 +4,10 @@ namespace Wl\Api\Factory;
 
 use Wl\Api\Client\Shikimori\ShikimoriTransport;
 use Wl\Api\Client\Tmdb\TmdbTransport;
+use Wl\Api\Factory\Exception\InvalidApiIdException;
+use Wl\Api\Transport\CachedTransport;
 use Wl\Api\Transport\ITransport;
+use Wl\Datasource\KeyValue\IStorage;
 
 class ApiTransportFactory
 {
@@ -20,6 +23,12 @@ class ApiTransportFactory
      */
     private $shikimori;
 
+    /**
+     * @Inject
+     * @var IStorage
+     */
+    private $cache;
+
     public function getTransport($apiId): ITransport
     {
         switch ($apiId) {
@@ -28,5 +37,12 @@ class ApiTransportFactory
             case ShikimoriTransport::API_ID:
                 return $this->shikimori;
         }
+
+        throw new InvalidApiIdException($apiId);
+    }
+
+    public function enableCache(ITransport $transport): ITransport
+    {
+        return new CachedTransport($this->cache, $transport);
     }
 }

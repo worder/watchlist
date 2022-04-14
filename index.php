@@ -37,7 +37,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute(['GET'], '/info', InfoController::class);
         });
         $r->addGroup('/search', function (RouteCollector $r) {
-            $r->addRoute(['GET'], '/term/{term}', SearchController::class);
+            $r->addRoute(['GET'], '/', SearchController::class);
             $r->addRoute(['GET'], '/options', OptionsController::class);
         });
         $r->addRoute('GET', '/test[/opt]', TestController::class);

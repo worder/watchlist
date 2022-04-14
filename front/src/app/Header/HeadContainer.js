@@ -5,6 +5,9 @@ const HeadContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    background: #ededed;
+    padding: 10px;
 `;
 
 export default HeadContainer;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Outlet } from 'react-router-dom';
 
 import HeadContainer from './Header/HeadContainer';
@@ -9,6 +9,14 @@ import UserContainer from './Header/User/UserContainer';
 import SearchTop from './Header/Search/SearchTopContainer';
 
 import RequireAuth from './Auth/RequireAuth';
+import { GlobalStyles } from '@mantine/core';
+
+const GlobalStyle = createGlobalStyle`
+    body, html {
+        padding: 0px;
+        margin: 0px;
+    }
+`;
 
 const ContentContainer = styled.div`
     margin-left: auto;
@@ -20,12 +28,13 @@ const ContentContainer = styled.div`
 
 const Layout = () => (
     <RequireAuth>
+        <GlobalStyle />
+        <HeadContainer>
+            <LogoContainer />
+            <SearchTop />
+            <UserContainer />
+        </HeadContainer>
         <ContentContainer>
-            <HeadContainer>
-                <LogoContainer />
-                <SearchTop />
-                <UserContainer />
-            </HeadContainer>
             <Outlet />
         </ContentContainer>
     </RequireAuth>

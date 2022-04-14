@@ -7,6 +7,7 @@ use Wl\Api\Client\Shikimori\ShikimoriTransport;
 use Wl\Api\Client\Tmdb\TmdbAdapter;
 use Wl\Api\Client\Tmdb\TmdbTransport;
 use Wl\Api\Data\DataAdapter\IDataAdapter;
+use Wl\Api\Factory\Exception\InvalidApiIdException;
 
 class ApiAdapterFactory
 {
@@ -30,5 +31,7 @@ class ApiAdapterFactory
             case ShikimoriTransport::API_ID:
                 return $this->shikimori;
         }
+
+        throw new InvalidApiIdException($apiId);
     }
 }

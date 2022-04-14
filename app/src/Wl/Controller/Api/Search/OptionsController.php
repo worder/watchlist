@@ -27,7 +27,7 @@ class OptionsController
             $out[] = array_merge(
                 [
                     'api_id' => $t->getApiId(),
-                    'media_type' => $t->getSupportedMediaTypes()
+                    'media_types' => $t->getSupportedMediaTypes()
                 ],
                 $this->getApiDescriptionById($t->getApiId())
             );

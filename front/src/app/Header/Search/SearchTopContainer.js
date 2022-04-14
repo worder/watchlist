@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { TextInput, Select, LoadingOverlay } from '@mantine/core';
@@ -27,16 +27,31 @@ const SearchTop = () => {
 
     const isReady = !isLoading && !isFetching && !isError;
 
-    const [selectValue, setSelectValue] = useState(null);
-    const selectData = data
+    const [selectedApi, setSelectedApi] = useState(null);
+    const [selectedMediaType, setSelectedMediaType] = useState(null);
+
+    useEffect(() => {
+        if (data && selectedApi) {
+            console.log(data.find(val => val.api_id === selectedApi))
+            setSelectedMediaType(data.find(val => val.api_id === selectedApi).media_types[0]);
+        }
+    }, [selectedApi]);
+
+    const apisList = data
         ? data.map((api) => ({
               value: api.api_id,
               label: api.name_short,
           }))
         : [];
+
+    let mediaTypesList = [];
+    if (data && data.length > 0 && selectedApi) {
+        mediaTypesList = data.find(val => val.api_id === selectedApi).media_types;
+        console.log(data.find(val => val.api_id === selectedApi))
+    }
     
-    if (data && !selectValue) {
-        setSelectValue(data[0].api_id);
+    if (data && !selectedApi) {
+        setSelectedApi(data[0].api_id);
     }
 
     const onFocus = () => {
@@ -59,8 +74,9 @@ const SearchTop = () => {
                 />
             </SearchInputContainer>
             <SearchApiContainer>
-                <Select value={selectValue} onChange={setSelectValue} data={selectData} />
+                <Select value={selectedApi} onChange={setSelectedApi} data={apisList} />
             </SearchApiContainer>
+            <Select value={selectedMediaType} onChange={setSelectedMediaType} data={mediaTypesList} />
         </SearchTopContainer>
     );
 };

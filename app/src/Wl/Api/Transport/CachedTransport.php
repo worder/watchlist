@@ -20,12 +20,17 @@ class CachedTransport implements ITransport
     public function __construct(IStorage $storage, ITransport $backend)
     {
         $this->backend = $backend;
-        $this->storage = new KeyDecoratedStorage($storage, $backend->getType());
+        $this->storage = new KeyDecoratedStorage($storage, $backend->getApiId());
     }
 
-    public function getType()
+    public function getApiId()
     {
-        return $this->backend->getType();
+        return $this->backend->getApiId();
+    }
+
+    public function getSupportedMediaTypes(): array
+    {
+        return $this->backend->getSupportedMediaTypes();
     }
 
     public function search(ISearchQuery $q): ISearchResult
