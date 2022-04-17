@@ -72,13 +72,13 @@ return [
     IHttpService::class => get(HttpService::class),
 
     // API clients
-    ShikimoriTransportConfig::class => function (IConfig $conf) {
-        return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
-    },
+    // ShikimoriTransportConfig::class => function (IConfig $conf) {
+    //     return new ShikimoriTransportConfig($conf->get("API_SHIKIMORI_APP_NAME"));
+    // },
 
-    TmdbTransport::class => function (IHttpClient $httpClient, IConfig $conf) {
-        return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
-    },
+    // TmdbTransport::class => function (IHttpClient $httpClient, IConfig $conf) {
+    //     return new TmdbTransport($httpClient, $conf->get("API_TMDB_KEY"));
+    // },
 
     // auth and accounts
     IAccountService::class => get(AccountService::class),

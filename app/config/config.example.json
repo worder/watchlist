@@ -8,5 +8,12 @@
     "CACHE_MEMCACHED_PREFIX": "",
     "CACHE_MEMCACHED_HOST": "",
     "CACHE_MEMCACHED_PORT": "",
-    "AUTH_TOKEN_SALT": ""
+    "AUTH_TOKEN_SALT": "",
+    "API_PROXY_SETTINGS": {
+        "API_TMDB": {
+            "type": "SOCKS5",
+            "proxy": "example.com:8888"
+        },
+        "API_SHIKIMORI": false
+    }
 }

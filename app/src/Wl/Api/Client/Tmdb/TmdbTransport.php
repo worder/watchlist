@@ -11,9 +11,9 @@ use Wl\Api\Search\Query\ISearchQuery;
 use Wl\Api\Search\Result\ISearchResult;
 use Wl\Api\Search\Result\SearchResult;
 use Wl\Api\Transport\ITransport;
+use Wl\HttpClient\HttpRequestException;
 use Wl\HttpClient\IHttpClient;
 use Wl\HttpClient\Request\Request;
-use Wl\Media\MediaLocalization;
 use Wl\Media\MediaType;
 
 class TmdbTransport implements ITransport
@@ -27,11 +27,13 @@ class TmdbTransport implements ITransport
 
     private $apiKey;
     private $httpc;
+    private $config;
 
-    public function __construct(IHttpClient $httpc, $apiKey)
+    public function __construct(IHttpClient $httpc, TmdbTransportConfig $config)
     {
-        $this->apiKey = $apiKey;
+        $this->apiKey = $config->getApiKey();
         $this->httpc = $httpc;
+        $this->httpc->setProxy($config->getProxy());
     }
 
     public function getApiId()
@@ -137,16 +139,19 @@ class TmdbTransport implements ITransport
         $request->setParam('api_key', $this->apiKey);
         $request->addParams($data);
 
-        $result = $this->httpc->dispatch($request);
-        $code = $result->getHttpCode();
-
-        if ($code === 200) {
-            $json = $result->getBody();
-            return json_decode($json, true);
-        } elseif ($code === 400) {
-            throw new NotFoundException();
-        } else {
-            throw new RequestFailedException("Tmdb request failed: code " . $code);
+        try {
+            $result = $this->httpc->dispatch($request);
+            $code = $result->getHttpCode();
+            if ($code === 200) {
+                $json = $result->getBody();
+                return json_decode($json, true);
+            } elseif ($code === 400) {
+                throw new NotFoundException();
+            } else {
+                throw new RequestFailedException("Tmdb request failed: code " . $code);
+            }
+        } catch (HttpRequestException $e) {
+            throw new RequestFailedException("Tmdb request failed: " . $e->getMessage());
         }
 
         return false;

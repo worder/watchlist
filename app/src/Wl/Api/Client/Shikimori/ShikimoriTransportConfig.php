@@ -2,27 +2,19 @@
 
 namespace Wl\Api\Client\Shikimori;
 
-class ShikimoriTransportConfig
-{
-    private $appName;
+use Wl\Api\Transport\ATransportConfig;
+use Wl\Api\Transport\ITransportConfig;
 
-    public function __construct($oauthAppName/*, $oauthClientId, $oauthClientSecret*/)
+class ShikimoriTransportConfig extends ATransportConfig implements ITransportConfig
+{
+    protected function getApiConfig()
     {
-        $this->appName = $oauthAppName;
+        $conf = $this->config->get('API_SETTINGS');
+        return $conf['API_SHIKIMORI'] ?? [];
     }
 
     public function getAppName()
     {
-        return $this->appName;
+        return $this->getApiConfigParam('APP_NAME');
     }
-
-    // public function getClientId()
-    // {
-
-    // }
-
-    // public function getClientSecret()
-    // {
-
-    // }
 }
