@@ -2,8 +2,8 @@
 
 namespace Wl\Api\Client\Tmdb;
 
+use Wl\Api\Data\DataAdapter\DataResolver;
 use Wl\Api\Data\DataAdapter\Exception\ApiMismatchException;
-use Wl\Api\Data\DataAdapter\Exception\InvalidDatasourceException;
 use Wl\Api\Data\DataAdapter\IDataAdapter;
 use Wl\Api\Data\DataContainer\IDataContainer;
 use Wl\Media\Details\MovieDetails;
@@ -22,40 +22,48 @@ class TmdbAdapter implements IDataAdapter
             throw new ApiMismatchException("\"{$container->getApiId()}\" container is not supported by TmdbAdapter");
         }
 
+        $data = new DataResolver($container->getData());
+        
         $media = new Media($container);
-
-        $data = $container->getData();
+        
         $mediaType = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE);
         $requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE);
 
+        if (!$mediaType) {
+            throw new \Exception("Media type is missing");
+        }
+
         // common features
-        $media->setMediaId($data['id']);
+        $media->setMediaId($data->int('id'));
         $media->setMediaType($mediaType);
 
+        $media->setOriginalLocale($data->str('original_language'));
+        $media->addLocalization(new MediaLocalization($data->str('original_language'), $data->str('original_title'), ''));
+        $media->addLocalization(new MediaLocalization($requestLocale, $data->str('title'), $data->str('overview')));
 
-        $media->setOriginalLocale($data['original_language']);
-        $media->addLocalization(new MediaLocalization($data['original_language'], $data['original_name'], ''));
-        $media->addLocalization(new MediaLocalization($requestLocale, $data['name'], $data['overview']));
-
-
+        // var_dump($data);
         // type-specific features
         switch ($mediaType) {
             case MediaType::MOVIE:
-                $media->setReleaseDate($data['release_date']);
-                $movieDetails = new MovieDetails($data['runtime']);
-                $media->setDetails($movieDetails);
+                $media->setReleaseDate($data->str('release_date'));
+                if ($data->has('runtime')) {
+                    $movieDetails = new MovieDetails($data->str('runtime'));
+                    $media->setDetails($movieDetails);
+                }
                 break;
             case MediaType::TV_SERIES:
-                $media->setReleaseDate($data['first_air_date']);
+                $media->setReleaseDate($data->str('first_air_date'));
                 // details data only
-                if (isset($data['number_of_seasons'])) {
-                    $seriesDetails = new SeriesDetails($data['number_of_seasons']);
+                if ($data->has('number_of_seasons')) {
+                    $seriesDetails = new SeriesDetails($data->str('number_of_seasons'));
                     $media->setDetails($seriesDetails);
                     for ($n = 1; $n <= $seriesDetails->getSeasonsNumber(); $n++) {
-                        if (isset($data['seasons'][$n])) {
-                            $sData = $data['seasons'][$n];
-                            $seasonDetails = new SeasonDetails($n, $sData['episode_count']);
-                            $seasonDetails->addLocalization(new MediaLocalization($requestLocale, $sData['name'], $sData['overview']));
+                        if ($data->arr('seasons')->has($n)) {
+                            $sData = $data->arr('seasons')->arr($n);
+                            $seasonDetails = new SeasonDetails($n, $sData->str('episode_count'));
+                            $seasonDetails->addLocalization(
+                                new MediaLocalization($requestLocale, $sData->str('name'), $sData->str('overview'))
+                            );
                             $seriesDetails->addSeason($seasonDetails);
                         }
                     }

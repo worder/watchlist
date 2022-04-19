@@ -102,12 +102,12 @@ class TmdbTransport implements ITransport
         ];
 
         $response = $this->call('search/movie', $params);
-        
+
         $result = new SearchResult();
         $result->setPage($q->getPage());
         $result->setPages($response['total_pages']);
         $result->setTotal($response['total_results']);
-        foreach ($result['results'] as $data) {
+        foreach ($response['results'] as $data) {
             $result->addContainer($this->createContainer($data, MediaType::MOVIE));
         }
         return $result;
@@ -122,7 +122,7 @@ class TmdbTransport implements ITransport
         ];
 
         $response = $this->call('search/tv', $params);
-        
+
         $result = new SearchResult();
         $result->setPage($q->getPage());
         $result->setPages($response['total_pages']);

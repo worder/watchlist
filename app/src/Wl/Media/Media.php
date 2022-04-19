@@ -35,7 +35,7 @@ class Media implements IMedia
 
     public function setMediaType($type)
     {
-        return $this->mediaType;
+        $this->mediaType = $type;
     }
 
     public function getReleaseDate()

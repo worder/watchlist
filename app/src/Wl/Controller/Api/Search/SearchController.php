@@ -2,6 +2,7 @@
 
 namespace Wl\Controller\Api\Search;
 
+use Wl\Api\Factory\ApiAdapterFactory;
 use Wl\Api\Factory\ApiTransportFactory;
 use Wl\Api\Factory\Exception\InvalidApiIdException;
 use Wl\Api\Search\Query\SearchQuery;
@@ -24,7 +25,14 @@ class SearchController
      */
     private $apiTransportFactory;
 
-    // view-source:https://watchlist-dev.scootaloo.ru/api/search/?api=API_SHIKIMORI&type=anime_series&term=monogatari
+    /**
+     * @Inject
+     * @var ApiAdapterFactory
+     */
+    private $apiAdapterFactory;
+
+    // /api/search/?api=API_SHIKIMORI&type=anime_series&term=monogatari
+    // /api/search/?api=API_TMDB&type=movie&term=avatar
     
     public function get($vars)
     {
@@ -52,7 +60,14 @@ class SearchController
             try {
                 $result = $transport->search($sq);
 
-                var_dump($result);
+                $adapter = $this->apiAdapterFactory->getAdapter($clientId);
+                
+                $mediaList = [];
+                foreach($result as $container) {
+                    $mediaList[] = $adapter->getMedia($container);
+                }
+
+                var_dump($mediaList);
 
                 // return ApiResult::success($result);
             } catch (\Exception $e) {
