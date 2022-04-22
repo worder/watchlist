@@ -2,6 +2,8 @@
 
 namespace Wl\Api\Client\Tmdb;
 
+use Wl\Api\Client\Tmdb\Entity\TmdbConfigurationResponse;
+use Wl\Api\Data\DataAdapter\DataResolver;
 use Wl\Api\Data\DataContainer\DataContainer;
 use Wl\Api\Data\DataContainer\IDataContainer;
 use Wl\Api\Search\Exception\MediaTypeNotSupportedException;
@@ -11,10 +13,13 @@ use Wl\Api\Search\Query\ISearchQuery;
 use Wl\Api\Search\Result\ISearchResult;
 use Wl\Api\Search\Result\SearchResult;
 use Wl\Api\Transport\ITransport;
+use Wl\Datasource\KeyValue\IStorage;
+use Wl\Datasource\KeyValue\KeyDecoratedStorage;
 use Wl\HttpClient\HttpRequestException;
 use Wl\HttpClient\IHttpClient;
 use Wl\HttpClient\Request\Request;
 use Wl\Media\MediaType;
+use Wl\Utils\Date\Date;
 
 class TmdbTransport implements ITransport
 {
@@ -22,18 +27,22 @@ class TmdbTransport implements ITransport
 
     const CONTAINER_META_PARAM_REQUEST_LOCALE  = 'request_locale';
     const CONTAINER_META_PARAM_MEDIA_TYPE = 'media_type';
+    const CONTAINER_META_PARAM_CONFIG = 'config';
+
+    const CACHE_KEY_CONFIGURATION = 'conf';
 
     const URL_BASE = 'https://api.themoviedb.org/3';
 
     private $apiKey;
     private $httpc;
-    private $config;
+    private $localCache;
 
-    public function __construct(IHttpClient $httpc, TmdbTransportConfig $config)
+    public function __construct(IHttpClient $httpc, TmdbTransportConfig $config, IStorage $cache)
     {
         $this->apiKey = $config->getApiKey();
         $this->httpc = $httpc;
         $this->httpc->setProxy($config->getProxy());
+        $this->localCache = new KeyDecoratedStorage($cache, 'local_' . $this->getApiId());
     }
 
     public function getApiId()
@@ -73,6 +82,24 @@ class TmdbTransport implements ITransport
         }
 
         throw new MediaTypeNotSupportedException('Searching media type "' . ($mediaType ?: 'null') . '" is not supported');
+    }
+
+    public function getConfiguration()
+    {
+        $data = $this->localCache->get(self::CACHE_KEY_CONFIGURATION);
+        if (empty($data)) {
+            $data = $this->call('configuration');
+            $this->localCache->set(self::CACHE_KEY_CONFIGURATION, $data, Date::now()->plusDays(7)->timestamp());
+        }
+
+        $conf = new DataResolver($data);
+        $images = $conf->arr('images');
+        $confObj = new TmdbConfigurationResponse();
+        $confObj->baseUrl = $images->str('base_url');
+        $confObj->secureBaseUrl = $images->str('base_url');
+        $confObj->posterSizes = $images->getArray('poster_sizes');
+
+        return $confObj;
     }
 
     private function getMovieDetails($mediaId): IDataContainer
@@ -162,6 +189,7 @@ class TmdbTransport implements ITransport
         $container = new DataContainer($data, self::API_ID);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_MEDIA_TYPE, $mediaType);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_REQUEST_LOCALE, 'ru');
+        $container->setMetadataParam(self::CONTAINER_META_PARAM_CONFIG, $this->getConfiguration());
         return $container;
     }
 }

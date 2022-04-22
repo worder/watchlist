@@ -20,7 +20,7 @@ class CachedTransport implements ITransport
     public function __construct(IStorage $storage, ITransport $backend)
     {
         $this->backend = $backend;
-        $this->storage = new KeyDecoratedStorage($storage, $backend->getApiId());
+        $this->storage = new KeyDecoratedStorage($storage, 'media_cache_' . $backend->getApiId());
     }
 
     public function getApiId()

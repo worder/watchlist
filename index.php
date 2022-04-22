@@ -2,6 +2,7 @@
 
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
+use Wl\Controller\Api\Asset\ProxyController;
 use Wl\Controller\Api\Search\OptionsController;
 use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
@@ -40,6 +41,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute(['GET'], '/', SearchController::class);
             $r->addRoute(['GET'], '/options', OptionsController::class);
         });
+        $r->addGroup('/asset', function (RouteCollector $r) {
+            $r->addRoute(['GET'], '/proxy/{data}', ProxyController::class);
+        });
         $r->addRoute('GET', '/test[/opt]', TestController::class);
     });
 });
@@ -61,9 +65,9 @@ $rtr = new ResultToResponse();
 $result = null;
 
 switch ($routeInfo[0]) {
-    // case FastRoute\Dispatcher::NOT_FOUND:
-    //     $result = new ErrorResult(null, 404);
-    //     break;
+        // case FastRoute\Dispatcher::NOT_FOUND:
+        //     $result = new ErrorResult(null, 404);
+        //     break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $result = new ErrorResult(null, 405);
         break;

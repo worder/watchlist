@@ -16,7 +16,7 @@ abstract class ATransportConfig implements ITransportConfig
 
     abstract protected function getApiConfig();
     
-    protected function getApiConfigParam($key, $default = null) 
+    protected function getApiConfigParam($key, $default = null)
     {
         $config = $this->getApiConfig();
         if (isset($config[$key])) {
@@ -34,5 +34,11 @@ abstract class ATransportConfig implements ITransportConfig
         }
         
         return null;
+    }
+
+    public function getAssetProxyAllowedHosts(): array
+    {
+        $proxy = $this->getApiConfigParam('PROXY');
+        return $proxy['asset_proxy_allowed_hosts'];
     }
 }

@@ -94,36 +94,6 @@ class Media implements IMedia
         $this->mediaId = $id;
     }
 
-    // public function getSeasonsCount()
-    // {
-    //     return $this->seasonsCount;
-    // }
-
-    // public function setSeasonsCount($count)
-    // {
-    //     $this->seasonsCount = $count;
-    // }
-
-    // public function getSeasonNumber()
-    // {
-    //     return $this->seasonNumber;
-    // }
-
-    // public function setSeasonNumber($number)
-    // {
-    //     $this->seasonNumber = $number;
-    // }
-
-    // public function getEpisodesCount()
-    // {
-    //     return $this->episodesCount;
-    // }
-
-    // public function setEpisodesCount($count)
-    // {
-    //     $this->episodesCount = $count;
-    // }
-
     public function getDetails(): ?IDetails
     {
         return $this->details;

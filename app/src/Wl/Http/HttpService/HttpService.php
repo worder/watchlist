@@ -35,4 +35,15 @@ class HttpService implements IHttpService
 
         return new Request($method, $path, null, '', $get, $post, $cookies, $files, $headers);
     }
+
+    public function redirect($url): void 
+    {
+        header("Location: " . $url);
+        exit();
+    }
+
+    public function header($name, $value): void
+    {
+        header("{$name}: {$value}");
+    }
 }

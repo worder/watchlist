@@ -61,4 +61,12 @@ class DataResolver
     {
         return is_array($this->data) && isset($this->data[$key]);
     }
+
+    public function getArray($key, $required = true)
+    {
+        if ($required) {
+            $this->assertRequired($key);
+        }
+        return $this->data[$key];
+    }
 }
