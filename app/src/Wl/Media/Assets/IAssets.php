@@ -4,7 +4,7 @@ namespace Wl\Media\Assets;
 
 use Wl\Media\Assets\Poster\IPoster;
 
-interface IMediaAssets
+interface IAssets
 {
-    public function getPoster($size): IPoster;
+    public function getPoster($size): ?IPoster;
 }

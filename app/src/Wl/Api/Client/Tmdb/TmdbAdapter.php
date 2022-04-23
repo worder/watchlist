@@ -6,6 +6,10 @@ use Wl\Api\Data\DataAdapter\DataResolver;
 use Wl\Api\Data\DataAdapter\Exception\ApiMismatchException;
 use Wl\Api\Data\DataAdapter\IDataAdapter;
 use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\Assets\Assets;
+use Wl\Media\Assets\Poster\IPoster;
+use Wl\Media\Assets\Poster\Poster;
+use Wl\Media\Assets\Provider\HttpProxiedAssetProvider;
 use Wl\Media\Details\MovieDetails;
 use Wl\Media\Details\SeasonDetails;
 use Wl\Media\Details\SeriesDetails;
@@ -13,6 +17,8 @@ use Wl\Media\IMedia;
 use Wl\Media\Media;
 use Wl\Media\MediaLocalization;
 use Wl\Media\MediaType;
+use Wl\Mvc\Result\ApiResult;
+use Wl\Utils\Path;
 
 class TmdbAdapter implements IDataAdapter
 {
@@ -23,15 +29,17 @@ class TmdbAdapter implements IDataAdapter
         }
 
         $data = new DataResolver($container->getData());
-        
+
         $media = new Media($container);
-        
+
         $mediaType = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE);
         $requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE);
 
         if (!$mediaType) {
             throw new \Exception("Media type is missing");
         }
+
+        // var_dump($data);
 
         // common features
         $media->setMediaId($data->int('id'));
@@ -41,7 +49,29 @@ class TmdbAdapter implements IDataAdapter
         $media->addLocalization(new MediaLocalization($data->str('original_language'), $data->str('original_title'), ''));
         $media->addLocalization(new MediaLocalization($requestLocale, $data->str('title'), $data->str('overview')));
 
-        // var_dump($data);
+        // assets
+        $conf = new DataResolver($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_CONFIG));
+        $assets = new Assets();
+        if ($data->has('poster_path')) {
+            $assetsBaseUrl = $conf->str('secureBaseUrl');
+            $posterSizes = $conf->getArray('posterSizes');
+            $sizeMap = [
+                IPoster::SIZE_SMALL => 'w92',
+                IPoster::SIZE_MEDIUM => 'w342',
+                IPoster::SIZE_LARGE => 'w780',
+                IPoster::SIZE_ORIGINAL => 'original'
+            ];
+            foreach ($sizeMap as $size => $apiSizeConst) {
+                if (!in_array($apiSizeConst, $posterSizes)) {
+                    return ApiResult::error('Invalid poster size: ' . $apiSizeConst);
+                }
+                $posterUrl = Path::join($assetsBaseUrl, $apiSizeConst, $data->str('poster_path'));
+                $posterProvider = new HttpProxiedAssetProvider($posterUrl, TmdbTransport::API_ID);
+                $assets->addPoster(new Poster($posterProvider, $size), $size);
+            }
+        }
+        $media->setAssets($assets);
+
         // type-specific features
         switch ($mediaType) {
             case MediaType::MOVIE:

@@ -15,7 +15,10 @@
             "API_KEY": "",
             "PROXY": {
                 "type": "socks5",
-                "proxy": "localhost:8888"
+                "proxy": "localhost:8888",
+                "asset_proxy_allowed_hosts": [
+                    "image.tmdb.org"
+                ]
             }
         }
     }

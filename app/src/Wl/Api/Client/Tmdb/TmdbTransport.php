@@ -189,7 +189,7 @@ class TmdbTransport implements ITransport
         $container = new DataContainer($data, self::API_ID);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_MEDIA_TYPE, $mediaType);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_REQUEST_LOCALE, 'ru');
-        $container->setMetadataParam(self::CONTAINER_META_PARAM_CONFIG, $this->getConfiguration());
+        $container->setMetadataParam(self::CONTAINER_META_PARAM_CONFIG, (array) $this->getConfiguration());
         return $container;
     }
 }

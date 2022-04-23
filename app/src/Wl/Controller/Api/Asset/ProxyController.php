@@ -82,5 +82,6 @@ class ProxyController
             }
         }
 
+        return ApiResult::error('bad request', 400);
     }
 }

@@ -3,6 +3,7 @@
 namespace Wl\Media;
 
 use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\Assets\IAssets;
 use Wl\Media\Details\IDetails;
 
 interface IMedia
@@ -19,5 +20,5 @@ interface IMedia
     public function getDataContainer(): IDataContainer;
 
     public function getDetails(): ?IDetails;
-    // public function getAssets();
+    public function getAssets(): ?IAssets;
 }

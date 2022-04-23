@@ -3,6 +3,7 @@
 namespace Wl\Media;
 
 use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\Assets\IAssets;
 use Wl\Media\Details\IDetails;
 
 class Media implements IMedia
@@ -20,7 +21,8 @@ class Media implements IMedia
     // private $episodesCount;
     // private $seasonNumber;
 
-    private $details;
+    private ?IDetails $details;
+    private ?IAssets $assets;
 
     public function __construct(IDataContainer $dataContainer)
     {
@@ -102,5 +104,15 @@ class Media implements IMedia
     public function setDetails(IDetails $details)
     {
         $this->details = $details;
+    }
+
+    public function getAssets(): ?IAssets
+    {
+        return $this->assets;
+    }
+
+    public function setAssets(IAssets $assets): void
+    {
+        $this->assets = $assets;
     }
 }
