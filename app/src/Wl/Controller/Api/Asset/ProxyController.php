@@ -50,7 +50,7 @@ class ProxyController
                 $whitelist = $tconf->getAssetProxyAllowedHosts();
                 $allow = false;
                 if (!$whitelist) {
-                    return ApiResult::error('forbiden', 403);
+                    return ApiResult::error(null);
                 }
                 foreach ($whitelist as $host) {
                     $qHost = preg_quote($host);

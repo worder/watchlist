@@ -46,8 +46,17 @@ class TmdbAdapter implements IDataAdapter
         $media->setMediaType($mediaType);
 
         $media->setOriginalLocale($data->str('original_language'));
-        $media->addLocalization(new MediaLocalization($data->str('original_language'), $data->str('original_title'), ''));
-        $media->addLocalization(new MediaLocalization($requestLocale, $data->str('title'), $data->str('overview')));
+        
+        if ($data->has('title')) {
+            $title = $data->str('title');
+            $titleOriginal = $data->str('original_title');
+        } else {
+            $title = $data->str('name');
+            $titleOriginal = $data->str('original_name');
+        }
+        
+        $media->addLocalization(new MediaLocalization($data->str('original_language'), $titleOriginal, ''));
+        $media->addLocalization(new MediaLocalization($requestLocale, $title, $data->str('overview')));
 
         // assets
         $conf = new DataResolver($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_CONFIG));
@@ -65,7 +74,7 @@ class TmdbAdapter implements IDataAdapter
                 if (!in_array($apiSizeConst, $posterSizes)) {
                     return ApiResult::error('Invalid poster size: ' . $apiSizeConst);
                 }
-                $posterUrl = Path::join($assetsBaseUrl, $apiSizeConst, $data->str('poster_path'));
+                $posterUrl = $assetsBaseUrl . Path::join($apiSizeConst, $data->str('poster_path'));
                 $posterProvider = new HttpProxiedAssetProvider($posterUrl, TmdbTransport::API_ID);
                 $assets->addPoster(new Poster($posterProvider, $size), $size);
             }
@@ -85,12 +94,12 @@ class TmdbAdapter implements IDataAdapter
                 $media->setReleaseDate($data->str('first_air_date'));
                 // details data only
                 if ($data->has('number_of_seasons')) {
-                    $seriesDetails = new SeriesDetails($data->str('number_of_seasons'));
+                    $seriesDetails = new SeriesDetails($data->int('number_of_seasons'));
                     $media->setDetails($seriesDetails);
                     for ($n = 1; $n <= $seriesDetails->getSeasonsNumber(); $n++) {
                         if ($data->arr('seasons')->has($n)) {
                             $sData = $data->arr('seasons')->arr($n);
-                            $seasonDetails = new SeasonDetails($n, $sData->str('episode_count'));
+                            $seasonDetails = new SeasonDetails($n, $sData->int('episode_count'));
                             $seasonDetails->addLocalization(
                                 new MediaLocalization($requestLocale, $sData->str('name'), $sData->str('overview'))
                             );

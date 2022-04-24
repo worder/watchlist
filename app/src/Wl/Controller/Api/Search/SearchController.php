@@ -7,6 +7,7 @@ use Wl\Api\Factory\ApiTransportFactory;
 use Wl\Api\Factory\Exception\InvalidApiIdException;
 use Wl\Api\Search\Query\SearchQuery;
 use Wl\Http\HttpService\IHttpService;
+use Wl\Media\Assets\Poster\IPoster;
 use Wl\Mvc\Result\ApiResult;
 
 class SearchController 
@@ -62,14 +63,37 @@ class SearchController
 
                 $adapter = $this->apiAdapterFactory->getAdapter($clientId);
                 
-                $mediaList = [];
+                $items = [];
                 foreach($result as $container) {
-                    $mediaList[] = $adapter->getMedia($container);
+                    $media = $adapter->getMedia($container);
+                    $assets = $media->getAssets();
+                    $posterSizes = [IPoster::SIZE_SMALL, IPoster::SIZE_MEDIUM];
+                    $posters = [];
+                    foreach ($posterSizes as $size) {
+                        $poster = $assets->getPoster($size);
+                        if ($poster) {
+                            $posters[$size] = $poster->getUrl();
+                        }
+                    }
+
+                    $items[] = [
+                        'id' => $media->getMediaId(),
+                        'type' => $media->getMediaType(),
+                        'title' => $media->getLocalization('ru')->getTitle(),
+                        'title_original' => $media->getLocalization($media->getOriginalLocale())->getTitle(),
+                        'release_date' => $media->getReleaseDate(),
+                        'posters' => $posters,
+                    ];
                 }
 
-                var_dump($mediaList);
+                $response = [
+                    'total' => $result->getTotal(),
+                    'page' => $result->getPage(),
+                    'pages' => $result->getPages(),
+                    'items' => $items,
+                ];
 
-                // return ApiResult::success($result);
+                return ApiResult::success($response);
             } catch (\Exception $e) {
                 return ApiResult::error('TRANSPORT_ERROR', $e->getMessage());
             }
