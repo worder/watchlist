@@ -34,7 +34,7 @@ class SearchQuery implements ISearchQuery
 
     public function setPage($page)
     {
-        return $this->page;
+        $this->page = $page;
     }
 
     public function getMediaType()

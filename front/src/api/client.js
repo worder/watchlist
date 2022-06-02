@@ -2,12 +2,13 @@ import axios from 'axios';
 
 const apiBaseQuery =
     ({ baseUrl } = { baseUrl: '/api' }) =>
-    async ({ url, method, data }) => {
+    async ({ url, method, data, params }) => {
         try {
             const result = await axios({
                 url: baseUrl + url,
                 method,
                 data,
+                params
             });
             return { data: result.data };
         } catch (axiosError) {

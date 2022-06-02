@@ -84,7 +84,9 @@ class TmdbAdapter implements IDataAdapter
         // type-specific features
         switch ($mediaType) {
             case MediaType::MOVIE:
-                $media->setReleaseDate($data->str('release_date'));
+                if ($data->has('release_date')) {
+                    $media->setReleaseDate($data->str('release_date'));
+                }
                 if ($data->has('runtime')) {
                     $movieDetails = new MovieDetails($data->str('runtime'));
                     $media->setDetails($movieDetails);

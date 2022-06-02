@@ -16,5 +16,7 @@ const store = configureStore({
     devTools: true,
 });
 
+console.log('store created');
+
 export default store;
 export const { dispatch } = store;

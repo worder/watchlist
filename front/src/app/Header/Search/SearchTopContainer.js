@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { TextInput, Select, LoadingOverlay } from '@mantine/core';
+import { TextInput, Select, Button, LoadingOverlay } from '@mantine/core';
 
-import { useGetSearchOptionsQuery } from '../../../api/search/searchApi';
+import SearchResultList from '../../Search/SearchResultList/SearchResultList';
+
+import {
+    useGetSearchOptionsQuery,
+    useSearchMutation,
+} from '../../../api/search/searchApi';
 
 const SearchTopContainer = styled.div`
     display: flex;
@@ -19,11 +24,15 @@ const SearchApiContainer = styled.div`
     width: 150px;
 `;
 
-const SearchBar = styled.input``;
-
 const SearchTop = () => {
     const { data, isLoading, isFetching, isError, error } =
         useGetSearchOptionsQuery();
+
+    const [doSearch, searchResult] = useSearchMutation();
+
+    const { isSuccess: isSearchSuccess, data: searchData } = searchResult;
+
+    console.log(searchResult);
 
     const isReady = !isLoading && !isFetching && !isError;
 
@@ -32,8 +41,10 @@ const SearchTop = () => {
 
     useEffect(() => {
         if (data && selectedApi) {
-            console.log(data.find(val => val.api_id === selectedApi))
-            setSelectedMediaType(data.find(val => val.api_id === selectedApi).media_types[0]);
+            console.log(data.find((val) => val.api_id === selectedApi));
+            setSelectedMediaType(
+                data.find((val) => val.api_id === selectedApi).media_types[0]
+            );
         }
     }, [selectedApi]);
 
@@ -46,10 +57,11 @@ const SearchTop = () => {
 
     let mediaTypesList = [];
     if (data && data.length > 0 && selectedApi) {
-        mediaTypesList = data.find(val => val.api_id === selectedApi).media_types;
-        console.log(data.find(val => val.api_id === selectedApi))
+        mediaTypesList = data.find(
+            (val) => val.api_id === selectedApi
+        ).media_types;
     }
-    
+
     if (data && !selectedApi) {
         setSelectedApi(data[0].api_id);
     }
@@ -62,22 +74,42 @@ const SearchTop = () => {
         console.log('blur');
     };
 
+    const onSearch = (e) => {
+        e.preventDefault();
+        var data = new FormData(e.target);
+        const term = data.get('term');
+        doSearch({ term, api: selectedApi, type: selectedMediaType });
+    };
+
     return (
-        <SearchTopContainer>
-            <LoadingOverlay visible={!isReady} />
-            <SearchInputContainer>
-                <TextInput
-                    placeholder="Поиск"
-                    seize="lg"
-                    onFocus={onFocus}
-                    onBlur={onBlur}
+        <form onSubmit={onSearch}>
+            <SearchTopContainer>
+                <LoadingOverlay visible={!isReady} />
+                <SearchInputContainer>
+                    <TextInput placeholder="Поиск" name="term" seize="lg" />
+                </SearchInputContainer>
+                <SearchApiContainer>
+                    <Select
+                        value={selectedApi}
+                        onChange={setSelectedApi}
+                        data={apisList}
+                    />
+                </SearchApiContainer>
+                <Select
+                    value={selectedMediaType}
+                    onChange={setSelectedMediaType}
+                    data={mediaTypesList}
                 />
-            </SearchInputContainer>
-            <SearchApiContainer>
-                <Select value={selectedApi} onChange={setSelectedApi} data={apisList} />
-            </SearchApiContainer>
-            <Select value={selectedMediaType} onChange={setSelectedMediaType} data={mediaTypesList} />
-        </SearchTopContainer>
+                <Button type="submit">Search</Button>
+            </SearchTopContainer>
+            {isSearchSuccess && (
+                <SearchResultList
+                    items={searchData.data.items}
+                    total={searchData.data.total}
+                    page={searchData.data.page}
+                />
+            )}
+        </form>
     );
 };
 

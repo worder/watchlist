@@ -37,10 +37,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute(['GET'], '/signout', SignoutController::class);
             $r->addRoute(['GET'], '/info', InfoController::class);
         });
-        $r->addGroup('/search', function (RouteCollector $r) {
-            $r->addRoute(['GET'], '/', SearchController::class);
-            $r->addRoute(['GET'], '/options', OptionsController::class);
-        });
+
+        $r->addRoute(['GET'], '/search', SearchController::class);
+        $r->addRoute(['GET'], '/search/options', OptionsController::class);
+
+
         $r->addGroup('/asset', function (RouteCollector $r) {
             $r->addRoute(['GET'], '/proxy/{data}', ProxyController::class);
         });

@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LogoContainer = () => <div>Watchlist (dev)</div>
+const LogoPlaceholder = styled.div`
+    flex-basis: 30%;
+`;
+
+const LogoContainer = () => <LogoPlaceholder>Watchlist (dev)</LogoPlaceholder>
 
 export default LogoContainer;

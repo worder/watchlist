@@ -1,4 +1,4 @@
-import { createApi, } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import apiBaseQuery from '../client';
 
 const searchApi = createApi({
@@ -10,29 +10,22 @@ const searchApi = createApi({
             query: () => ({ url: '/search/options' }),
             // providesTags: ['User'],
         }),
-        // signin: build.mutation({
-        //     query: (data) => ({
-        //         url: '/user/signin',
-        //         method: 'POST',
-        //         data,
-        //     }),
-        //     invalidatesTags: ['User'],
-        // }),
-        // signout: build.mutation({
-        //     query: () => ({
-        //         url: '/user/signout',
-        //         method: 'GET',
-        //     }),
-        //     invalidatesTags: ['User'],
-        // }),
+        search: build.mutation({
+            query: ({ term, api, type }) => ({
+                url: '/search',
+                params: {
+                    api,
+                    term,
+                    type,
+                },
+            }),
+        }),
     }),
 });
 
 export const {
     useGetSearchOptionsQuery,
-    // useGetInfoQuery,
-    // useSigninMutation,
-    // useSignoutMutation,
+    useSearchMutation,
 } = searchApi;
 
 export default searchApi;
