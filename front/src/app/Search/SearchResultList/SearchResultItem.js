@@ -16,7 +16,7 @@ const SearchResultItem = ({ item }) => (
             <img src={item.posters.s} />
         </PosterContainer>
         <InfoContainer>
-            <div>Title:w {item.title}</div>
+            <div>Title: {item.title}</div>
             <div>Title original: {item.title_original}</div>
             <div>Release date: {item.release_date}</div>
         </InfoContainer>

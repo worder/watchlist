@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import SearchResultItem from './SearchResultItem';
 
@@ -11,6 +11,11 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    ${(p) =>
+        !p.isVisible &&
+        css`
+            display: none;
+        `}
 `;
 
 const List = styled.div`
@@ -22,11 +27,12 @@ const List = styled.div`
 
 const SearchResultList = ({ items, total, page }) => {
     return (
-        <Container>
+        <Container isVisible={items && items.length > 0}>
             <List>
-                {items.map((item) => (
-                    <SearchResultItem key={item.id} item={item} />
-                ))}
+                {items &&
+                    items.map((item) => (
+                        <SearchResultItem key={item.id} item={item} />
+                    ))}
             </List>
         </Container>
     );

@@ -7,7 +7,10 @@ import SearchResultList from '../../Search/SearchResultList/SearchResultList';
 
 import {
     useGetSearchOptionsQuery,
-    useSearchMutation,
+    // useSearchMutation,
+    useSearchQuery,
+    useSearchQueryState,
+    useSearchQuerySubscription,
 } from '../../../api/search/searchApi';
 
 const SearchTopContainer = styled.div`
@@ -28,16 +31,36 @@ const SearchTop = () => {
     const { data, isLoading, isFetching, isError, error } =
         useGetSearchOptionsQuery();
 
-    const [doSearch, searchResult] = useSearchMutation();
-
-    const { isSuccess: isSearchSuccess, data: searchData } = searchResult;
-
-    console.log(searchResult);
-
     const isReady = !isLoading && !isFetching && !isError;
 
     const [selectedApi, setSelectedApi] = useState(null);
     const [selectedMediaType, setSelectedMediaType] = useState(null);
+    const [term, setTerm] = useState('');
+
+    const searchResult = useSearchQuery(
+        { term, api: selectedApi, type: selectedMediaType },
+        { skip: term.length < 1 }
+    );
+
+    console.log(searchResult);
+    const {
+        isSuccess: isSearchSuccess,
+        isUninitialized: isSearchUninitialized,
+        isFetching: isSearchFetching,
+        isLoading: isSearchLoading,
+        data: searchData,
+    } = searchResult;
+
+    const searchItems = searchData && searchData.data.items;
+    const searchTotal = searchData && searchData.data.total;
+    const searchPage = searchData && searchData.data.page;
+
+    const isSearchFullfiled =
+        isSearchSuccess &&
+        !isSearchUninitialized &&
+        !isSearchFetching &&
+        !isSearchLoading;
+    const isSearchInProgress = isSearchFetching;
 
     useEffect(() => {
         if (data && selectedApi) {
@@ -66,19 +89,11 @@ const SearchTop = () => {
         setSelectedApi(data[0].api_id);
     }
 
-    const onFocus = () => {
-        console.log('focus');
-    };
-
-    const onBlur = () => {
-        console.log('blur');
-    };
-
     const onSearch = (e) => {
         e.preventDefault();
         var data = new FormData(e.target);
-        const term = data.get('term');
-        doSearch({ term, api: selectedApi, type: selectedMediaType });
+        setTerm(data.get('term'));
+        // doSearch();
     };
 
     return (
@@ -102,13 +117,13 @@ const SearchTop = () => {
                 />
                 <Button type="submit">Search</Button>
             </SearchTopContainer>
-            {isSearchSuccess && (
-                <SearchResultList
-                    items={searchData.data.items}
-                    total={searchData.data.total}
-                    page={searchData.data.page}
-                />
-            )}
+            <SearchResultList
+                items={searchItems}
+                total={searchTotal}
+                page={searchPage}
+                inProgress={isSearchInProgress}
+                isReady={isSearchFullfiled}
+            />
         </form>
     );
 };

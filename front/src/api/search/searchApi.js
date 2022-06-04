@@ -10,7 +10,7 @@ const searchApi = createApi({
             query: () => ({ url: '/search/options' }),
             // providesTags: ['User'],
         }),
-        search: build.mutation({
+        search: build.query({
             query: ({ term, api, type }) => ({
                 url: '/search',
                 params: {
@@ -20,12 +20,28 @@ const searchApi = createApi({
                 },
             }),
         }),
+        // search: build.mutation({
+        //     query: ({ term, api, type }) => ({
+        //         url: '/search',
+        //         params: {
+        //             api,
+        //             term,
+        //             type,
+        //         },
+        //     }),
+        // }),
     }),
 });
 
 export const {
     useGetSearchOptionsQuery,
-    useSearchMutation,
+    useSearchQuery,
+    // useSearchMutation,
 } = searchApi;
+
+export const {
+    useQueryState: useSearchQueryState,
+    useQuerySubscription: useSearchQuerySubscription,
+} = searchApi.endpoints.search;
 
 export default searchApi;
