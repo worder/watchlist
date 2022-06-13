@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
     };
 
     const isLoading = isUserLoading || isSigninLoading || isSignoutLoading;
-    const user = response && response.data;
+    const user = response;
 
     const value = {
         user,

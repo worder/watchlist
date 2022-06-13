@@ -24,10 +24,16 @@ class OptionsController
 
         $out = [];
         foreach ($transports as $t) {
+            $mediaTypes = $t->getSupportedMediaTypes();
+            $mediaTypesDict = [];
+            foreach ($mediaTypes as $type) {
+                $mediaTypesDict[] = ["id" => $type, "name" => $type];
+            }
+
             $out[] = array_merge(
                 [
-                    'api_id' => $t->getApiId(),
-                    'media_types' => $t->getSupportedMediaTypes()
+                    'id' => $t->getApiId(),
+                    'media_types' => $mediaTypesDict
                 ],
                 $this->getApiDescriptionById($t->getApiId())
             );

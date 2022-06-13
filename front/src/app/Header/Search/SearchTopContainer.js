@@ -13,6 +13,9 @@ import {
     useSearchQuerySubscription,
 } from '../../../api/search/searchApi';
 
+import useSearch from '../../../api/search/hooks/search';
+import useSearchOptions from '../../../api/search/hooks/searchOptions';
+
 const SearchTopContainer = styled.div`
     display: flex;
     flex-flow: row;
@@ -27,73 +30,32 @@ const SearchApiContainer = styled.div`
     width: 150px;
 `;
 
+const setValueFromEvent = (set) => (e) => set(e.target.value);
+
 const SearchTop = () => {
-    const { data, isLoading, isFetching, isError, error } =
-        useGetSearchOptionsQuery();
-
-    const isReady = !isLoading && !isFetching && !isError;
-
-    const [selectedApi, setSelectedApi] = useState(null);
-    const [selectedMediaType, setSelectedMediaType] = useState(null);
     const [term, setTerm] = useState('');
 
-    const searchResult = useSearchQuery(
-        { term, api: selectedApi, type: selectedMediaType },
-        { skip: term.length < 1 }
-    );
+    const { commitSearch, searchResult, isProcessing, isFulfilled } = useSearch();
+    const { isReady, apis, api, mediaType, selectMediaType, selectApi } =
+        useSearchOptions();
 
-    console.log(searchResult);
-    const {
-        isSuccess: isSearchSuccess,
-        isUninitialized: isSearchUninitialized,
-        isFetching: isSearchFetching,
-        isLoading: isSearchLoading,
-        data: searchData,
-    } = searchResult;
+    const apisList = apis.map((api) => ({
+        value: api.id,
+        label: api.name_short,
+    }));
 
-    const searchItems = searchData && searchData.data.items;
-    const searchTotal = searchData && searchData.data.total;
-    const searchPage = searchData && searchData.data.page;
-
-    const isSearchFullfiled =
-        isSearchSuccess &&
-        !isSearchUninitialized &&
-        !isSearchFetching &&
-        !isSearchLoading;
-    const isSearchInProgress = isSearchFetching;
-
-    useEffect(() => {
-        if (data && selectedApi) {
-            console.log(data.find((val) => val.api_id === selectedApi));
-            setSelectedMediaType(
-                data.find((val) => val.api_id === selectedApi).media_types[0]
-            );
-        }
-    }, [selectedApi]);
-
-    const apisList = data
-        ? data.map((api) => ({
-              value: api.api_id,
-              label: api.name_short,
-          }))
+    const mediaTypesList = api
+        ? api.media_types.map((type) => ({ value: type.id, label: type.name }))
         : [];
 
-    let mediaTypesList = [];
-    if (data && data.length > 0 && selectedApi) {
-        mediaTypesList = data.find(
-            (val) => val.api_id === selectedApi
-        ).media_types;
-    }
+    console.log(searchResult);
 
-    if (data && !selectedApi) {
-        setSelectedApi(data[0].api_id);
-    }
+    const selectedMediaType = mediaType && mediaType.id;
+    const selectedApi = api && api.id;
 
     const onSearch = (e) => {
         e.preventDefault();
-        var data = new FormData(e.target);
-        setTerm(data.get('term'));
-        // doSearch();
+        commitSearch({ term, api: api.id, type: mediaType.id });
     };
 
     return (
@@ -101,28 +63,32 @@ const SearchTop = () => {
             <SearchTopContainer>
                 <LoadingOverlay visible={!isReady} />
                 <SearchInputContainer>
-                    <TextInput placeholder="Поиск" name="term" seize="lg" />
+                    <TextInput
+                        placeholder="Поиск"
+                        name="term"
+                        seize="lg"
+                        value={term}
+                        onChange={setValueFromEvent(setTerm)}
+                    />
                 </SearchInputContainer>
                 <SearchApiContainer>
                     <Select
                         value={selectedApi}
-                        onChange={setSelectedApi}
+                        onChange={selectApi}
                         data={apisList}
                     />
                 </SearchApiContainer>
                 <Select
                     value={selectedMediaType}
-                    onChange={setSelectedMediaType}
+                    onChange={selectMediaType}
                     data={mediaTypesList}
                 />
                 <Button type="submit">Search</Button>
             </SearchTopContainer>
             <SearchResultList
-                items={searchItems}
-                total={searchTotal}
-                page={searchPage}
-                inProgress={isSearchInProgress}
-                isReady={isSearchFullfiled}
+                result={searchResult}
+                inProgress={isProcessing}
+                isReady={isFulfilled}
             />
         </form>
     );

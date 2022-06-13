@@ -1,7 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { SearchResult } from '../../../api/search/searchTypes';
 
 import SearchResultItem from './SearchResultItem';
+
+interface ContainerProps {
+    isVisible: boolean
+}
 
 const Container = styled.div`
     position: absolute;
@@ -11,7 +16,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    ${(p) =>
+    ${(p: ContainerProps) =>
         !p.isVisible &&
         css`
             display: none;
@@ -25,7 +30,12 @@ const List = styled.div`
     padding: 10px;
 `;
 
-const SearchResultList = ({ items, total, page }) => {
+interface Props {
+    result: SearchResult | null;
+}
+
+const SearchResultList = ({ result }: Props) => {
+    const { items } = result ?? {};
     return (
         <Container isVisible={items && items.length > 0}>
             <List>

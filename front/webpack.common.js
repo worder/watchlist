@@ -6,10 +6,14 @@ const __root = path.join(__dirname, '../');
 module.exports = {
     context: __curdir,
     entry: {
-        bundle: ['react-hot-loader/patch', path.join(__curdir, 'src', 'App.js')],
+        bundle: [
+            'react-hot-loader/patch',
+            path.join(__curdir, 'src', 'App.js'),
+        ],
     },
     resolve: {
         modules: ['node_modules', path.join(__curdir, 'src')],
+        extensions: ['.ts', '.tsx', '.js', '.json']
     },
     output: {
         path: path.join(__root, 'assets/js'),
@@ -21,10 +25,14 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(j|t)s(x?)$/,
                 loader: 'babel-loader',
                 options: {
-                    presets: ['@babel/preset-env', '@babel/preset-react'],
+                    presets: [
+                        '@babel/preset-env',
+                        '@babel/preset-react',
+                        '@babel/preset-typescript',
+                    ],
                     plugins: [
                         // 'react-hot-loader/babel',
                         'babel-plugin-styled-components',

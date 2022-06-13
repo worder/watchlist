@@ -124,7 +124,7 @@ class TmdbTransport implements ITransport
     {
         $params = [
             "language" => "ru-RU",
-            "page" => $q->getPage(),
+            "page" => $q->getPage() ?? 1,
             "query" => $q->getTerm(),
         ];
 

@@ -12,20 +12,11 @@ class ApiResult extends JsonResult
 
     public static function success($data = null, $code = 200)
     {
-        $json = [
-            'data' => $data,
-        ];
-
-        return new self($json, $code);
+        return new self($data, $code);
     }
 
     public static function error($error, $data = null, $code = 400)
     {
-        $json = [
-            'error' => $error,
-            'data' => $data,
-        ];
-
-        return new self($json, $code);
+        return new self($error, $code);
     }
 }

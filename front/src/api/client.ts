@@ -1,8 +1,17 @@
 import axios from 'axios';
 
+type Method = "get" | "put" | "post" | "patch" | "delete";
+
+interface QueryParams {
+    url: string,
+    method?: Method,
+    data?: object | string,
+    params?: object
+}
+
 const apiBaseQuery =
     ({ baseUrl } = { baseUrl: '/api' }) =>
-    async ({ url, method, data, params }) => {
+    async ({ url, method, data, params }: QueryParams) => {
         try {
             const result = await axios({
                 url: baseUrl + url,

@@ -9,12 +9,12 @@ class SearchQuery implements ISearchQuery
     private $limit;
     private $type;
 
-    public function __construct($term = '', $page = 1, $limit = 10, $type = null)
+    public function __construct($term = '', $type = null, $page = 1, $limit = 10)
     {
         $this->term = $term;
+        $this->type = $type;
         $this->page = $page;
         $this->limit = $limit;
-        $this->type = $type;
     }
 
     public function getTerm()

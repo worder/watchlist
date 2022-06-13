@@ -56,7 +56,7 @@ class SearchController
                 return ApiResult::error('UNSUPPORTED_MEDIA_TYPE');
             }
 
-            $sq = new SearchQuery($term, $page, 10, $mediaType);
+            $sq = new SearchQuery($term, $mediaType, $page);
             
             try {
                 $result = $transport->search($sq);
