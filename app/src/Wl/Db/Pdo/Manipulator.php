@@ -1,4 +1,5 @@
 <?php
+
 namespace Wl\Db\Pdo;
 
 use \Exception;
@@ -32,7 +33,7 @@ class Manipulator implements IManipulator
      * @return array
      *
      * */
-    public function getRows($query, $params=array())
+    public function getRows($query, $params = array()): array
     {
         return $this->exec($query, $params)->getAll();
     }
@@ -46,7 +47,7 @@ class Manipulator implements IManipulator
      * @return array
      *
      * */
-    public function getRow($query, $params=array())
+    public function getRow($query, $params = array()): array
     {
         $row = array();
         $rows = $this->getRows($query, $params);
@@ -57,7 +58,7 @@ class Manipulator implements IManipulator
         return $row;
     }
 
-    public function getValue($query, $params=array())
+    public function getValue($query, $params = array())
     {
         $value = false;
         $row = $this->getRow($query, $params);
@@ -77,7 +78,7 @@ class Manipulator implements IManipulator
      * @return Worder\Db\Pdo\IResult
      *
      * */
-    public function exec($query, $params=array()): IResult
+    public function exec($query, $params = array()): IResult
     {
         $s = $this->prepare($query);
         foreach ($params as $placeholder => $value) {
@@ -96,10 +97,9 @@ class Manipulator implements IManipulator
      * Prepare statement method
      *
      * @param string $query - SQL query
-     * @return Worder\Db\Pdo\Statement
      *
      * */
-    public function prepare($query)
+    public function prepare($query): IStatement
     {
         $statement = new Statement($this->pdo);
         $statement->prepare($query);

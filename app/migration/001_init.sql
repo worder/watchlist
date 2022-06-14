@@ -13,6 +13,22 @@ create table credentials (
 	PRIMARY KEY(`accountId`, `type`)
 );
 
+create table lists (
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`title` text,
+	`description` text,
+	`added` datetime,
+	`updated` datetime
+);
+
+create table list_subscriptions (
+	`listId` int(11) NOT NULL,
+	`userId` int(11) NOT NULL,
+	`added` datetime NOT NULL,
+	`permissions` text,
+	PRIMARY KEY (`listId`, `userId`)
+);
+
 /* draft, TODO
 
 create table media (
@@ -36,18 +52,6 @@ create table media_localization (
 	`overview`,
 )
 
-create table watchlists (
-	`id`,
-	`title`,
-	`description`,
-	`ownerId`,
-);
-
-create table wl_subs (
-	`userId`,
-	`watchlistId`,
-	`flags`,
-);
 
 create table wl_items (
 	`id`,

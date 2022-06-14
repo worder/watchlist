@@ -35,9 +35,20 @@ const setValueFromEvent = (set) => (e) => set(e.target.value);
 const SearchTop = () => {
     const [term, setTerm] = useState('');
 
-    const { commitSearch, searchResult, isProcessing, isFulfilled } = useSearch();
-    const { isReady, apis, api, mediaType, selectMediaType, selectApi } =
-        useSearchOptions();
+    const {
+        commitSearch,
+        searchResult,
+        isLoading: isSearchLoading,
+        isReady: isSearchReady,
+    } = useSearch();
+    const {
+        isReady: isOptionsReady,
+        apis,
+        api,
+        mediaType,
+        selectMediaType,
+        selectApi,
+    } = useSearchOptions();
 
     const apisList = apis.map((api) => ({
         value: api.id,
@@ -61,12 +72,12 @@ const SearchTop = () => {
     return (
         <form onSubmit={onSearch}>
             <SearchTopContainer>
-                <LoadingOverlay visible={!isReady} />
+                <LoadingOverlay visible={!isOptionsReady} />
                 <SearchInputContainer>
                     <TextInput
                         placeholder="Поиск"
                         name="term"
-                        seize="lg"
+                        size="lg"
                         value={term}
                         onChange={setValueFromEvent(setTerm)}
                     />
@@ -87,8 +98,8 @@ const SearchTop = () => {
             </SearchTopContainer>
             <SearchResultList
                 result={searchResult}
-                inProgress={isProcessing}
-                isReady={isFulfilled}
+                isReady={isSearchReady}
+                isLoading={isSearchLoading}
             />
         </form>
     );

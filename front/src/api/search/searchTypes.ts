@@ -1,36 +1,36 @@
-interface SearchItem {
+export interface Posters {
+    s?: string,
+    m?: string,
+    l?: string,
+    o?: string,
+}
+
+export interface SearchItem {
     id: number;
     type: string;
     title: string;
     title_original: string;
     release_date: string;
+    posters?: Posters
 }
 
-interface SearchResult {
+export interface SearchResult {
     items: SearchItem[];
     page: number;
     pages: number;
     total: number;
 }
 
-interface SearchOptionsMediaType {
+export interface SearchOptionsMediaType {
     id: string;
     name: string;
 }
 
-interface SearchOptionsApi {
+export interface SearchOptionsApi {
     id: string;
     media_types: SearchOptionsMediaType[];
     name: string;
     name_short: string;
 }
 
-type SearchOptionsResult = SearchOptionsApi[];
-
-export {
-    SearchItem,
-    SearchResult,
-    SearchOptionsApi,
-    SearchOptionsMediaType,
-    SearchOptionsResult,
-};
+export type SearchOptionsResult = SearchOptionsApi[];

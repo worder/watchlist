@@ -10,6 +10,7 @@ import {
 
 interface UseSearchOptionsResult {
     isReady: boolean;
+    isLoading: boolean;
     isError: boolean;
     apis: SearchOptionsResult;
     selectApi: (id: string) => void;
@@ -54,6 +55,7 @@ const useSearchOptions = (): UseSearchOptionsResult => {
 
     return {
         isReady,
+        isLoading: isLoading || isFetching,
         isError,
         apis,
         selectApi,

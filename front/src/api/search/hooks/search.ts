@@ -15,8 +15,8 @@ interface UseSearchReturn {
     commitSearch: (options: SearchOptions) => void;
     clearSearch: () => void;
     searchResult: SearchResult | null;
-    isFulfilled: boolean;
-    isProcessing: boolean;
+    isReady: boolean;
+    isLoading: boolean;
     isError: boolean;
     error: string | null;
 }
@@ -45,22 +45,21 @@ const useSearch = (): UseSearchReturn => {
 
     const { data: searchResultData } = searchQueryResult;
 
-    const isFulfilled =
+    const isReady =
         isSuccess && !isUninitialized && !isFetching && !isLoading;
-    const isProcessing = isFetching;
 
     useEffect(() => {
-        if (isFulfilled) {
+        if (isReady) {
             setSearchResult(searchResultData);
         }
-    }, [isFulfilled]);
+    }, [isReady]);
 
     return {
         commitSearch: setSearchOptions,
         clearSearch,
         searchResult,
-        isFulfilled,
-        isProcessing,
+        isLoading: isLoading || isFetching,
+        isReady,
         isError,
         error: null,
     };

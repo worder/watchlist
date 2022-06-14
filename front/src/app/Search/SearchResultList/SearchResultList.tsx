@@ -32,6 +32,8 @@ const List = styled.div`
 
 interface Props {
     result: SearchResult | null;
+    isReady: boolean,
+    isLoading: boolean
 }
 
 const SearchResultList = ({ result }: Props) => {
