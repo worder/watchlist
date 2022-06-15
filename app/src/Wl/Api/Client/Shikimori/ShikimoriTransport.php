@@ -2,8 +2,8 @@
 
 namespace Wl\Api\Client\Shikimori;
 
-use Wl\Api\Data\DataContainer\DataContainer;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\DataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Api\Search\Exception\MediaTypeNotSupportedException;
 use Wl\Api\Search\Exception\NotFoundException;
 use Wl\Api\Search\Exception\RequestFailedException;

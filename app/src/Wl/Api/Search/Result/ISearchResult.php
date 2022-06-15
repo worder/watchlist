@@ -2,8 +2,8 @@
 
 namespace Wl\Api\Search\Result;
 
-use Wl\Api\Data\DataContainer\IDataContainer;
-use Wl\Api\Data\DataContainer\IDataContainersCollection;
+use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainersCollection;
 
 interface ISearchResult extends IDataContainersCollection
 {

@@ -4,7 +4,7 @@ namespace Wl\Api\Search\Result;
 
 use Iterator;
 use Traversable;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Utils\Iterator\AIterator;
 
 class SearchResult extends AIterator implements ISearchResult, Iterator

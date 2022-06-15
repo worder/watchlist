@@ -3,9 +3,9 @@
 namespace Wl\Api\Client\Tmdb;
 
 use Wl\Api\Client\Tmdb\Entity\TmdbConfigurationResponse;
-use Wl\Api\Data\DataAdapter\DataResolver;
-use Wl\Api\Data\DataContainer\DataContainer;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Api\DataAdapter\DataResolver;
+use Wl\Media\DataContainer\DataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Api\Search\Exception\MediaTypeNotSupportedException;
 use Wl\Api\Search\Exception\NotFoundException;
 use Wl\Api\Search\Exception\RequestFailedException;
@@ -102,19 +102,19 @@ class TmdbTransport implements ITransport
         return $confObj;
     }
 
-    private function getMovieDetails($mediaId): IDataContainer
+    private function getMovieDetails($mediaId, $locale = null): IDataContainer
     {
         $params = [
-            "language" => "ru-RU",
+            "language" => $this->parseLocale($locale),
         ];
         $data = $this->call('movie/' . $mediaId, $params);
         return $this->createContainer($data, MediaType::MOVIE);
     }
 
-    private function getTvDetails($mediaId): IDataContainer
+    private function getTvDetails($mediaId, $locale = null): IDataContainer
     {
         $params = [
-            "language" => "ru-RU",
+            "language" => $this->parseLocale($locale),
         ];
         $data = $this->call('tv/' . $mediaId, $params);
         return $this->createContainer($data, MediaType::TV_SERIES);
@@ -123,7 +123,7 @@ class TmdbTransport implements ITransport
     private function searchMovie(ISearchQuery $q): ISearchResult
     {
         $params = [
-            "language" => "ru-RU",
+            "language" => $this->parseLocale($q->getLocale()),
             "page" => $q->getPage() ?? 1,
             "query" => $q->getTerm(),
         ];
@@ -143,7 +143,7 @@ class TmdbTransport implements ITransport
     private function searchTvSeries(ISearchQuery $q): ISearchResult
     {
         $params = [
-            "language" => "ru-RU",
+            "language" => $this->parseLocale($q->getLocale()),
             "page" => $q->getPage(),
             "query" => $q->getTerm(),
         ];
@@ -182,6 +182,11 @@ class TmdbTransport implements ITransport
         }
 
         return false;
+    }
+
+    private function parseLocale($locale)
+    {
+        return 'ru-RU'; // TODO
     }
 
     private function createContainer($data, $mediaType)

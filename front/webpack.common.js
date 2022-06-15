@@ -17,7 +17,6 @@ module.exports = {
     },
     output: {
         path: path.join(__root, 'assets/js'),
-        // publicPath: ('/js/rivChat/'),
         filename: '[name].js',
         library: '[name]',
         libraryTarget: 'umd',

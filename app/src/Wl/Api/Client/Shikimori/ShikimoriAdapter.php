@@ -2,8 +2,8 @@
 
 namespace Wl\Api\Client\Shikimori;
 
-use Wl\Api\Data\DataAdapter\IDataAdapter;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Api\DataAdapter\IDataAdapter;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Media\IMedia;
 use Wl\Media\Media;
 use Wl\Media\MediaLocalization;

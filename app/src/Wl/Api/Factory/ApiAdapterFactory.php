@@ -6,7 +6,7 @@ use Wl\Api\Client\Shikimori\ShikimoriAdapter;
 use Wl\Api\Client\Shikimori\ShikimoriTransport;
 use Wl\Api\Client\Tmdb\TmdbAdapter;
 use Wl\Api\Client\Tmdb\TmdbTransport;
-use Wl\Api\Data\DataAdapter\IDataAdapter;
+use Wl\Api\DataAdapter\IDataAdapter;
 use Wl\Api\Factory\Exception\InvalidApiIdException;
 
 class ApiAdapterFactory

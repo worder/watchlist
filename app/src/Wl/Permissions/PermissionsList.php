@@ -16,7 +16,7 @@ class PermissionsList implements IPermissionsList
         return in_array($permission->getType(), $this->permissions);
     }
 
-    public function getPermissions(): array
+    public function getAll(): array
     {
         return array_unique($this->permissions);
     }

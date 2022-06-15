@@ -25,7 +25,7 @@ class ListSubscriptionService
             'listId' => $sub->getListId(),
             'userId' => $sub->getUserId(),
             'added' => date('Y-m-d H:i:s'),
-            'permissions' => json_encode($sub->getPermissions()->getPermissions())
+            'permissions' => json_encode($sub->getPermissions()->getAll())
         ]);
         if ($result) {
             return true;

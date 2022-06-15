@@ -1,8 +1,8 @@
 <?php
 
-namespace Wl\Api\Data\DataAdapter;
+namespace Wl\Api\DataAdapter;
 
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Media\IMedia;
 
 interface IDataAdapter

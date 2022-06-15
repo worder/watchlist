@@ -2,7 +2,7 @@
 
 namespace Wl\Api\Transport;
 
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Api\Search\Query\ISearchQuery;
 use Wl\Api\Search\Result\ISearchResult;
 

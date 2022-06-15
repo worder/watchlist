@@ -8,4 +8,5 @@ interface ISearchQuery
     public function getTerm();
     public function getPage();
     public function getLimit();
+    public function getLocale();
 }

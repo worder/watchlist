@@ -29,28 +29,26 @@ create table list_subscriptions (
 	PRIMARY KEY (`listId`, `userId`)
 );
 
-/* draft, TODO
-
 create table media (
 	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
-	`mediaId` varchar(64),
-	`apiId` varchar(64),
-	`locale` varchar(64),
-	`title` TEXT,
-	`data` MEDIUMTEXT,
-	`added` datetime,
+	`apiMediaId` varchar(64) NOT NULL,
+	`api` varchar(64) NOT NULL,
+	`added` datetime NOT NULL,
+);
+
+create table media_locale (
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`mediaId` int(11) NOT NULL,
+	`locale` varchar(10) NOT NULL,
+	`data` MEDIUMTEXT NOT NULL,
+	`title` varchar(1024) NOT NULL,
+	`added` datetime NOT NULL,
 	`updated` datetime,
 );
 
 
-create table media_localization (
-	`id`,
-	`mediaId`,
-	`apiId`,
-	`locale`,
-	`title`,
-	`overview`,
-)
+
+/* draft, TODO
 
 
 create table wl_items (

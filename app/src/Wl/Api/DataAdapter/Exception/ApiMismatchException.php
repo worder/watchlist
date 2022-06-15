@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\Api\Data\DataAdapter\Exception;
+namespace Wl\Api\DataAdapter\Exception;
 
 class ApiMismatchException extends \Exception
 {

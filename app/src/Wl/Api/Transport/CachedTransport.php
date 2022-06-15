@@ -2,9 +2,9 @@
 
 namespace Wl\Api\Transport;
 
-use Wl\Api\Data\DataContainer\DataContainer;
-use Wl\Api\Data\DataContainer\DataContainerCached;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\DataContainer;
+use Wl\Media\DataContainer\DataContainerCached;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Api\Search\Query\ISearchQuery;
 use Wl\Api\Search\Result\ISearchResult;
 use Wl\Api\Search\Result\SearchResult;

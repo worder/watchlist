@@ -77,7 +77,6 @@ const SearchTop = () => {
                     <TextInput
                         placeholder="Поиск"
                         name="term"
-                        size="lg"
                         value={term}
                         onChange={setValueFromEvent(setTerm)}
                     />

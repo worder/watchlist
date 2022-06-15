@@ -8,13 +8,14 @@ class SearchQuery implements ISearchQuery
     private $page;
     private $limit;
     private $type;
+    private $locale;
 
-    public function __construct($term = '', $type = null, $page = 1, $limit = 10)
+    public function __construct($term = '', $type = null, $page = 1, $locale = null)
     {
         $this->term = $term;
         $this->type = $type;
         $this->page = $page;
-        $this->limit = $limit;
+        $this->setLocale($locale);
     }
 
     public function getTerm()
@@ -55,5 +56,15 @@ class SearchQuery implements ISearchQuery
     public function setLimit($limit)
     {
         $this->limit = $limit;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

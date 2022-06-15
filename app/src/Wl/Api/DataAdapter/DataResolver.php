@@ -1,8 +1,8 @@
 <?php
 
-namespace Wl\Api\Data\DataAdapter;
+namespace Wl\Api\DataAdapter;
 
-use Wl\Api\Data\DataAdapter\Exception\DataResolverException;
+use Wl\Api\DataAdapter\Exception\DataResolverException;
 
 class DataResolver
 {

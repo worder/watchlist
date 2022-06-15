@@ -1,8 +1,8 @@
 <?php
 
-namespace Wl\Api\Data\DataContainer;
+namespace Wl\Media\DataContainer;
 
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 
 class DataContainer implements IDataContainer
 {

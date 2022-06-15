@@ -2,10 +2,10 @@
 
 namespace Wl\Api\Client\Tmdb;
 
-use Wl\Api\Data\DataAdapter\DataResolver;
-use Wl\Api\Data\DataAdapter\Exception\ApiMismatchException;
-use Wl\Api\Data\DataAdapter\IDataAdapter;
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Api\DataAdapter\DataResolver;
+use Wl\Api\DataAdapter\Exception\ApiMismatchException;
+use Wl\Api\DataAdapter\IDataAdapter;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Media\Assets\Assets;
 use Wl\Media\Assets\Poster\IPoster;
 use Wl\Media\Assets\Poster\Poster;

@@ -1,5 +1,5 @@
 <?php
-namespace Wl\Api\Data\DataContainer;
+namespace Wl\Media\DataContainer;
 
 class DataContainerCached extends DataContainer implements IDataContainer
 {

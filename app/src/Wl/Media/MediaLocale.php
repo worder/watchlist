@@ -2,11 +2,11 @@
 
 namespace Wl\Media;
 
-use Wl\Api\Data\DataContainer\IDataContainer;
+use Wl\Media\DataContainer\IDataContainer;
 use Wl\Media\Assets\IAssets;
 use Wl\Media\Details\IDetails;
 
-class Media implements IMedia
+class Media implements IMediaLocale
 {
     private $dataContainer;
     private $mediaId;
