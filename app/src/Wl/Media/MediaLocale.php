@@ -6,94 +6,82 @@ use Wl\Media\DataContainer\IDataContainer;
 use Wl\Media\Assets\IAssets;
 use Wl\Media\Details\IDetails;
 
-class Media implements IMediaLocale
+class MediaLocale implements IMediaLocale
 {
-    private $dataContainer;
-    private $mediaId;
-    
-    private $mediaType;
-    private $releaseDate;
-    
-    private $locales = [];
-    private $origLocale;
-
-    // private $seasonsCount;
-    // private $episodesCount;
-    // private $seasonNumber;
+    private ?IMedia $media;
+    private ?IDataContainer $container;
 
     private ?IDetails $details;
     private ?IAssets $assets;
 
-    public function __construct(IDataContainer $dataContainer)
+    private $id;
+    private $locale;
+    private $title;
+    private $overview;
+
+    public function __construct(?IDataContainer $dataContainer)
     {
-        $this->dataContainer = $dataContainer;
+        $this->container = $dataContainer;
     }
 
-
-    public function getMediaType()
+    public function getId()
     {
-        return $this->mediaType;
+        return $this->id;
     }
 
-    public function setMediaType($type)
+    public function setId($id)
     {
-        $this->mediaType = $type;
+        $this->id = $id;
     }
 
-    public function getReleaseDate()
+    public function getLocale()
     {
-        return $this->releaseDate;
+        return $this->locale;
     }
 
-    public function setReleaseDate($date)
+    public function setLocale($locale)
     {
-        $this->releaseDate = $date;
+        $this->locale = $locale;
     }
 
-    public function hasLocalization($locale)
+    public function getTitle()
     {
-        return isset($this->locales[$locale]);
+        return $this->title;
     }
 
-    public function getLocalization($locale = 'en'): IMediaLocalization
+    public function setTitle($title)
     {
-        if ($this->hasLocalization($locale)) {
-            return $this->locales[$locale];
-        } else {
-            return new MediaLocalization($locale, '_' . $locale . '_nodata_');
-        }
+        $this->title = $title;
     }
 
-    public function addLocalization($l10n)
+    public function getOverview()
     {
-        if (!$this->hasLocalization($l10n->getLocale())) {
-            $this->locales[$l10n->getLocale()] = $l10n;
-        }
+        return $this->overview;
     }
 
-    public function getOriginalLocale()
+    public function setOverview($overview)
     {
-        return $this->origLocale;
+        $this->overview = $overview;
     }
 
-    public function setOriginalLocale($locale)
+    public function getMedia(): IMedia
     {
-        $this->origLocale = $locale;
+        return $this->media;
+    }
+
+    public function setMedia(IMedia $media)
+    {
+        $this->media = $media;
     }
 
     public function getDataContainer(): IDataContainer
     {
-        return $this->dataContainer;
+        return $this->container;
     }
 
-    public function getMediaId()
+    public function setDataContainer(IDataContainer $container)
     {
-        return $this->mediaId;
-    }
-
-    public function setMediaId($id)
-    {
-        $this->mediaId = $id;
+        $this->container = $container;
     }
 
     public function getDetails(): ?IDetails

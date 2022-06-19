@@ -8,5 +8,7 @@ interface ISeasonDetails extends IDetails
 {
     public function getSeasonNumber();
     public function getEpisodesNumber();
-    public function getLocalization($locale): ?IMediaLocalization;
+
+    public function getTitle();
+    public function getOverview();
 }

@@ -8,7 +8,8 @@ class SeasonDetails implements ISeasonDetails
 {
     private $episodesNumber;
     private $seasonNumber = 0;
-    private $localizations = [];
+    private string $title;
+    private string $overview;
 
     public function __construct($seasonNumber, $episodesNumber)
     {
@@ -21,18 +22,28 @@ class SeasonDetails implements ISeasonDetails
         return $this->episodesNumber;
     }
 
-    public function getLocalization($locale): IMediaLocalization
-    {
-        return $this->seasonNumber;
-    }
-
-    public function addLocalization(IMediaLocalization $l10n)
-    {
-        $this->localizations[$l10n->getLocale()] = $l10n;
-    }
-
     public function getSeasonNumber()
     {
         return $this->seasonNumber;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    public function getOverview()
+    {
+        return $this->overview;
+    }
+
+    public function setOverview($overview)
+    {
+        $this->overview = $overview;
     }
 }

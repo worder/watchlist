@@ -65,8 +65,9 @@ class SearchController
                 
                 $items = [];
                 foreach($result as $container) {
-                    $media = $adapter->getMedia($container);
-                    $assets = $media->getAssets();
+                    $locale = $adapter->getMediaLocale($container);
+                    $media = $locale->getMedia();
+                    $assets = $locale->getAssets();
                     $posterSizes = [IPoster::SIZE_SMALL, IPoster::SIZE_MEDIUM];
                     $posters = [];
                     foreach ($posterSizes as $size) {
@@ -77,10 +78,10 @@ class SearchController
                     }
 
                     $items[] = [
-                        'id' => $media->getMediaId(),
+                        'id' => $media->getApiMediaId(),
                         'type' => $media->getMediaType(),
-                        'title' => $media->getLocalization('ru')->getTitle(),
-                        'title_original' => $media->getLocalization($media->getOriginalLocale())->getTitle(),
+                        'title' => $locale->getTitle(),
+                        'title_original' => $media->getOriginalTitle(),
                         'release_date' => $media->getReleaseDate(),
                         'posters' => $posters,
                     ];

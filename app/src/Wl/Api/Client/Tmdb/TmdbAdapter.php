@@ -14,8 +14,9 @@ use Wl\Media\Details\MovieDetails;
 use Wl\Media\Details\SeasonDetails;
 use Wl\Media\Details\SeriesDetails;
 use Wl\Media\IMedia;
+use Wl\Media\IMediaLocale;
 use Wl\Media\Media;
-use Wl\Media\MediaLocalization;
+use Wl\Media\MediaLocale;
 use Wl\Media\MediaType;
 use Wl\Mvc\Result\ApiResult;
 use Wl\Utils\Path;
@@ -24,13 +25,45 @@ class TmdbAdapter implements IDataAdapter
 {
     public function getMedia(IDataContainer $container): IMedia
     {
+        $data = new DataResolver($container->getData());
+        $media = new Media();
+
+        $media->setApiMediaId((string) $data->int('id'));
+        $media->setMediaType($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE));
+        $media->setOriginalLocale($data->str('original_language'));
+
+        $media->setOriginalTitle($data->str('original_title'));
+
+        if ($data->has('release_date')) {
+            $media->setReleaseDate($data->str('release_date'));
+        } elseif ($data->has('first_air_date')) {
+            $media->setReleaseDate($data->str('first_air_date'));
+        }
+
+        return $media;
+    }
+
+    public function getMediaLocale(IDataContainer $container): IMediaLocale
+    {
         if ($container->getApiId() !== TmdbTransport::API_ID) {
             throw new ApiMismatchException("\"{$container->getApiId()}\" container is not supported by TmdbAdapter");
         }
 
         $data = new DataResolver($container->getData());
+        $locale = new MediaLocale($container);
 
-        $media = new Media($container);
+        $locale->setMedia($this->getMedia($container));
+        $locale->setLocale($requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE));
+
+        if ($data->has('title')) {
+            $locale->setTitle($data->str('title'));
+        } else {
+            $locale->setTitle($data->str('name'));
+        }
+
+        $locale->setOverview($data->str('overview'));
+
+        // ---
 
         $mediaType = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE);
         $requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE);
@@ -40,23 +73,6 @@ class TmdbAdapter implements IDataAdapter
         }
 
         // var_dump($data);
-
-        // common features
-        $media->setMediaId($data->int('id'));
-        $media->setMediaType($mediaType);
-
-        $media->setOriginalLocale($data->str('original_language'));
-        
-        if ($data->has('title')) {
-            $title = $data->str('title');
-            $titleOriginal = $data->str('original_title');
-        } else {
-            $title = $data->str('name');
-            $titleOriginal = $data->str('original_name');
-        }
-        
-        $media->addLocalization(new MediaLocalization($data->str('original_language'), $titleOriginal, ''));
-        $media->addLocalization(new MediaLocalization($requestLocale, $title, $data->str('overview')));
 
         // assets
         $conf = new DataResolver($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_CONFIG));
@@ -79,32 +95,26 @@ class TmdbAdapter implements IDataAdapter
                 $assets->addPoster(new Poster($posterProvider, $size), $size);
             }
         }
-        $media->setAssets($assets);
+        $locale->setAssets($assets);
 
         // type-specific features
         switch ($mediaType) {
             case MediaType::MOVIE:
-                if ($data->has('release_date')) {
-                    $media->setReleaseDate($data->str('release_date'));
-                }
                 if ($data->has('runtime')) {
                     $movieDetails = new MovieDetails($data->str('runtime'));
-                    $media->setDetails($movieDetails);
+                    $locale->setDetails($movieDetails);
                 }
                 break;
             case MediaType::TV_SERIES:
-                $media->setReleaseDate($data->str('first_air_date'));
-                // details data only
                 if ($data->has('number_of_seasons')) {
                     $seriesDetails = new SeriesDetails($data->int('number_of_seasons'));
-                    $media->setDetails($seriesDetails);
+                    $locale->setDetails($seriesDetails);
                     for ($n = 1; $n <= $seriesDetails->getSeasonsNumber(); $n++) {
                         if ($data->arr('seasons')->has($n)) {
                             $sData = $data->arr('seasons')->arr($n);
                             $seasonDetails = new SeasonDetails($n, $sData->int('episode_count'));
-                            $seasonDetails->addLocalization(
-                                new MediaLocalization($requestLocale, $sData->str('name'), $sData->str('overview'))
-                            );
+                            $seasonDetails->setTitle($sData->str('name'));
+                            $seasonDetails->setOverview($sData->str('overview'));
                             $seriesDetails->addSeason($seasonDetails);
                         }
                     }
@@ -112,6 +122,6 @@ class TmdbAdapter implements IDataAdapter
                 break;
         }
 
-        return $media;
+        return $locale;
     }
 }
