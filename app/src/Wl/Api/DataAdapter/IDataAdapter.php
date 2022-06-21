@@ -8,6 +8,6 @@ use Wl\Media\IMediaLocale;
 
 interface IDataAdapter
 {
-    public function getMedia(IDataContainer $container): IMedia;
-    public function getMediaLocale(IDataContainer $container): IMediaLocale;
+    public function buildMedia(IMedia $media, IDataContainer $container): IMedia;
+    public function buildMediaLocale(IMediaLocale $locale, IDataContainer $container): IMediaLocale;
 }

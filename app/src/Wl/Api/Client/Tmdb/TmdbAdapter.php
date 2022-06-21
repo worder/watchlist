@@ -23,10 +23,9 @@ use Wl\Utils\Path;
 
 class TmdbAdapter implements IDataAdapter
 {
-    public function getMedia(IDataContainer $container): IMedia
+    public function buildMedia(IMedia $media, IDataContainer $container): IMedia
     {
         $data = new DataResolver($container->getData());
-        $media = new Media();
 
         $media->setApiMediaId((string) $data->int('id'));
         $media->setMediaType($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE));
@@ -43,16 +42,19 @@ class TmdbAdapter implements IDataAdapter
         return $media;
     }
 
-    public function getMediaLocale(IDataContainer $container): IMediaLocale
+    public function buildMediaLocale(IMediaLocale $locale, IDataContainer $container): IMediaLocale
     {
         if ($container->getApiId() !== TmdbTransport::API_ID) {
             throw new ApiMismatchException("\"{$container->getApiId()}\" container is not supported by TmdbAdapter");
         }
 
-        $data = new DataResolver($container->getData());
-        $locale = new MediaLocale($container);
+        $media = $locale->getMedia() ?? new Media();
+        $this->buildMedia($media, $container);
+        $locale->setMedia($media);
 
-        $locale->setMedia($this->getMedia($container));
+        $data = new DataResolver($container->getData());
+        $locale->setDataContainer($container);
+
         $locale->setLocale($requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE));
 
         if ($data->has('title')) {
@@ -88,7 +90,7 @@ class TmdbAdapter implements IDataAdapter
             ];
             foreach ($sizeMap as $size => $apiSizeConst) {
                 if (!in_array($apiSizeConst, $posterSizes)) {
-                    return ApiResult::error('Invalid poster size: ' . $apiSizeConst);
+                    throw new \Exception('Invalid poster size: ' . $apiSizeConst);
                 }
                 $posterUrl = $assetsBaseUrl . Path::join($apiSizeConst, $data->str('poster_path'));
                 $posterProvider = new HttpProxiedAssetProvider($posterUrl, TmdbTransport::API_ID);

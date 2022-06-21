@@ -8,9 +8,10 @@ use Wl\Api\Factory\Exception\InvalidApiIdException;
 use Wl\Api\Search\Query\SearchQuery;
 use Wl\Http\HttpService\IHttpService;
 use Wl\Media\Assets\Poster\IPoster;
+use Wl\Media\MediaLocale;
 use Wl\Mvc\Result\ApiResult;
 
-class SearchController 
+class SearchController
 {
 
     /**
@@ -34,11 +35,11 @@ class SearchController
 
     // /api/search/?api=API_SHIKIMORI&type=anime_series&term=monogatari
     // /api/search/?api=API_TMDB&type=movie&term=avatar
-    
+
     public function get($vars)
     {
         $params = $this->http->request()->get();
-        
+
         $clientId = $params->get('api');
         $mediaType = $params->get('type');
         $term = $params->get('term');
@@ -51,29 +52,32 @@ class SearchController
         try {
             $rawTransport = $this->apiTransportFactory->getTransport($clientId);
             $transport = $this->apiTransportFactory->enableCache($rawTransport);
-            
+
             if (!in_array($mediaType, $transport->getSupportedMediaTypes())) {
                 return ApiResult::error('UNSUPPORTED_MEDIA_TYPE');
             }
 
             $sq = new SearchQuery($term, $mediaType, $page);
-            
+
             try {
                 $result = $transport->search($sq);
 
                 $adapter = $this->apiAdapterFactory->getAdapter($clientId);
-                
+
                 $items = [];
-                foreach($result as $container) {
-                    $locale = $adapter->getMediaLocale($container);
+                foreach ($result as $container) {
+                    $locale = new MediaLocale();
+                    $adapter->buildMediaLocale($locale, $container);
                     $media = $locale->getMedia();
                     $assets = $locale->getAssets();
                     $posterSizes = [IPoster::SIZE_SMALL, IPoster::SIZE_MEDIUM];
                     $posters = [];
-                    foreach ($posterSizes as $size) {
-                        $poster = $assets->getPoster($size);
-                        if ($poster) {
-                            $posters[$size] = $poster->getUrl();
+                    if ($assets) {
+                        foreach ($posterSizes as $size) {
+                            $poster = $assets->getPoster($size);
+                            if ($poster) {
+                                $posters[$size] = $poster->getUrl();
+                            }
                         }
                     }
 

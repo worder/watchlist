@@ -8,15 +8,24 @@ use Wl\Media\Details\IDetails;
 
 interface IMediaLocale
 {
-    public function getId();
-
     public function getMedia(): ?IMedia;
-    public function getDataContainer(): IDataContainer;
-    
-    public function getLocale();
-    public function getTitle();
-    public function getOverview();
+    public function setMedia(IMedia $media): void;
+
+    public function getDataContainer(): ?IDataContainer;
+    public function setDataContainer(IDataContainer $container): void;
+
+    public function getLocale(): string;
+    public function setLocale(string $locale): void;
+
+    public function getTitle(): string;
+    public function setTitle(string $title): void;
+
+    public function getOverview(): string;
+    public function setOverview(string $overview): void;
 
     public function getDetails(): ?IDetails;
+    public function setDetails(IDetails $details): void;
+
     public function getAssets(): ?IAssets;
+    public function setAssets(IAssets $assets): void;
 }

@@ -4,60 +4,49 @@ namespace Wl\Media;
 
 class Media implements IMedia
 {
-    private int $id;
-    private string $api;
-    private string $apiMediaId;
-    private string $mediaType;
-    private string $releaseDate;
-    private string $originalLocale;
-    private string $originalTitle;
-    private array $locales;
+    private string $api = '';
+    private string $apiMediaId = '';
+    private string $mediaType = '';
+    private ?string $releaseDate = '';
+    private string $originalLocale = '';
+    private string $originalTitle = '';
 
     public function __construct()
     {
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getApi()
+    public function getApi(): string
     {
         return $this->api;
     }
-    public function setApi($api)
+    public function setApi($api): void
     {
         $this->api = $api;
     }
 
-    public function getApiMediaId()
+    public function getApiMediaId(): string
     {
         return $this->apiMediaId;
     }
-    public function setApiMediaId(string $id)
+    public function setApiMediaId(string $id): void
     {
         $this->apiMediaId = $id;
     }
 
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return $this->mediaType;
     }
-    public function setMediaType(string $type)
+    public function setMediaType(string $type): void
     {
         $this->mediaType = $type;
     }
 
-    public function getReleaseDate()
+    public function getReleaseDate(): string
     {
-        return $this->releaseDate;
+        return $this->releaseDate ?? null;
     }
-    public function setReleaseDate($date)
+    public function setReleaseDate($date): void
     {
         $this->releaseDate = $date;
     }
@@ -66,41 +55,18 @@ class Media implements IMedia
     {
         return $this->originalTitle;
     }
-    public function setOriginalTitle($title)
+    public function setOriginalTitle($title): void
     {
         $this->originalTitle = $title;
     }
 
-    public function getLocale($locale): ?IMediaLocale
+    public function setOriginalLocale(string $locale)
     {
-        if ($this->hasLocale($locale)) {
-            return $this->locales[$locale];
-        }
-
-        return null;
+        $this->originalLocale = $locale;
     }
 
-    public function getOriginalLocale(): ?IMediaLocale
+    public function getOriginalLocale(): string
     {
-        if ($this->hasLocale($this->originalLocale)) {
-            return $this->getLocale($this->originalLocale);
-        }
-
-        return null;
-    }
-
-    public function setOriginalLocale(string $cc)
-    {
-        $this->originalLocale = $cc;
-    }
-
-    public function hasLocale($locale): bool
-    {
-        return isset($this->locales[$locale]);
-    }
-
-    public function addLocale(IMediaLocale $mediaLocale)
-    {
-        $this->locals[$mediaLocale->getLocale()] = $mediaLocale;
+        return $this->originalLocale;
     }
 }

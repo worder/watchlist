@@ -8,68 +8,68 @@ use Wl\Media\Details\IDetails;
 
 class MediaLocale implements IMediaLocale
 {
-    private ?IMedia $media;
-    private ?IDataContainer $container;
+    private ?IMedia $media = null;
+    private ?IDataContainer $container = null;
 
-    private ?IDetails $details;
-    private ?IAssets $assets;
+    private ?IDetails $details = null;
+    private ?IAssets $assets = null;
 
-    private $id;
-    private $locale;
-    private $title;
-    private $overview;
+    // private $api;
+    private $locale = '';
+    private $title = '';
+    private $overview = '';
 
-    public function __construct(?IDataContainer $dataContainer)
+    public function __construct(?IDataContainer $dataContainer = null)
     {
         $this->container = $dataContainer;
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    // IMedia contains this already
+    // public function getApi()
+    // {
+    //     return $this->api;
+    // }
+    // public function setApi($api)
+    // {
+    //     $this->api = $api;
+    // }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    public function setLocale($locale)
+    public function setLocale($locale): void
     {
         $this->locale = $locale;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
 
-    public function getOverview()
+    public function getOverview(): string
     {
         return $this->overview;
     }
 
-    public function setOverview($overview)
+    public function setOverview($overview): void
     {
         $this->overview = $overview;
     }
 
-    public function getMedia(): IMedia
+    public function getMedia(): ?IMedia
     {
         return $this->media;
     }
 
-    public function setMedia(IMedia $media)
+    public function setMedia(IMedia $media): void
     {
         $this->media = $media;
     }
@@ -79,7 +79,7 @@ class MediaLocale implements IMediaLocale
         return $this->container;
     }
 
-    public function setDataContainer(IDataContainer $container)
+    public function setDataContainer(IDataContainer $container): void
     {
         $this->container = $container;
     }
@@ -89,7 +89,7 @@ class MediaLocale implements IMediaLocale
         return $this->details;
     }
 
-    public function setDetails(IDetails $details)
+    public function setDetails(IDetails $details): void
     {
         $this->details = $details;
     }

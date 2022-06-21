@@ -45,4 +45,17 @@ class DataContainer implements IDataContainer
     {
         return $this->metadata[$key] ?: null;
     }
+
+    public function export(): string
+    {
+        return json_encode([$this->data, $this->apiId, $this->metadata]);
+    }
+
+    public static function import($data): IDataContainer
+    {
+        $decoded = json_decode($data, true);
+        $container = new self($decoded[0], $decoded[1]);
+        $container->setMetadata($decoded[2]);
+        return $container;
+    }
 }

@@ -33,17 +33,18 @@ create table media (
 	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
 	`apiMediaId` varchar(64) NOT NULL,
 	`api` varchar(64) NOT NULL,
+	`type` varchar(64) NOT NULL,
 	`added` datetime NOT NULL,
+	`updated` datetime NOT NULL,
 );
 
 create table media_locale (
-	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
 	`mediaId` int(11) NOT NULL,
 	`locale` varchar(10) NOT NULL,
 	`data` MEDIUMTEXT NOT NULL,
-	`title` varchar(1024) NOT NULL,
 	`added` datetime NOT NULL,
-	`updated` datetime,
+	`updated` datetime NOT NULL,
+	PRIMARY KEY(`mediaId`, `locale`)
 );
 
 

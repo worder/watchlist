@@ -17,6 +17,6 @@ class ApiResult extends JsonResult
 
     public static function error($error, $data = null, $code = 400)
     {
-        return new self($error, $code);
+        return new self([$error, $data], $code);
     }
 }
