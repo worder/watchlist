@@ -75,7 +75,7 @@ class ProxyController
                     echo $result->getBody();
                     exit();
                 } catch (\Exception $e) {
-                    return ApiResult::error('internal error', 500);
+                    return ApiResult::error(['internal error', $e->getMessage()], 500);
                 }
             } catch (\Exception $e) {
                 return ApiResult::error('bad request', 400);

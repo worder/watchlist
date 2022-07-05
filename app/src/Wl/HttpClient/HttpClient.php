@@ -56,6 +56,7 @@ class HttpClient implements IHttpClient
         curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->timeoutMs);
         curl_setopt($ch, CURLOPT_HEADER, 1); // include to result
         curl_setopt($ch, CURLINFO_HEADER_OUT, true); // allow access to request headers
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);

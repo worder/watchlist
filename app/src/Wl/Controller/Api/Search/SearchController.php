@@ -8,7 +8,7 @@ use Wl\Api\Factory\Exception\InvalidApiIdException;
 use Wl\Api\Search\Query\SearchQuery;
 use Wl\Http\HttpService\IHttpService;
 use Wl\Media\Assets\Poster\IPoster;
-use Wl\Media\MediaLocale;
+use Wl\Media\MediaLocale\MediaLocale;
 use Wl\Mvc\Result\ApiResult;
 
 class SearchController
@@ -66,8 +66,7 @@ class SearchController
 
                 $items = [];
                 foreach ($result as $container) {
-                    $locale = new MediaLocale();
-                    $adapter->buildMediaLocale($locale, $container);
+                    $locale = $adapter->buildMediaLocale(new MediaLocale(), $container);
                     $media = $locale->getMedia();
                     $assets = $locale->getAssets();
                     $posterSizes = [IPoster::SIZE_SMALL, IPoster::SIZE_MEDIUM];

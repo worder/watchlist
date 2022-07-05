@@ -4,15 +4,15 @@ namespace Wl\Api\Client\Shikimori;
 
 use Wl\Api\DataAdapter\DataResolver;
 use Wl\Api\DataAdapter\IDataAdapter;
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Media\IMedia;
-use Wl\Media\IMediaLocale;
+use Wl\Media\MediaLocale\IMediaLocale;
 use Wl\Media\Media;
-use Wl\Media\MediaLocale;
+use Wl\Media\MediaLocale\MediaLocale;
 
 class ShikimoriAdapter implements IDataAdapter
 {
-    public function buildMedia(IMedia $media, IDataContainer $container): IMedia
+    public function buildMedia(IMedia $media, IApiDataContainer $container): IMedia
     {
         // $data = new DataResolver($container->getData());
         // $media = new Media();
@@ -34,7 +34,7 @@ class ShikimoriAdapter implements IDataAdapter
         return $media;
     }
 
-    public function buildMediaLocale(IMediaLocale $locale, IDataContainer $container): IMediaLocale
+    public function buildMediaLocale(IMediaLocale $locale, IApiDataContainer $container): IMediaLocale
     {
         $locale->setDataContainer($container);
         

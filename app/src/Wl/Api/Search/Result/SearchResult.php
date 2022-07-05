@@ -4,7 +4,7 @@ namespace Wl\Api\Search\Result;
 
 use Iterator;
 use Traversable;
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Utils\Iterator\AIterator;
 
 class SearchResult extends AIterator implements ISearchResult, Iterator
@@ -63,7 +63,7 @@ class SearchResult extends AIterator implements ISearchResult, Iterator
         }
     }
 
-    public function addContainer(IDataContainer $item)
+    public function addContainer(IApiDataContainer $item)
     {
         $this->items[] = $item;
     }

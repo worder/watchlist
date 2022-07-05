@@ -1,7 +1,7 @@
 <?php
-namespace Wl\Media\DataContainer;
+namespace Wl\Media\ApiDataContainer;
 
-class DataContainerCached extends DataContainer implements IDataContainer
+class ApiDataContainerCached extends ApiDataContainer implements IApiDataContainer
 {
     private $cacheExpirationTime;
 
@@ -15,7 +15,7 @@ class DataContainerCached extends DataContainer implements IDataContainer
         return $this->cacheExpirationTime = $time;
     }
 
-    public static function createFromContainer(IDataContainer $container) 
+    public static function createFromContainer(IApiDataContainer $container) 
     {
         $cached = new self($container->getData(), $container->getApiId());
         $cached->setMetadata($container->getMetadata());

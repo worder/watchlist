@@ -2,8 +2,8 @@
 
 namespace Wl\Api\Client\Shikimori;
 
-use Wl\Media\DataContainer\DataContainer;
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\ApiDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Api\Search\Exception\MediaTypeNotSupportedException;
 use Wl\Api\Search\Exception\NotFoundException;
 use Wl\Api\Search\Exception\RequestFailedException;
@@ -85,7 +85,7 @@ class ShikimoriTransport implements ITransport
 
         $items = [];
         foreach ($data as $itemData) {
-            $items[] = new DataContainer($itemData, self::API_ID);
+            $items[] = new ApiDataContainer($itemData, self::API_ID);
         }
 
         $result = new SearchResult($items);
@@ -95,7 +95,7 @@ class ShikimoriTransport implements ITransport
         return $result;
     }
 
-    public function getMediaDetails($mediaId, $mediaType = null): IDataContainer
+    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer
     {
         $request = Request::get($this->apiUrl . 'animes/' . $mediaId);
         $request->setHeader("User-Agent", $this->config->getAppName());
@@ -107,7 +107,7 @@ class ShikimoriTransport implements ITransport
         $result = $this->transport->dispatch($request);
         if ($result->getHttpCode() === 200) {
             $data = json_decode($result->getBody(), true);
-            return new DataContainer($data, self::API_ID);
+            return new ApiDataContainer($data, self::API_ID);
         } elseif ($result->getHttpCode() === 400) {
             throw new NotFoundException();
         } else {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Wl\Media\DataContainer;
+namespace Wl\Media\ApiDataContainer;
 
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 
-class DataContainer implements IDataContainer
+class ApiDataContainer implements IApiDataContainer
 {
     private $data;
     private $apiId;
@@ -51,7 +51,7 @@ class DataContainer implements IDataContainer
         return json_encode([$this->data, $this->apiId, $this->metadata]);
     }
 
-    public static function import($data): IDataContainer
+    public static function import($data): IApiDataContainer
     {
         $decoded = json_decode($data, true);
         $container = new self($decoded[0], $decoded[1]);

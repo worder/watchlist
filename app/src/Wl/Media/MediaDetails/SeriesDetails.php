@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\Media\Details;
+namespace Wl\Media\MediaDetails;
 
 use Wl\Media\IMediaLocalization;
 

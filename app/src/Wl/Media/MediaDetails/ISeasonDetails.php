@@ -1,10 +1,10 @@
 <?php
 
-namespace Wl\Media\Details;
+namespace Wl\Media\MediaDetails;
 
 use Wl\Media\IMediaLocalization;
 
-interface ISeasonDetails extends IDetails
+interface ISeasonDetails extends IMediaDetails
 {
     public function getSeasonNumber();
     public function getEpisodesNumber();

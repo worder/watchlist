@@ -1,6 +1,6 @@
 <?php
 
-namespace Wl\Media;
+namespace Wl\Media\MediaLocale;
 
 class MediaLocaleRecord extends MediaLocale implements IMediaLocaleRecord
 {

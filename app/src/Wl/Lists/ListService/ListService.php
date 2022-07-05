@@ -17,7 +17,7 @@ class ListService
         $this->db = $db;
     }
 
-    public function createList(IList $list)
+    public function createList(IList $list): IList
     {
         $q = "INSERT INTO lists (`title`, `description`, `added`) 
                    VALUES (:title, :desc, :added)";

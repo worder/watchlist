@@ -4,8 +4,8 @@ namespace Wl\Api\Client\Tmdb;
 
 use Wl\Api\Client\Tmdb\Entity\TmdbConfigurationResponse;
 use Wl\Api\DataAdapter\DataResolver;
-use Wl\Media\DataContainer\DataContainer;
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\ApiDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Api\Search\Exception\MediaTypeNotSupportedException;
 use Wl\Api\Search\Exception\NotFoundException;
 use Wl\Api\Search\Exception\RequestFailedException;
@@ -72,7 +72,7 @@ class TmdbTransport implements ITransport
         return $result;
     }
 
-    public function getMediaDetails($mediaId, $mediaType = null): IDataContainer
+    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer
     {
         switch ($mediaType) {
             case MediaType::MOVIE:
@@ -102,7 +102,7 @@ class TmdbTransport implements ITransport
         return $confObj;
     }
 
-    private function getMovieDetails($mediaId, $locale = null): IDataContainer
+    private function getMovieDetails($mediaId, $locale = null): IApiDataContainer
     {
         $params = [
             "language" => $this->parseLocale($locale),
@@ -111,7 +111,7 @@ class TmdbTransport implements ITransport
         return $this->createContainer($data, MediaType::MOVIE);
     }
 
-    private function getTvDetails($mediaId, $locale = null): IDataContainer
+    private function getTvDetails($mediaId, $locale = null): IApiDataContainer
     {
         $params = [
             "language" => $this->parseLocale($locale),
@@ -191,7 +191,7 @@ class TmdbTransport implements ITransport
 
     private function createContainer($data, $mediaType)
     {
-        $container = new DataContainer($data, self::API_ID);
+        $container = new ApiDataContainer($data, self::API_ID);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_MEDIA_TYPE, $mediaType);
         $container->setMetadataParam(self::CONTAINER_META_PARAM_REQUEST_LOCALE, 'ru');
         $container->setMetadataParam(self::CONTAINER_META_PARAM_CONFIG, (array) $this->getConfiguration());

@@ -3,8 +3,8 @@
 namespace Wl\Media\MediaService;
 
 use Wl\Media\IMedia;
-use Wl\Media\IMediaLocale;
-use Wl\Media\IMediaLocaleRecord;
+use Wl\Media\MediaLocale\IMediaLocale;
+use Wl\Media\MediaLocale\IMediaLocaleRecord;
 use Wl\Media\IMediaRecord;
 
 interface IMediaService 

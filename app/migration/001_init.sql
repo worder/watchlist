@@ -38,7 +38,7 @@ create table media (
 	`updated` datetime NOT NULL,
 );
 
-create table media_locale (
+create table media_locales (
 	`mediaId` int(11) NOT NULL,
 	`locale` varchar(10) NOT NULL,
 	`data` MEDIUMTEXT NOT NULL,

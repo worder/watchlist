@@ -1,17 +1,18 @@
 <?php
 
-namespace Wl\Media;
+namespace Wl\Media\MediaLocale;
 
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Media\Assets\IAssets;
-use Wl\Media\Details\IDetails;
+use Wl\Media\IMedia;
+use Wl\Media\MediaDetails\IMediaDetails;
 
 class MediaLocale implements IMediaLocale
 {
     private ?IMedia $media = null;
-    private ?IDataContainer $container = null;
+    private ?IApiDataContainer $container = null;
 
-    private ?IDetails $details = null;
+    private ?IMediaDetails $details = null;
     private ?IAssets $assets = null;
 
     // private $api;
@@ -19,7 +20,7 @@ class MediaLocale implements IMediaLocale
     private $title = '';
     private $overview = '';
 
-    public function __construct(?IDataContainer $dataContainer = null)
+    public function __construct(?IApiDataContainer $dataContainer = null)
     {
         $this->container = $dataContainer;
     }
@@ -74,22 +75,22 @@ class MediaLocale implements IMediaLocale
         $this->media = $media;
     }
 
-    public function getDataContainer(): IDataContainer
+    public function getDataContainer(): IApiDataContainer
     {
         return $this->container;
     }
 
-    public function setDataContainer(IDataContainer $container): void
+    public function setDataContainer(IApiDataContainer $container): void
     {
         $this->container = $container;
     }
 
-    public function getDetails(): ?IDetails
+    public function getDetails(): ?IMediaDetails
     {
         return $this->details;
     }
 
-    public function setDetails(IDetails $details): void
+    public function setDetails(IMediaDetails $details): void
     {
         $this->details = $details;
     }

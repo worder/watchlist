@@ -34,7 +34,7 @@ class ListSubscriptionService
         return false;
     }
 
-    public function buildSubscription($data)
+    private function buildSubscription($data)
     {
         $perms = PermissionsList::import(json_decode($data['permissions'], true));
 

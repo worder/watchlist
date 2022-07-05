@@ -5,25 +5,25 @@ namespace Wl\Api\Client\Tmdb;
 use Wl\Api\DataAdapter\DataResolver;
 use Wl\Api\DataAdapter\Exception\ApiMismatchException;
 use Wl\Api\DataAdapter\IDataAdapter;
-use Wl\Media\DataContainer\IDataContainer;
+use Wl\Media\ApiDataContainer\IApiDataContainer;
 use Wl\Media\Assets\Assets;
 use Wl\Media\Assets\Poster\IPoster;
 use Wl\Media\Assets\Poster\Poster;
 use Wl\Media\Assets\Provider\HttpProxiedAssetProvider;
-use Wl\Media\Details\MovieDetails;
-use Wl\Media\Details\SeasonDetails;
-use Wl\Media\Details\SeriesDetails;
+use Wl\Media\MediaDetails\MovieDetails;
+use Wl\Media\MediaDetails\SeasonDetails;
+use Wl\Media\MediaDetails\SeriesDetails;
 use Wl\Media\IMedia;
-use Wl\Media\IMediaLocale;
+use Wl\Media\MediaLocale\IMediaLocale;
 use Wl\Media\Media;
-use Wl\Media\MediaLocale;
+use Wl\Media\MediaLocale\MediaLocale;
 use Wl\Media\MediaType;
 use Wl\Mvc\Result\ApiResult;
 use Wl\Utils\Path;
 
 class TmdbAdapter implements IDataAdapter
 {
-    public function buildMedia(IMedia $media, IDataContainer $container): IMedia
+    public function buildMedia(IMedia $media, IApiDataContainer $container): IMedia
     {
         $data = new DataResolver($container->getData());
 
@@ -42,7 +42,7 @@ class TmdbAdapter implements IDataAdapter
         return $media;
     }
 
-    public function buildMediaLocale(IMediaLocale $locale, IDataContainer $container): IMediaLocale
+    public function buildMediaLocale(IMediaLocale $locale, IApiDataContainer $container): IMediaLocale
     {
         if ($container->getApiId() !== TmdbTransport::API_ID) {
             throw new ApiMismatchException("\"{$container->getApiId()}\" container is not supported by TmdbAdapter");
@@ -55,7 +55,7 @@ class TmdbAdapter implements IDataAdapter
         $data = new DataResolver($container->getData());
         $locale->setDataContainer($container);
 
-        $locale->setLocale($requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE));
+        $locale->setLocale($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE));
 
         if ($data->has('title')) {
             $locale->setTitle($data->str('title'));
@@ -68,7 +68,6 @@ class TmdbAdapter implements IDataAdapter
         // ---
 
         $mediaType = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE);
-        $requestLocale = $container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_REQUEST_LOCALE);
 
         if (!$mediaType) {
             throw new \Exception("Media type is missing");

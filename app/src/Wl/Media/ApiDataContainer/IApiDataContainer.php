@@ -1,8 +1,8 @@
 <?php
 
-namespace Wl\Media\DataContainer;
+namespace Wl\Media\ApiDataContainer;
 
-interface IDataContainer
+interface IApiDataContainer
 {
     public function getApiId();
     public function getData();
@@ -13,5 +13,5 @@ interface IDataContainer
     public function setMetadataParam($key, $value);
 
     public function export(): string;
-    public static function import($data): IDataContainer;
+    public static function import($data): IApiDataContainer;
 }

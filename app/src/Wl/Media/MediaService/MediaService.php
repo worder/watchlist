@@ -4,12 +4,12 @@ namespace Wl\Media\MediaService;
 
 use Wl\Api\Factory\ApiAdapterFactory;
 use Wl\Db\Pdo\IManipulator;
-use Wl\Media\DataContainer\DataContainer;
+use Wl\Media\ApiDataContainer\ApiDataContainer;
 use Wl\Media\IMedia;
-use Wl\Media\IMediaLocale;
-use Wl\Media\IMediaLocaleRecord;
+use Wl\Media\MediaLocale\IMediaLocale;
+use Wl\Media\MediaLocale\IMediaLocaleRecord;
+use Wl\Media\MediaLocale\MediaLocaleRecord;
 use Wl\Media\IMediaRecord;
-use Wl\Media\MediaLocaleRecord;
 use Wl\Media\MediaRecord;
 
 use function PHPSTORM_META\map;
@@ -116,12 +116,6 @@ class MediaService implements IMediaService
 
     public function getMediaLocaleById($id): IMediaLocaleRecord
     {
-        // m.api AS m_api,
-        // m.apiMediaId AS m_apiMediaId,
-        // m.type AS m_type,
-        // m.originalLocale AS m_originalLocale,
-        // m.originalTitle AS m_originalTitle,
-        // m.releaseDate AS m_releaseDate
         $q = "SELECT ml.*, 
                      m.id AS m_id,
                      m.added AS m_added,
@@ -132,7 +126,7 @@ class MediaService implements IMediaService
                WHERE id=:id";
         $row = $this->db->getRow($q, ['id' => $id]);
         if ($row) {
-            return $this->buildMediaLocale($row);
+            return $this->buildMediaLocale($row, '_m');
         }
 
         throw new MediaServiceException('Media locale not found, ID:' . $id);
@@ -152,17 +146,16 @@ class MediaService implements IMediaService
         // isset($data[$fieldPrefix . 'originalLocale']) && $media->setOriginalLocale($data[$fieldPrefix . 'originalLocale']);
         // isset($data[$fieldPrefix . 'originalTitle']) && $media->setOriginalTitle($data[$fieldPrefix . 'originalTitle']);
         // isset($data[$fieldPrefix . 'releaseDate']) && $media->setReleaseDate($data[$fieldPrefix . 'releaseDate']);
-        
+
         return $media;
     }
 
-    private function buildMediaLocale($data): IMediaLocaleRecord
+    private function buildMediaLocale($data, $mediaRecordPrefix): IMediaLocaleRecord
     {
-        $mediaRecord = $this->buildMediaRecord($data, 'm_');
+        $mediaRecord = $this->buildMediaRecord($data, $mediaRecordPrefix);
 
-        $locale = new MediaLocaleRecord(DataContainer::import($data['data']));
+        $locale = new MediaLocaleRecord(ApiDataContainer::import($data['data']));
         $locale->setMedia($mediaRecord);
-        $locale->setId($data['id']);
         $locale->setAdded($data['added']);
         $locale->setUpdated($data['updated']);
 
