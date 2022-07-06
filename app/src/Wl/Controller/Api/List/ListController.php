@@ -3,7 +3,9 @@
 namespace Wl\Controller\Api\List;
 
 use Wl\Http\HttpService\IHttpService;
+use Wl\List\ListSubscriptionService\IListSubscriptionService;
 use Wl\Lists\ListEntity;
+use Wl\Lists\ListService\IListService;
 use Wl\Lists\ListService\ListService;
 use Wl\Lists\ListValidator\ListValidator;
 use Wl\Lists\ListValidator\ListValidatorException;
@@ -19,29 +21,22 @@ class ListController
     const PUT_ERROR_VALIDATION = 'validation_error';
     const PUT_ERROR_INTERNAL = 'internal_error';
 
-    /**
-     * @Inject
-     * @var IHttpService
-     */
     private $http;
-
-    /**
-     * @Inject
-     * @var ListService
-     */
     private $listService;
-
-    /**
-     * @Inject
-     * @var ListSubscriptionService
-     */
     private $listSubscriptionService;
-
-    /**
-     * @Inject
-     * @var IAuthService
-     */
     private $authService;
+
+    public function __construct(
+        IHttpService $http,
+        IListService $listService,
+        IListSubscriptionService $listSubsService,
+        IAuthService $authService
+    ) {
+        $this->http = $http;
+        $this->listService = $listService;
+        $this->listSubscriptionService = $listSubsService;
+        $this->authService = $authService;
+    }
 
     public function put()
     {
@@ -76,7 +71,7 @@ class ListController
             $listOwnerSub->setUserId($this->authService->account()->getId());
             $listOwnerSub->setPermissions($perms);
 
-            $this->listSubscriptionService->createSubscription()
+            $this->listSubscriptionService->createSubscription();
         } catch (ListValidatorException $e) {
             return ApiResult::error(self::PUT_ERROR_VALIDATION, $e->getMessage());
         } catch (\Exception $e) {

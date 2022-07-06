@@ -22,6 +22,10 @@ use Wl\Http\HttpService\HttpService;
 use Wl\Http\HttpService\IHttpService;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
+use Wl\List\ListSubscriptionService\IListSubscriptionService;
+use Wl\Lists\ListService\IListService;
+use Wl\Lists\ListService\ListService;
+use Wl\Lists\Subscription\ListSubscriptionService\ListSubscriptionService;
 use Wl\Session\ISession;
 use Wl\Session\Session;
 use Wl\User\CredentialsFactory;
@@ -70,6 +74,10 @@ return [
     IHttpClient::class => get(HttpClient::class),
 
     IHttpService::class => get(HttpService::class),
+
+    IListService::class => get(ListService::class),
+
+    IListSubscriptionService::class => get(ListSubscriptionService::class),
 
     // API clients
     // ShikimoriTransportConfig::class => function (IConfig $conf) {

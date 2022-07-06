@@ -3,11 +3,12 @@
 namespace Wl\Lists\Subscription\ListSubscriptionService;
 
 use Wl\Db\Pdo\IManipulator;
+use Wl\List\ListSubscriptionService\IListSubscriptionService;
 use Wl\Lists\Subscription\IListSubscription;
 use Wl\Lists\Subscription\ListSubscription;
 use Wl\Permissions\PermissionsList;
 
-class ListSubscriptionService
+class ListSubscriptionService implements IListSubscriptionService
 {
     private $db;
 
@@ -16,7 +17,7 @@ class ListSubscriptionService
         $this->db = $db;
     }
 
-    public function createSubscription(IListSubscription $sub): bool
+    public function createSubscription(IListSubscription $sub): IListSubscription
     {
         $q = "INSERT INTO list_subscriptions (`listId`, `userId`, `added`, `permissions`) 
                    VALUES (:listId, :userId, :added, :permissions)";
@@ -27,11 +28,18 @@ class ListSubscriptionService
             'added' => date('Y-m-d H:i:s'),
             'permissions' => json_encode($sub->getPermissions()->getAll())
         ]);
+        return $this->getSubscriptionById($result->getId());
+    }
+
+    public function getSubscriptionById(int $id): ?IListSubscription
+    {
+        $q = "SELECT * FROM list_subscriptions WHERE id=:id";
+        $result = $this->db->getRow($q, ['id' => $id]);
         if ($result) {
-            return true;
+            return $this->buildSubscription($result);
         }
 
-        return false;
+        return null;
     }
 
     private function buildSubscription($data)

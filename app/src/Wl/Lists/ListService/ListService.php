@@ -8,7 +8,7 @@ use Wl\Lists\IList;
 use Wl\Lists\ListEntity;
 use Wl\Lists\ListService\Exception\ListCreateException;
 
-class ListService
+class ListService implements IListService
 {
     private $db;
 
