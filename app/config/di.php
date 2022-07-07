@@ -22,7 +22,7 @@ use Wl\Http\HttpService\HttpService;
 use Wl\Http\HttpService\IHttpService;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
-use Wl\List\ListSubscriptionService\IListSubscriptionService;
+use Wl\Lists\Subscription\ListSubscriptionService\IListSubscriptionService;
 use Wl\Lists\ListService\IListService;
 use Wl\Lists\ListService\ListService;
 use Wl\Lists\Subscription\ListSubscriptionService\ListSubscriptionService;

@@ -31,7 +31,7 @@ class ProxyController
     public function get($params)
     {
         if (!isset($params['data'])) {
-            return ApiResult::error('bad request', 400);
+            return ApiResult::error('bad request');
         }
         $json = base64_decode($params['data']);
         $parts = json_decode($json);
@@ -50,7 +50,7 @@ class ProxyController
                 $whitelist = $tconf->getAssetProxyAllowedHosts();
                 $allow = false;
                 if (!$whitelist) {
-                    return ApiResult::error(null);
+                    return ApiResult::errorInternal('invalid_configuration');
                 }
                 foreach ($whitelist as $host) {
                     $qHost = preg_quote($host);
@@ -60,7 +60,7 @@ class ProxyController
                     }
                 }
                 if (!$allow) {
-                    return ApiResult::error('forbiden', 403);
+                    return ApiResult::errorAccessDenied();
                 }
 
                 try {
@@ -75,13 +75,13 @@ class ProxyController
                     echo $result->getBody();
                     exit();
                 } catch (\Exception $e) {
-                    return ApiResult::error(['internal error', $e->getMessage()], 500);
+                    return ApiResult::errorInternal($e->getMessage());
                 }
             } catch (\Exception $e) {
-                return ApiResult::error('bad request', 400);
+                return ApiResult::errorInternal($e->getMessage());
             }
         }
 
-        return ApiResult::error('bad request', 400);
+        return ApiResult::error();
     }
 }

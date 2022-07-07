@@ -15,10 +15,11 @@ create table credentials (
 
 create table lists (
 	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
-	`title` text,
+	`ownerId` int(11) NOT NULL,
+	`title` text NOT NULL,
 	`description` text,
-	`added` datetime,
-	`updated` datetime
+	`added` datetime NOT NULL,
+	`updated` datetime NOT NULL
 );
 
 create table list_subscriptions (

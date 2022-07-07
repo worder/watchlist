@@ -46,7 +46,7 @@ class SearchController
         $page = $params->get('page');
 
         if (empty($term) && strlen($term) > 512) {
-            return ApiResult::error('INVALID_TERM');
+            return ApiResult::error('invalid_term');
         }
 
         try {
@@ -54,7 +54,7 @@ class SearchController
             $transport = $this->apiTransportFactory->enableCache($rawTransport);
 
             if (!in_array($mediaType, $transport->getSupportedMediaTypes())) {
-                return ApiResult::error('UNSUPPORTED_MEDIA_TYPE');
+                return ApiResult::error('unsupported_media_type');
             }
 
             $sq = new SearchQuery($term, $mediaType, $page);
@@ -99,10 +99,10 @@ class SearchController
 
                 return ApiResult::success($response);
             } catch (\Exception $e) {
-                return ApiResult::error('TRANSPORT_ERROR', $e->getMessage());
+                return ApiResult::error('transport_error', $e->getMessage());
             }
         } catch (InvalidApiIdException $e) {
-            return ApiResult::error('INVALID_API_ID');
+            return ApiResult::error('invalid_api_id');
         }
     }
 }

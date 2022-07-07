@@ -18,15 +18,24 @@ class ListService implements IListService
     }
 
     public function createList(IList $list): IList
-    {
-        $q = "INSERT INTO lists (`title`, `description`, `added`) 
-                   VALUES (:title, :desc, :added)";
+    {   
+        // `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+        // `ownerId` int(11) NOT NULL,
+        // `title` text NOT NULL,
+        // `description` text,
+        // `added` datetime NOT NULL,
+        // `updated` datetime NOT NULL
+
+        $q = "INSERT INTO lists (`ownerId`, `title`, `description`, `added`, `updated`) 
+                   VALUES (:ownerId, :title, :desc, :added, :updated)";
 
         try {
             $result = $this->db->exec($q, [
+                'ownerId' => $list->getOwnerId(),
                 'title' => $list->getTitle(),
                 'desc' => $list->getDesc(),
                 'added' => date('Y-m-d H:i:s'),
+                'updated' => date('Y-m-d H:i:s'),
             ]);
 
             if ($result) {
@@ -43,15 +52,21 @@ class ListService implements IListService
 
         $result = $this->db->getRow($q, ['id' => $id]);
         if ($result) {
-            return $this->buildList($result);
+            return self::buildList($result);
         }
 
         return null;
     }
 
-    private function buildList(array $data): IList
+    public static function buildList(array $data): IList
     {
         $list = new ListEntity();
-        return $list->setId($data['id'])->setDesc($data['description'])->setTitle($data['title']);
+        return $list
+            ->setOwnerId($data['ownerId'])
+            ->setId($data['id'])
+            ->setDesc($data['description'])
+            ->setTitle($data['title'])
+            ->setAdded($data['added'])
+            ->setUpdated($data['updated']);
     }
 }

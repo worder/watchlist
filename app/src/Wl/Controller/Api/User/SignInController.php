@@ -52,12 +52,12 @@ class SignInController
             $this->authService->login($account);
             return ApiResult::success('OK');
         } catch (AuthValidatorException $e) {
-            return ApiResult::error('INVALID_CREDENTIALS');
+            return ApiResult::error('invalid_credentials');
         } catch (AuthException $e) {
             if ($e->getMessage() === AuthException::INVALID_LOGIN) {
-                return ApiResult::error('USER_NOT_FOUND');
+                return ApiResult::error('user_not_found');
             } else {
-                return ApiResult::error('INVALID_CREDENTIALS');
+                return ApiResult::error('invalid_credentials');
             }
         }
     }

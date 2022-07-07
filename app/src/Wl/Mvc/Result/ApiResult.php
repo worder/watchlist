@@ -19,13 +19,18 @@ class ApiResult extends JsonResult
         return new self($data, $code);
     }
 
-    public static function error($error, $data = null, $code = 400)
+    public static function error($message = 'error', $data = null, $code = 400)
     {
-        return new self([$error, $data], $code);
+        return new self([$message, $data], $code);
     }
 
-    public static function accessDenied($data = null)
+    public static function errorAccessDenied($data = null)
     {
-        return new self($data, self::HTTP_CODE_ACCESS_DENIED);
+        return self::error('error_access_denied', $data, self::HTTP_CODE_ACCESS_DENIED);
+    }
+
+    public static function errorInternal($data = null)
+    {
+        return self::error('internal_server_error', $data, self::HTTP_CODE_INTERNAL_SERVER_ERROR);
     }
 }

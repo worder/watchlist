@@ -2,14 +2,27 @@
 
 namespace Wl\Lists\Subscription;
 
+use Wl\Lists\IList;
 use Wl\Permissions\IPermissionsList;
 
 class ListSubscription implements IListSubscription
 {
+    private $list = null;
+
     private $listId;
     private $userId;
     private $added;
     private $permissions;
+
+    public function setList(IList $list)
+    {
+        $this->list = $list;
+    }
+
+    public function getList(): ?IList
+    {
+        return $this->list;
+    }
 
     public function getListId(): int
     {

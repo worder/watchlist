@@ -1,25 +1,22 @@
 <?php
 
-namespace Wl\Controller\Api\List;
+namespace Wl\Controller\Api\ListEntry;
 
 use Wl\Http\HttpService\IHttpService;
-use Wl\List\ListSubscriptionService\IListSubscriptionService;
+use Wl\Lists\Subscription\ListSubscriptionService\IListSubscriptionService;
 use Wl\Lists\ListEntity;
 use Wl\Lists\ListService\IListService;
-use Wl\Lists\ListService\ListService;
 use Wl\Lists\ListValidator\ListValidator;
 use Wl\Lists\ListValidator\ListValidatorException;
 use Wl\Lists\Subscription\ListSubscription;
-use Wl\Lists\Subscription\ListSubscriptionService\ListSubscriptionService;
 use Wl\Mvc\Result\ApiResult;
-use Wl\Permissions\CrudPermission;
-use Wl\Permissions\PermissionsList;
 use Wl\User\AuthService\IAuthService;
 
 class ListController
 {
     const PUT_ERROR_VALIDATION = 'validation_error';
     const PUT_ERROR_INTERNAL = 'internal_error';
+    const PUT_SUCCESS = 'put_success';
 
     private $http;
     private $listService;
@@ -43,8 +40,10 @@ class ListController
         // 1. create list
         // 2. subscribe user to list with owner privileges
 
-        if (!$this->authService->account()) {
-            return ApiResult::accessDenied();
+        $user = $this->authService->account();
+
+        if (!$user) {
+            return ApiResult::errorAccessDenied();
         }
 
         $data = $this->http->request()->post();
@@ -55,6 +54,7 @@ class ListController
         $list = new ListEntity();
         $list->setTitle($title);
         $list->setDesc($desc);
+        $list->setOwnerId($user->getId());
 
         try {
             $validator = new ListValidator();
@@ -62,23 +62,17 @@ class ListController
 
             $addedList = $this->listService->createList($list);
 
-            $perms = new PermissionsList();
-            $perms->addPermission(CrudPermission::update());
-            $perms->addPermission(CrudPermission::delete());
-
             $listOwnerSub = new ListSubscription();
             $listOwnerSub->setListId($addedList->getId());
             $listOwnerSub->setUserId($this->authService->account()->getId());
-            $listOwnerSub->setPermissions($perms);
 
-            $this->listSubscriptionService->createSubscription();
+            $this->listSubscriptionService->createSubscription($listOwnerSub);
+            return ApiResult::success();
         } catch (ListValidatorException $e) {
-            return ApiResult::error(self::PUT_ERROR_VALIDATION, $e->getMessage());
+            return ApiResult::error('validation_error', $e->getMessage());
         } catch (\Exception $e) {
-            return ApiResult::error(self::PUT_ERROR_INTERNAL, $e->getMessage());
+            return ApiResult::errorInternal($e->getMessage());
         }
-
-        echo 'media controller';
     }
 
     public function patch()
