@@ -6,19 +6,32 @@ import userApi, {
     useSignoutMutation,
 } from '../../api/user/userApi';
 
-const AuthContext = React.createContext(null);
+import { User, UserInfoResponse } from '../../api/user/userTypes';
+
+
+interface AuthContext {
+    user: UserInfoResponse | undefined,
+    isLoading: boolean,
+    isUserError: boolean,
+    isSigninError: boolean,
+    // signinError: boolean,
+    signin: (login: string, password: string) => void,
+    // signout: any,
+};
+
+const AuthContext = React.createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }) => {
     const [
         doLogin,
         {
-            isFetching: isSigninLoading,
+            isLoading: isSigninLoading,
             isError: isSigninError,
             error: signinError,
         },
     ] = useSigninMutation();
 
-    const [signout, { isFetching: isSignoutLoading }] = useSignoutMutation();
+    const [signout, { isLoading: isSignoutLoading }] = useSignoutMutation();
 
     const {
         data: response,

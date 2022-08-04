@@ -5,7 +5,7 @@ type Method = "get" | "put" | "post" | "patch" | "delete";
 interface QueryParams {
     url: string,
     method?: Method,
-    data?: object | string,
+    data?: any,
     params?: object
 }
 

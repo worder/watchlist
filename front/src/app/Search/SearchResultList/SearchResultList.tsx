@@ -5,10 +5,10 @@ import { SearchResult } from '../../../api/search/searchTypes';
 import SearchResultItem from './SearchResultItem';
 
 interface ContainerProps {
-    isVisible: boolean
+    isVisible: boolean;
 }
 
-const Container = styled.div`
+const Container = styled.div<Partial<ContainerProps>>`
     position: absolute;
     top: 60px;
     left: 0px;
@@ -16,7 +16,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    ${(p: ContainerProps) =>
+    ${(p) =>
         !p.isVisible &&
         css`
             display: none;
@@ -32,8 +32,8 @@ const List = styled.div`
 
 interface Props {
     result: SearchResult | null;
-    isReady: boolean,
-    isLoading: boolean
+    isReady: boolean;
+    isLoading: boolean;
 }
 
 const SearchResultList = ({ result }: Props) => {

@@ -1,5 +1,5 @@
-import React from 'react';
 import { hot } from 'react-hot-loader/root';
+import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Outlet } from 'react-router-dom';
 
@@ -7,9 +7,10 @@ import HeadContainer from './Header/HeadContainer';
 import LogoContainer from './Header/Logo/LogoContainer';
 import UserContainer from './Header/User/UserContainer';
 import SearchTop from './Header/Search/SearchTopContainer';
+import UserLists from './UserLists/UserLists';
 
 import RequireAuth from './Auth/RequireAuth';
-import { GlobalStyles } from '@mantine/core';
+import DialogsCollection from './Dialogs/DialogsCollection';
 
 const GlobalStyle = createGlobalStyle`
     body, html {
@@ -35,6 +36,8 @@ const Layout = () => (
             <UserContainer />
         </HeadContainer>
         <ContentContainer>
+            <DialogsCollection />
+            <UserLists></UserLists>
             <Outlet />
         </ContentContainer>
     </RequireAuth>

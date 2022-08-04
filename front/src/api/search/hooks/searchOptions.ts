@@ -32,7 +32,7 @@ const useSearchOptions = (): UseSearchOptionsResult => {
     );
 
     useEffect(() => {
-        if (isReady) {
+        if (isReady && data !== undefined) {
             setApis(data);
         }
     }, [data, isReady]);
@@ -49,9 +49,10 @@ const useSearchOptions = (): UseSearchOptionsResult => {
         }
     }, [api]);
 
-    const selectApi = (id) => setApi(apis.find((api) => api.id === id));
+    const selectApi = (id) => setApi(apis.find((api) => api.id === id) || null);
+
     const selectMediaType = (id) =>
-        setMediaType(api.media_types.find((type) => type.id === id));
+        setMediaType(api?.media_types.find((type) => type.id === id) || null);
 
     return {
         isReady,

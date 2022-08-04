@@ -1,28 +1,33 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import apiBaseQuery from '../client';
 
+import { UserInfoResponse } from './userTypes';
+
+type SigninProps = { login: string; password: string };
+
+type ApiResponse = string | [string, any];
+
 const userApi = createApi({
     baseQuery: apiBaseQuery(),
-    //   baseQuery: apiBaseQuery(),
     reducerPath: 'userApi',
     tagTypes: ['User'],
     endpoints: (build) => ({
-        getInfo: build.query({
+        getInfo: build.query<UserInfoResponse, void>({
             query: () => ({ url: '/user/info' }),
             providesTags: ['User'],
         }),
-        signin: build.mutation({
+        signin: build.mutation<ApiResponse, SigninProps>({
             query: (data) => ({
                 url: '/user/signin',
-                method: 'POST',
+                method: 'post',
                 data,
             }),
             invalidatesTags: ['User'],
         }),
-        signout: build.mutation({
+        signout: build.mutation<ApiResponse, void>({
             query: () => ({
                 url: '/user/signout',
-                method: 'GET',
+                method: 'get',
             }),
             invalidatesTags: ['User'],
         }),
