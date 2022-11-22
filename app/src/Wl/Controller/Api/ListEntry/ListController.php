@@ -48,8 +48,8 @@ class ListController
 
         $data = $this->http->request()->post();
 
-        $title = $data->get('title');
-        $desc = $data->get('desc');
+        $title = (string) $data->get('title');
+        $desc = (string) $data->get('desc');
 
         $list = new ListEntity();
         $list->setTitle($title);

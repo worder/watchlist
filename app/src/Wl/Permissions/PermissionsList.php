@@ -4,7 +4,7 @@ namespace Wl\Permissions;
 
 class PermissionsList implements IPermissionsList
 {
-    private $permissions;
+    private $permissions = [];
 
     public function addPermission(IPermission $permission): void
     {

@@ -1,7 +1,7 @@
-import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Outlet } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import HeadContainer from './Header/HeadContainer';
 import LogoContainer from './Header/Logo/LogoContainer';
@@ -29,6 +29,9 @@ const ContentContainer = styled.div`
 
 const Layout = () => (
     <RequireAuth>
+        <Helmet>
+            <title>Watchlist | main page</title>
+        </Helmet>
         <GlobalStyle />
         <HeadContainer>
             <LogoContainer />
@@ -43,4 +46,4 @@ const Layout = () => (
     </RequireAuth>
 );
 
-export default hot(Layout);
+export default Layout;

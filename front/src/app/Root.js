@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-// import { hot } from 'react-hot-loader/root';
+import { hot } from 'react-hot-loader/root';
 
 import store from '../store/store';
 
@@ -8,8 +8,6 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from './Page/Login/LoginPage';
 import MainLayout from './MainLayout';
 import AuthProvider from './Auth/AuthContext';
-
-// import
 
 const Root = () => (
     <Provider store={store}>
@@ -22,5 +20,4 @@ const Root = () => (
     </Provider>
 );
 
-// export default hot(Root);
 export default Root;

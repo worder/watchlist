@@ -6,15 +6,19 @@ import { UserListsResult } from './listsTypes';
 const listsApi = createApi({
     baseQuery: apiBaseQuery(),
     reducerPath: 'listApi',
+    tagTypes: ['UserLists'],
     endpoints: (build) => ({
         getUserLists: build.query<UserListsResult, number>({
             query: (userId) => ({ url: `/user-lists/${userId}` }),
+            providesTags: ['UserLists'],
         }),
-        createUserList: build.mutation({
+        createUserList: build.mutation<null, { title: string; desc: string }>({
             query: (data) => ({
-                url: '/put',
-                data
-            })
+                url: '/list',
+                method: 'put',
+                data,
+            }),
+            invalidatesTags: ['UserLists'],
         }),
         // search: build.query<
         //     SearchResult,
@@ -28,6 +32,6 @@ const listsApi = createApi({
     }),
 });
 
-export const { useGetUserListsQuery } = listsApi;
+export const { useGetUserListsQuery, useCreateUserListMutation } = listsApi;
 
 export default listsApi;

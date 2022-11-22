@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import {hot} from 'react-hot-loader';
+import {
+    TextInput,
+    PasswordInput,
+    InputWrapper,
+    Button,
+    Textarea,
+} from '@mantine/core';
+import { z } from 'zod';
 
 import { getIsVisible, hide } from './userListCreateDialogSlice';
+import { useForm, zodResolver } from '@mantine/form';
+import { useCreateUserListMutation } from '../../../api/list/listApi';
 
 interface Props {
     isVisible: boolean;
@@ -40,32 +49,117 @@ const DialogContainer = styled.div`
 `;
 
 const DialogHeader = styled.div`
-    height: 20px;
     display: flex;
+    border-bottom: 1px solid #000;
 `;
 
 const DialogTitle = styled.div`
+    padding: 15px;
     height: 20px;
+    width: 100%;
 `;
 
 const DialogCloseButton = styled.div`
-    width: 20px;
+    padding: 15px;
+    cursor: pointer;
 `;
 
-const DialogContentContainer = styled.div``;
+const DialogContentContainer = styled.div`
+    padding: 15px;
+`;
 
+const Form = styled.form``;
 
+const FormRow = styled.div`
+    & + & {
+        padding-top: 20px;
+    }
+`;
 
 const UserListCreateDialog = ({ isVisible, onHide }: Props) => {
+    const [createList, result] = useCreateUserListMutation();
+    const [errors, setErrors] = useState<{ title: string | null }>({
+        title: null,
+    });
+
+    const inProgress = result.isLoading;
+
+    const schema = z.object({
+        title: z
+            .string()
+            .min(1, { message: 'Название не должно быть пустым' })
+            .max(128, { message: 'Название не должно быть > 128 символов' }),
+        desc: z.string().max(256),
+    });
+
+    const form = useForm({
+        schema: zodResolver(schema),
+        initialValues: {
+            title: '',
+            desc: '',
+        },
+    });
+
+    const onListCreate = ({ title, desc }) => {
+        console.log(title, desc);
+        createList({ desc, title });
+    };
+
+    useEffect(() => {
+        if (result.isSuccess) {
+            onHide();
+        }
+    }, [result.isSuccess]);
+
+    useEffect(() => {
+        if (result.isError) {
+            if ('status' in result.error) {
+                const {status, data} = result.error;
+                setErrors({
+                    ...errors,
+                    title: 'Ошибка на сервере: ' + status + ' ' + data,
+                });
+            }
+        } else {
+            setErrors({
+                title: null,
+            });
+        }
+    }, [result.isError]);
+
     return (
         <DialogPlaceholder isVisible={isVisible}>
             <ModalOverlay />
             <DialogContainer>
                 <DialogHeader>
-                    <DialogTitle>List creation dialog</DialogTitle>
+                    <DialogTitle>Создание списка</DialogTitle>
                     <DialogCloseButton onClick={onHide}>X</DialogCloseButton>
                 </DialogHeader>
-                <DialogContentContainer>dialog content</DialogContentContainer>
+                <DialogContentContainer>
+                    <Form onSubmit={form.onSubmit(onListCreate)}>
+                        <FormRow>
+                            <TextInput
+                                label="Название"
+                                name="title"
+                                error={errors.title}
+                                {...form.getInputProps('title')}
+                            />
+                        </FormRow>
+                        <FormRow>
+                            <Textarea
+                                label="Описание"
+                                name="desc"
+                                // error={false}
+                                {...form.getInputProps('desc')}
+                            />
+                        </FormRow>
+                        <FormRow>
+                            <Button loading={inProgress} type="submit">
+                                Создать
+                            </Button>
+                        </FormRow>
+                    </Form>
+                </DialogContentContainer>
             </DialogContainer>
         </DialogPlaceholder>
     );

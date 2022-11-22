@@ -9,6 +9,11 @@ interface QueryParams {
     params?: object
 }
 
+interface Error {
+    data: string,
+    status: number;
+}
+
 const apiBaseQuery =
     ({ baseUrl } = { baseUrl: '/api' }) =>
     async ({ url, method, data, params }: QueryParams) => {
@@ -26,7 +31,7 @@ const apiBaseQuery =
                 error: {
                     status: err.response?.status,
                     data: err.response?.data,
-                },
+                } as Error,
             };
         }
     };

@@ -27,7 +27,7 @@ class HttpService implements IHttpService
         $files = new ParamsStore($_FILES);
         $headers = new ParamsStore(getallheaders());
 
-        if ($method === 'POST' && $headers->get('Content-Type') === 'application/json') {
+        if (in_array($method, ['POST', 'PUT', 'PATCH']) && $headers->get('Content-Type') === 'application/json') {
             $json = file_get_contents('php://input');
             $post = new ParamsStore(json_decode($json, true));
         }

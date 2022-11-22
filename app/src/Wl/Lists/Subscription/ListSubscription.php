@@ -4,6 +4,7 @@ namespace Wl\Lists\Subscription;
 
 use Wl\Lists\IList;
 use Wl\Permissions\IPermissionsList;
+use Wl\Permissions\PermissionsList;
 
 class ListSubscription implements IListSubscription
 {
@@ -59,6 +60,10 @@ class ListSubscription implements IListSubscription
 
     public function getPermissions(): IPermissionsList
     {
+        if (!$this->permissions) {
+            $this->permissions = new PermissionsList();
+        }
+
         return $this->permissions;
     }
 

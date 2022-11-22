@@ -21,6 +21,12 @@ use Wl\Mvc\ResultToResponse;
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+register_shutdown_function(function () {
+    $last_error = error_get_last();
+    if ($last_error && in_array($last_error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR, E_CORE_ERROR]))
+        header('HTTP/1.1 500 Internal Server Error', TRUE, 500);
+});
+
 require "app/vendor/autoload.php";
 
 // init DI container
