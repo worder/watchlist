@@ -33,7 +33,11 @@ const useSearch = (): UseSearchReturn => {
         setSearchOptions(null);
     };
 
-    const { term, api, type } = searchOptions ?? {};
+    const { term, api, type } = searchOptions ?? {
+        term: '',
+        api: '',
+        type: '',
+    };
 
     const searchQueryResult = useSearchQuery(
         { term, api, type },
@@ -45,11 +49,10 @@ const useSearch = (): UseSearchReturn => {
 
     const { data: searchResultData } = searchQueryResult;
 
-    const isReady =
-        isSuccess && !isUninitialized && !isFetching && !isLoading;
+    const isReady = isSuccess && !isUninitialized && !isFetching && !isLoading;
 
     useEffect(() => {
-        if (isReady) {
+        if (isReady && searchResultData) {
             setSearchResult(searchResultData);
         }
     }, [isReady]);

@@ -101,7 +101,6 @@ const UserListCreateDialog = ({ isVisible, onHide }: Props) => {
     });
 
     const onListCreate = ({ title, desc }) => {
-        console.log(title, desc);
         createList({ desc, title });
     };
 
@@ -112,9 +111,18 @@ const UserListCreateDialog = ({ isVisible, onHide }: Props) => {
     }, [result.isSuccess]);
 
     useEffect(() => {
+        if (isVisible) {
+            form.setValues({
+                title: '',
+                desc: '',
+            });
+        }
+    }, [isVisible]);
+
+    useEffect(() => {
         if (result.isError) {
             if ('status' in result.error) {
-                const {status, data} = result.error;
+                const { status, data } = result.error;
                 setErrors({
                     ...errors,
                     title: 'Ошибка на сервере: ' + status + ' ' + data,

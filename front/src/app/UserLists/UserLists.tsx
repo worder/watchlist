@@ -9,7 +9,6 @@ import { UserListsResult } from '../../api/list/listsTypes';
 import { show } from '../Dialogs/UserListCreateDialog/userListCreateDialogSlice';
 
 const UserListsContainer = styled.div`
-    width: 300px;
 `;
 
 const UserListAddButtonContainer = styled.div``;

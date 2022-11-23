@@ -81,6 +81,7 @@ class SearchController
                     }
 
                     $items[] = [
+                        'api' => $clientId,
                         'id' => $media->getApiMediaId(),
                         'type' => $media->getMediaType(),
                         'title' => $locale->getTitle(),

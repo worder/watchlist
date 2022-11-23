@@ -6,6 +6,7 @@ export interface Posters {
 }
 
 export interface SearchItem {
+    api: string;
     id: number;
     type: string;
     title: string;

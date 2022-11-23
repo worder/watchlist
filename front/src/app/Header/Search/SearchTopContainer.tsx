@@ -5,14 +5,6 @@ import { TextInput, Select, Button, LoadingOverlay } from '@mantine/core';
 
 import SearchResultList from '../../Search/SearchResultList/SearchResultList';
 
-import {
-    useGetSearchOptionsQuery,
-    // useSearchMutation,
-    useSearchQuery,
-    useSearchQueryState,
-    useSearchQuerySubscription,
-} from '../../../api/search/searchApi';
-
 import useSearch from '../../../api/search/hooks/search';
 import useSearchOptions from '../../../api/search/hooks/searchOptions';
 
@@ -34,6 +26,7 @@ const setValueFromEvent = (set) => (e) => set(e.target.value);
 
 const SearchTop = () => {
     const [term, setTerm] = useState('');
+    const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
 
     const {
         commitSearch,
@@ -59,14 +52,15 @@ const SearchTop = () => {
         ? api.media_types.map((type) => ({ value: type.id, label: type.name }))
         : [];
 
-    console.log(searchResult);
-
     const selectedMediaType = mediaType && mediaType.id;
     const selectedApi = api && api.id;
 
     const onSearch = (e) => {
         e.preventDefault();
-        commitSearch({ term, api: api.id, type: mediaType.id });
+        setIsSearchResultVisible(true);
+        if (api && mediaType) {
+            commitSearch({ term, api: api.id, type: mediaType.id });
+        }
     };
 
     return (
@@ -96,6 +90,8 @@ const SearchTop = () => {
                 <Button type="submit">Search</Button>
             </SearchTopContainer>
             <SearchResultList
+                isVisible={isSearchResultVisible}
+                onHide={() => setIsSearchResultVisible(false)}
                 result={searchResult}
                 isReady={isSearchReady}
                 isLoading={isSearchLoading}

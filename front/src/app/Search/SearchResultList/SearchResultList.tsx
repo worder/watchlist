@@ -4,11 +4,11 @@ import { SearchResult } from '../../../api/search/searchTypes';
 
 import SearchResultItem from './SearchResultItem';
 
-interface ContainerProps {
+interface PlaceholderProps {
     isVisible: boolean;
 }
 
-const Container = styled.div<Partial<ContainerProps>>`
+const Placeholder = styled.div<Partial<PlaceholderProps>>`
     position: absolute;
     top: 60px;
     left: 0px;
@@ -23,30 +23,54 @@ const Container = styled.div<Partial<ContainerProps>>`
         `}
 `;
 
-const List = styled.div`
+const Container = styled.div`
     width: 720px;
     border: 1px solid #000;
-    background-color: #aaa;
+    background-color: #eee;
+`;
+
+const List = styled.div`
     padding: 10px;
 `;
+
+const Title = styled.div`
+    padding: 10px;
+    display: flex;
+    border-bottom: 1px solid #444;
+`;
+
+const TitleInfo = styled.div`
+    width: 100%;
+`;
+
+const CloseButton = styled.button``;
 
 interface Props {
     result: SearchResult | null;
     isReady: boolean;
     isLoading: boolean;
+    isVisible: boolean;
+    onHide: () => void;
 }
 
-const SearchResultList = ({ result }: Props) => {
+const SearchResultList = ({ result, isVisible, isLoading, onHide }: Props) => {
     const { items } = result ?? {};
+    const visible = isVisible && (items && items.length > 0) || isLoading;
     return (
-        <Container isVisible={items && items.length > 0}>
-            <List>
-                {items &&
-                    items.map((item) => (
-                        <SearchResultItem key={item.id} item={item} />
-                    ))}
-            </List>
-        </Container>
+        <Placeholder isVisible={visible}>
+            <Container>
+                <Title>
+                    <TitleInfo>{`Найдено: ${result?.total}`}</TitleInfo>
+                    <CloseButton type="button" onClick={onHide}>Закрыть</CloseButton>
+                </Title>
+                <List>
+                    {items &&
+                        items.map((item) => (
+                            <SearchResultItem key={item.id} item={item} />
+                        ))}
+                </List>
+            </Container>
+        </Placeholder>
     );
 };
 
