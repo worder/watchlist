@@ -3,16 +3,10 @@ import { string } from 'zod';
 
 import { useSearchQuery } from '../searchApi';
 
-import { SearchResult } from '../searchTypes';
-
-interface SearchOptions {
-    term: string;
-    api: string;
-    type: string;
-}
+import { SearchResult, SearchQueryParams } from '../searchTypes';
 
 interface UseSearchReturn {
-    commitSearch: (options: SearchOptions) => void;
+    commitSearch: (options: SearchQueryParams) => void;
     clearSearch: () => void;
     searchResult: SearchResult | null;
     isReady: boolean;
@@ -22,7 +16,7 @@ interface UseSearchReturn {
 }
 
 const useSearch = (): UseSearchReturn => {
-    const [searchOptions, setSearchOptions] = useState<SearchOptions | null>(
+    const [searchOptions, setSearchOptions] = useState<SearchQueryParams | null>(
         null
     );
 
@@ -33,14 +27,15 @@ const useSearch = (): UseSearchReturn => {
         setSearchOptions(null);
     };
 
-    const { term, api, type } = searchOptions ?? {
+    const { term, api, type, page } = searchOptions ?? {
         term: '',
         api: '',
         type: '',
+        page: 1
     };
 
     const searchQueryResult = useSearchQuery(
-        { term, api, type },
+        { term, api, type, page },
         { skip: searchOptions === null }
     );
 
@@ -49,13 +44,15 @@ const useSearch = (): UseSearchReturn => {
 
     const { data: searchResultData } = searchQueryResult;
 
+    console.log(searchResultData);
+
     const isReady = isSuccess && !isUninitialized && !isFetching && !isLoading;
 
     useEffect(() => {
         if (isReady && searchResultData) {
             setSearchResult(searchResultData);
         }
-    }, [isReady]);
+    }, [isReady, searchResultData]);
 
     return {
         commitSearch: setSearchOptions,

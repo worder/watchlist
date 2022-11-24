@@ -26,7 +26,6 @@ const store = configureStore({
     devTools: true,
 });
 
-console.log('store created');
-
+export type RootState = ReturnType<typeof store.getState>
 export default store;
 export const { dispatch } = store;

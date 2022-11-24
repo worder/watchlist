@@ -34,4 +34,11 @@ export interface SearchOptionsApi {
     name_short: string;
 }
 
+export interface SearchQueryParams {
+    term: string;
+    api: string;
+    type: string;
+    page: number;
+}
+
 export type SearchOptionsResult = SearchOptionsApi[];

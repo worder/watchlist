@@ -14,59 +14,16 @@ import { getIsVisible, hide } from './userListCreateDialogSlice';
 import { useForm, zodResolver } from '@mantine/form';
 import { useCreateUserListMutation } from '../../../api/list/listApi';
 
+import Dialog from '../../Dialog/Dialog';
+import DialogTitleContainer from '../../Dialog/DialogTitleContainer';
+import DialogTitle from '../../Dialog/DialogTitle';
+import DialogCloseButton from '../../Dialog/DialogTitleCloseButton';
+import DialogContentContainer from '../../Dialog/DialogContentContainer';
+
 interface Props {
     isVisible: boolean;
     onHide: () => void;
 }
-
-const DialogPlaceholder = styled.div<Partial<Props>>`
-    display: ${(p) => (p.isVisible ? 'flex' : 'none')};
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-`;
-
-const ModalOverlay = styled.div`
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    opacity: 0.1;
-    z-index: 1000;
-`;
-
-const DialogContainer = styled.div`
-    border: 1px solid #000;
-    background: #fff;
-    width: 500px;
-    z-index: 1001;
-`;
-
-const DialogHeader = styled.div`
-    display: flex;
-    border-bottom: 1px solid #000;
-`;
-
-const DialogTitle = styled.div`
-    padding: 15px;
-    height: 20px;
-    width: 100%;
-`;
-
-const DialogCloseButton = styled.div`
-    padding: 15px;
-    cursor: pointer;
-`;
-
-const DialogContentContainer = styled.div`
-    padding: 15px;
-`;
 
 const Form = styled.form``;
 
@@ -136,40 +93,37 @@ const UserListCreateDialog = ({ isVisible, onHide }: Props) => {
     }, [result.isError]);
 
     return (
-        <DialogPlaceholder isVisible={isVisible}>
-            <ModalOverlay />
-            <DialogContainer>
-                <DialogHeader>
-                    <DialogTitle>Создание списка</DialogTitle>
-                    <DialogCloseButton onClick={onHide}>X</DialogCloseButton>
-                </DialogHeader>
-                <DialogContentContainer>
-                    <Form onSubmit={form.onSubmit(onListCreate)}>
-                        <FormRow>
-                            <TextInput
-                                label="Название"
-                                name="title"
-                                error={errors.title}
-                                {...form.getInputProps('title')}
-                            />
-                        </FormRow>
-                        <FormRow>
-                            <Textarea
-                                label="Описание"
-                                name="desc"
-                                // error={false}
-                                {...form.getInputProps('desc')}
-                            />
-                        </FormRow>
-                        <FormRow>
-                            <Button loading={inProgress} type="submit">
-                                Создать
-                            </Button>
-                        </FormRow>
-                    </Form>
-                </DialogContentContainer>
-            </DialogContainer>
-        </DialogPlaceholder>
+        <Dialog isVisible={isVisible}>
+            <DialogTitleContainer>
+                <DialogTitle>Создание списка</DialogTitle>
+                <DialogCloseButton onClick={onHide} />
+            </DialogTitleContainer>
+            <DialogContentContainer>
+                <Form onSubmit={form.onSubmit(onListCreate)}>
+                    <FormRow>
+                        <TextInput
+                            label="Название"
+                            name="title"
+                            error={errors.title}
+                            {...form.getInputProps('title')}
+                        />
+                    </FormRow>
+                    <FormRow>
+                        <Textarea
+                            label="Описание"
+                            name="desc"
+                            // error={false}
+                            {...form.getInputProps('desc')}
+                        />
+                    </FormRow>
+                    <FormRow>
+                        <Button loading={inProgress} type="submit">
+                            Создать
+                        </Button>
+                    </FormRow>
+                </Form>
+            </DialogContentContainer>
+        </Dialog>
     );
 };
 

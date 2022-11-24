@@ -31,6 +31,8 @@ const Container = styled.div`
 
 const List = styled.div`
     padding: 10px;
+    max-height: 500px;
+    overflow: auto;
 `;
 
 const Title = styled.div`
@@ -43,25 +45,87 @@ const TitleInfo = styled.div`
     width: 100%;
 `;
 
+const Footer = styled.div`
+    border-top: 1px solid #444;
+`;
+
 const CloseButton = styled.button``;
+
+const PaginateContainer = styled.div`
+    display: flex;
+    padding: 10px;
+`;
+const PaginateButton = styled.button`
+    padding: 6px;
+    border: none;
+    font-size: 16px;
+    background: none;
+    text-decoration: underline;
+    cursor: pointer;
+`;
+const PaginateCurrentPage = styled.div`
+    font-size: 16px;
+    padding: 6px;
+    color: #989587;
+`;
+
+const Paginate = ({ pages, page, setPage }) => {
+    let buttons: JSX.Element[] = [];
+
+    for (let i = 1; i <= pages; i++) {
+        buttons.push(
+            page !== i ? (
+                <PaginateButton
+                    type="button"
+                    onClick={() => {
+                        setPage(i);
+                        return false;
+                    }}
+                >
+                    {i}
+                </PaginateButton>
+            ) : (
+                <PaginateCurrentPage>{i}</PaginateCurrentPage>
+            )
+        );
+    }
+
+    return <PaginateContainer>{buttons}</PaginateContainer>;
+};
 
 interface Props {
     result: SearchResult | null;
     isReady: boolean;
     isLoading: boolean;
     isVisible: boolean;
+    page: number;
     onHide: () => void;
+    onSetPage: (page: number) => void;
 }
 
-const SearchResultList = ({ result, isVisible, isLoading, onHide }: Props) => {
-    const { items } = result ?? {};
-    const visible = isVisible && (items && items.length > 0) || isLoading;
+const SearchResultList = ({
+    result,
+    isVisible,
+    isLoading,
+    onHide,
+    onSetPage,
+    page,
+}: Props) => {
+    const { items, pages } = result ?? {};
+    const visible = (isVisible && items && items.length > 0) || isLoading;
     return (
         <Placeholder isVisible={visible}>
             <Container>
                 <Title>
-                    <TitleInfo>{`Найдено: ${result?.total}`}</TitleInfo>
-                    <CloseButton type="button" onClick={onHide}>Закрыть</CloseButton>
+                    <TitleInfo>
+                        {isLoading
+                            ? 'Загрузка...'
+                            : `Найдено: ${result?.total}`}
+                    </TitleInfo>
+
+                    <CloseButton type="button" onClick={onHide}>
+                        Закрыть
+                    </CloseButton>
                 </Title>
                 <List>
                     {items &&
@@ -69,6 +133,15 @@ const SearchResultList = ({ result, isVisible, isLoading, onHide }: Props) => {
                             <SearchResultItem key={item.id} item={item} />
                         ))}
                 </List>
+                {pages && pages > 1 && (
+                    <Footer>
+                        <Paginate
+                            pages={pages}
+                            page={page}
+                            setPage={onSetPage}
+                        />
+                    </Footer>
+                )}
             </Container>
         </Placeholder>
     );

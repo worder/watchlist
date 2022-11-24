@@ -25,8 +25,10 @@ const SearchApiContainer = styled.div`
 const setValueFromEvent = (set) => (e) => set(e.target.value);
 
 const SearchTop = () => {
-    const [term, setTerm] = useState('');
-    const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
+    const [term, setTerm] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+    const [isSearchResultVisible, setIsSearchResultVisible] =
+        useState<boolean>(false);
 
     const {
         commitSearch,
@@ -34,6 +36,7 @@ const SearchTop = () => {
         isLoading: isSearchLoading,
         isReady: isSearchReady,
     } = useSearch();
+
     const {
         isReady: isOptionsReady,
         apis,
@@ -55,12 +58,19 @@ const SearchTop = () => {
     const selectedMediaType = mediaType && mediaType.id;
     const selectedApi = api && api.id;
 
+    const doSearch = () =>
+        api &&
+        mediaType &&
+        commitSearch({ term, api: api.id, type: mediaType.id, page });
+
+    useEffect(() => {
+        doSearch();
+    }, [page]);
+
     const onSearch = (e) => {
         e.preventDefault();
         setIsSearchResultVisible(true);
-        if (api && mediaType) {
-            commitSearch({ term, api: api.id, type: mediaType.id });
-        }
+        doSearch();
     };
 
     return (
@@ -92,6 +102,8 @@ const SearchTop = () => {
             <SearchResultList
                 isVisible={isSearchResultVisible}
                 onHide={() => setIsSearchResultVisible(false)}
+                page={page}
+                onSetPage={setPage}
                 result={searchResult}
                 isReady={isSearchReady}
                 isLoading={isSearchLoading}
