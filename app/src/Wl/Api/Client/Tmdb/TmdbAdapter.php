@@ -31,7 +31,11 @@ class TmdbAdapter implements IDataAdapter
         $media->setMediaType($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE));
         $media->setOriginalLocale($data->str('original_language'));
 
-        $media->setOriginalTitle($data->str('original_title'));
+        if ($data->has('original_title')) {
+            $media->setOriginalTitle($data->str('original_title'));
+        } elseif ($data->has('original_name')) {
+            $media->setOriginalTitle($data->str('original_name'));
+        }
 
         if ($data->has('release_date')) {
             $media->setReleaseDate($data->str('release_date'));

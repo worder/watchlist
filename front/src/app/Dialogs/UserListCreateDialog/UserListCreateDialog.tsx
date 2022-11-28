@@ -14,7 +14,7 @@ import { getIsVisible, hide } from './userListCreateDialogSlice';
 import { useForm, zodResolver } from '@mantine/form';
 import { useCreateUserListMutation } from '../../../api/list/listApi';
 
-import Dialog from '../../Dialog/Dialog';
+import Dialog from '../../Dialog/DialogContainer';
 import DialogTitleContainer from '../../Dialog/DialogTitleContainer';
 import DialogTitle from '../../Dialog/DialogTitle';
 import DialogCloseButton from '../../Dialog/DialogTitleCloseButton';

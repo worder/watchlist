@@ -8,17 +8,17 @@ import { SearchResult, SearchQueryParams } from '../searchTypes';
 interface UseSearchReturn {
     commitSearch: (options: SearchQueryParams) => void;
     clearSearch: () => void;
+    refetch: () => void;
     searchResult: SearchResult | null;
     isReady: boolean;
     isLoading: boolean;
     isError: boolean;
-    error: string | null;
+    error: string[] | null;
 }
 
 const useSearch = (): UseSearchReturn => {
-    const [searchOptions, setSearchOptions] = useState<SearchQueryParams | null>(
-        null
-    );
+    const [searchOptions, setSearchOptions] =
+        useState<SearchQueryParams | null>(null);
 
     const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
@@ -31,7 +31,7 @@ const useSearch = (): UseSearchReturn => {
         term: '',
         api: '',
         type: '',
-        page: 1
+        page: 1,
     };
 
     const searchQueryResult = useSearchQuery(
@@ -39,14 +39,24 @@ const useSearch = (): UseSearchReturn => {
         { skip: searchOptions === null }
     );
 
-    const { isSuccess, isUninitialized, isFetching, isLoading, isError } =
-        searchQueryResult;
-
-    const { data: searchResultData } = searchQueryResult;
-
-    console.log(searchResultData);
+    const {
+        data: searchResultData,
+        isSuccess,
+        isUninitialized,
+        isFetching,
+        isLoading,
+        isError,
+        error: rawError,
+        refetch,
+    } = searchQueryResult;
 
     const isReady = isSuccess && !isUninitialized && !isFetching && !isLoading;
+
+    useEffect(() => {
+        if (searchResult && isError) {
+            setSearchResult(null);
+        }
+    }, [isError]);
 
     useEffect(() => {
         if (isReady && searchResultData) {
@@ -57,11 +67,12 @@ const useSearch = (): UseSearchReturn => {
     return {
         commitSearch: setSearchOptions,
         clearSearch,
+        refetch,
         searchResult,
         isLoading: isLoading || isFetching,
         isReady,
         isError,
-        error: null,
+        error: rawError && 'data' in rawError && rawError.data,
     };
 };
 

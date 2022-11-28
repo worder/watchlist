@@ -5,6 +5,7 @@ import searchApi from '../api/search/searchApi';
 import listApi from '../api/list/listApi';
 
 import userListCreateDialogSlice from '../app/Dialogs/UserListCreateDialog/userListCreateDialogSlice';
+import addToListDialogSlice from '../app/Dialogs/AddToListDialog/addToListDialogSlice';
 
 const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     [listApi.reducerPath]: listApi.reducer,
     dialogs: combineReducers({
         userListCreate: userListCreateDialogSlice,
+        addToList: addToListDialogSlice,
     }),
 });
 
@@ -26,6 +28,6 @@ const store = configureStore({
     devTools: true,
 });
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 export default store;
 export const { dispatch } = store;

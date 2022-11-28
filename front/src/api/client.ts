@@ -1,28 +1,37 @@
 import axios from 'axios';
+import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 
-type Method = "get" | "put" | "post" | "patch" | "delete";
+type Method = 'get' | 'put' | 'post' | 'patch' | 'delete';
 
-interface QueryParams {
-    url: string,
-    method?: Method,
-    data?: any,
-    params?: object
+interface Args {
+    baseUrl?: string;
+}
+
+interface QueryArgs {
+    url: string;
+    method?: Method;
+    data?: any;
+    params?: object;
 }
 
 interface Error {
-    data: string,
+    data: any;
     status: number;
 }
 
-const apiBaseQuery =
-    ({ baseUrl } = { baseUrl: '/api' }) =>
-    async ({ url, method, data, params }: QueryParams) => {
+const apiBaseQuery = ({ baseUrl } = { baseUrl: '/api' }) => {
+    const apiBaseQueryFunc: BaseQueryFn<QueryArgs, unknown, Error> = async ({
+        url,
+        method,
+        data,
+        params,
+    }: QueryArgs) => {
         try {
             const result = await axios({
                 url: baseUrl + url,
                 method,
                 data,
-                params
+                params,
             });
             return { data: result.data };
         } catch (axiosError) {
@@ -31,9 +40,12 @@ const apiBaseQuery =
                 error: {
                     status: err.response?.status,
                     data: err.response?.data,
-                } as Error,
+                },
             };
         }
     };
+
+    return apiBaseQueryFunc;
+};
 
 export default apiBaseQuery;

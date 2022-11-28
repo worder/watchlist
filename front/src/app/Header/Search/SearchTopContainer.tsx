@@ -32,9 +32,12 @@ const SearchTop = () => {
 
     const {
         commitSearch,
+        refetch,
         searchResult,
         isLoading: isSearchLoading,
         isReady: isSearchReady,
+        isError: isSearchError,
+        error: searchError,
     } = useSearch();
 
     const {
@@ -70,7 +73,11 @@ const SearchTop = () => {
     const onSearch = (e) => {
         e.preventDefault();
         setIsSearchResultVisible(true);
-        doSearch();
+        if (isSearchError && term) {
+            refetch();
+        } else {
+            doSearch();
+        }
     };
 
     return (
@@ -107,6 +114,8 @@ const SearchTop = () => {
                 result={searchResult}
                 isReady={isSearchReady}
                 isLoading={isSearchLoading}
+                isError={isSearchError}
+                error={searchError}
             />
         </form>
     );

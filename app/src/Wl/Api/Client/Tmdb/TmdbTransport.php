@@ -2,6 +2,7 @@
 
 namespace Wl\Api\Client\Tmdb;
 
+use Exception;
 use Wl\Api\Client\Tmdb\Entity\TmdbConfigurationResponse;
 use Wl\Api\DataAdapter\DataResolver;
 use Wl\Media\ApiDataContainer\ApiDataContainer;
@@ -60,6 +61,10 @@ class TmdbTransport implements ITransport
 
     public function search(ISearchQuery $q): ISearchResult
     {
+        if (empty($q->getTerm())) {
+            throw new Exception('Term can not be empty'); // this sould't happen normaly
+        }
+
         $result = [];
         if ($q->getMediaType() === MediaType::MOVIE) {
             $result = $this->searchMovie($q);

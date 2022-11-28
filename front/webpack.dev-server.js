@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common');
+const webpack = require('webpack');
 
 const outPath = process.env.npm_config_output;
 
@@ -36,5 +37,6 @@ module.exports = merge(common, {
             'react-dom': '@hot-loader/react-dom',
         },
     },
+    // plugins: [new webpack.SourceMapDevToolPlugin()],
     // plugins: [new CleanWebpackPlugin()]
-})
+});

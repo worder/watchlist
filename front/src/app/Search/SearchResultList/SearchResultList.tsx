@@ -72,10 +72,11 @@ const PaginateCurrentPage = styled.div`
 const Paginate = ({ pages, page, setPage }) => {
     let buttons: JSX.Element[] = [];
 
-    for (let i = 1; i <= pages; i++) {
+    for (let i = 1; (i <= pages && i <= 20); i++) {
         buttons.push(
             page !== i ? (
                 <PaginateButton
+                    key={i}
                     type="button"
                     onClick={() => {
                         setPage(i);
@@ -85,7 +86,7 @@ const Paginate = ({ pages, page, setPage }) => {
                     {i}
                 </PaginateButton>
             ) : (
-                <PaginateCurrentPage>{i}</PaginateCurrentPage>
+                <PaginateCurrentPage key={i}>{i}</PaginateCurrentPage>
             )
         );
     }
@@ -97,6 +98,8 @@ interface Props {
     result: SearchResult | null;
     isReady: boolean;
     isLoading: boolean;
+    isError: boolean;
+    error: any;
     isVisible: boolean;
     page: number;
     onHide: () => void;
@@ -107,26 +110,28 @@ const SearchResultList = ({
     result,
     isVisible,
     isLoading,
+    page,
+    isError,
+    error,
     onHide,
     onSetPage,
-    page,
 }: Props) => {
     const { items, pages } = result ?? {};
-    const visible = (isVisible && items && items.length > 0) || isLoading;
     return (
-        <Placeholder isVisible={visible}>
+        <Placeholder isVisible={isVisible}>
             <Container>
                 <Title>
                     <TitleInfo>
-                        {isLoading
-                            ? 'Загрузка...'
-                            : `Найдено: ${result?.total}`}
+                        {isLoading && 'Загрузка...'}
+                        {result?.total && `Найдено: ${result?.total}`}
+                        {isError && 'Ошибка'}
                     </TitleInfo>
 
                     <CloseButton type="button" onClick={onHide}>
                         Закрыть
                     </CloseButton>
                 </Title>
+                {isError && error && `${error[0]} - ${error[1]}`}
                 <List>
                     {items &&
                         items.map((item) => (
