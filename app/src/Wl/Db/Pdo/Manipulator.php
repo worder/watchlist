@@ -44,12 +44,12 @@ class Manipulator implements IManipulator
      * @param string $query - SQL query
      * @param array [$params] - statement values
      *
-     * @return array
+     * @return ?array
      *
      * */
-    public function getRow($query, $params = array()): array
+    public function getRow($query, $params = array()): ?array
     {
-        $row = array();
+        $row = null;
         $rows = $this->getRows($query, $params);
         if (isset($rows[0])) {
             $row = $rows[0];

@@ -4,19 +4,19 @@ namespace Wl\Media\MediaLocale;
 
 class MediaLocaleRecord extends MediaLocale implements IMediaLocaleRecord
 {
-    private $mediaId = null;
+    // private $mediaId = null;
     private $added = '';
     private $updated = '';
 
-    public function getMediaId(): ?int
-    {
-        return $this->mediaId;
-    }
+    // public function getMediaId(): ?int
+    // {
+    //     return $this->mediaId;
+    // }
 
-    public function setMediaId($id): void
-    {
-        $this->mediaId = $id;
-    }
+    // public function setMediaId($id): void
+    // {
+    //     $this->mediaId = $id;
+    // }
 
     public function getAdded(): string
     {

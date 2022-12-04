@@ -12,8 +12,6 @@ use Wl\Media\MediaLocale\MediaLocaleRecord;
 use Wl\Media\IMediaRecord;
 use Wl\Media\MediaRecord;
 
-use function PHPSTORM_META\map;
-
 class MediaService implements IMediaService
 {
     private $db;

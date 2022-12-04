@@ -1,5 +1,5 @@
 <?php
-
+// DEPRECATED, to be deleted
 namespace Wl\Media\MediaService;
 
 use Wl\Media\IMedia;
