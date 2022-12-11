@@ -12,5 +12,5 @@ interface ITransport
     public function getSupportedMediaTypes(): array;
 
     public function search(ISearchQuery $q): ISearchResult;
-    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer;
+    public function getMediaDetails($mediaId, $locale, $mediaType = null): IApiDataContainer;
 }

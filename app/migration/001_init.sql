@@ -43,29 +43,30 @@ create table media_cache (
 );
 
 create table list_items (
-	`id` int(11) PRIMARY KEY AUTO_INCREMENT;
-	`listId` int(11) NOT NULL;
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`listId` int(11) NOT NULL,
 	`api` varchar(32) NOT NULL,
 	`mediaId` int(11) NOT NULL,
+	`added` datetime NOT NULL
 );
 
 /* type: completed, in progress, planned etc; value can hold current episode or whatever */
 create table list_item_statuses (
-	`id` int(11) PRIMARY KEY AUTO_INCREMENT;
-	`itemId` int(11) NOT NULL;
-	`date` datetime NOT NULL;
-	`added` datetime NOT NULL;
-	`type` int(11) NOT NULL;
-	`value` text;
-	`userId` int(11) NOT NULL;
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`itemId` int(11) NOT NULL,
+	`date` datetime NOT NULL,
+	`added` datetime NOT NULL,
+	`type` int(11) NOT NULL,
+	`value` text,
+	`userId` int(11) NOT NULL
 );
 
 /* for comments, ratings etc */
 create table list_item_features (
-	`id` int(11) PRIMARY KEY AUTO_INCREMENT;
-	`itemId` int(11) NOT NULL;
-	`userId` int(11) NOT NULL;
-	`added` datetime NOT NULL;
-	`type` varchar(16);
-	`value` text;
+	`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+	`itemId` int(11) NOT NULL,
+	`userId` int(11) NOT NULL,
+	`added` datetime NOT NULL,
+	`type` varchar(16),
+	`value` text
 );

@@ -95,7 +95,7 @@ class ShikimoriTransport implements ITransport
         return $result;
     }
 
-    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer
+    public function getMediaDetails($mediaId, $locale, $mediaType = null): IApiDataContainer
     {
         $request = Request::get($this->apiUrl . 'animes/' . $mediaId);
         $request->setHeader("User-Agent", $this->config->getAppName());

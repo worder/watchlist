@@ -38,7 +38,7 @@ class ApiTransportFactory
                 return $this->shikimori;
         }
 
-        throw new InvalidApiIdException($apiId);
+        throw new InvalidApiIdException("Invalid api id");
     }
 
     public function enableCache(ITransport $transport): ITransport

@@ -10,7 +10,5 @@ interface IMediaCacheService
     public function isInCache($api, $mediaId, $locale): bool;
     public function getFromCache($api, $mediaId, $locale): ?IMediaLocaleRecord;
     public function deleteFromCache($api, $mediaId, $locale): void;
-    public function addToCache(IMediaLocale $locale): void;
-
-    public function refetch($api, $mediaId);
+    public function addToCache(string $api, string $mediaId, string $locale, string $title, $data): void;
 }

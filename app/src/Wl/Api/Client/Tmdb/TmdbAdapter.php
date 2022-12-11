@@ -16,9 +16,7 @@ use Wl\Media\MediaDetails\SeriesDetails;
 use Wl\Media\IMedia;
 use Wl\Media\MediaLocale\IMediaLocale;
 use Wl\Media\Media;
-use Wl\Media\MediaLocale\MediaLocale;
 use Wl\Media\MediaType;
-use Wl\Mvc\Result\ApiResult;
 use Wl\Utils\Path;
 
 class TmdbAdapter implements IDataAdapter
@@ -27,6 +25,7 @@ class TmdbAdapter implements IDataAdapter
     {
         $data = new DataResolver($container->getData());
 
+        $media->setApi($container->getApiId());
         $media->setApiMediaId((string) $data->int('id'));
         $media->setMediaType($container->getMetadataParam(TmdbTransport::CONTAINER_META_PARAM_MEDIA_TYPE));
         $media->setOriginalLocale($data->str('original_language'));
@@ -106,7 +105,7 @@ class TmdbAdapter implements IDataAdapter
         switch ($mediaType) {
             case MediaType::MOVIE:
                 if ($data->has('runtime')) {
-                    $movieDetails = new MovieDetails($data->str('runtime'));
+                    $movieDetails = new MovieDetails($data->int('runtime'));
                     $locale->setDetails($movieDetails);
                 }
                 break;

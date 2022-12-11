@@ -22,10 +22,14 @@ use Wl\Http\HttpService\HttpService;
 use Wl\Http\HttpService\IHttpService;
 use Wl\HttpClient\HttpClient;
 use Wl\HttpClient\IHttpClient;
+use Wl\Lists\ListItems\ListItemsService\IListItemsService;
+use Wl\Lists\ListItems\ListItemsService\ListItemsService;
 use Wl\Lists\Subscription\ListSubscriptionService\IListSubscriptionService;
 use Wl\Lists\ListService\IListService;
 use Wl\Lists\ListService\ListService;
 use Wl\Lists\Subscription\ListSubscriptionService\ListSubscriptionService;
+use Wl\Media\MediaCacheService\IMediaCacheService;
+use Wl\Media\MediaCacheService\MediaCacheService;
 use Wl\Session\ISession;
 use Wl\Session\Session;
 use Wl\User\CredentialsFactory;
@@ -78,6 +82,10 @@ return [
     IListService::class => get(ListService::class),
 
     IListSubscriptionService::class => get(ListSubscriptionService::class),
+
+    IListItemsService::class =>get(ListItemsService::class),
+
+    IMediaCacheService::class => get(MediaCacheService::class),
 
     // API clients
     // ShikimoriTransportConfig::class => function (IConfig $conf) {

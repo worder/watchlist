@@ -63,23 +63,29 @@ class MediaCacheService implements IMediaCacheService
     {
     }
 
-    public function addToCache(IMediaLocale $locale): void
+    public function addToCache(string $api, string $mediaId, string $locale, string $title, $data): void
     {
-        $q = "INSERT INTO media_cache (api, mediaId, locale, data, title, added, updated)
-                   VALUES (:api, :mediaId, :locale, :data, :title, :added, :updated)";
-
-        $this->db->exec($q, [
-            'api' => $locale->getMedia()->getApi(), 
-            'mediaId' => $locale->getMedia()->getApiMediaId(),
-            'locale' => $locale->getLocale(),
-            'data' => json_encode($locale->getDataContainer()->getData()),
-            'title' => $locale->getTitle(),
-            'added' => Date::now()->date(),
-            'updated' => Date::now()->date(),
-        ]);
-    }
-
-    public function refetch($api, $mediaId)
-    {
+        if (!$this->isInCache($api, $mediaId, $locale)) {
+            $q = "INSERT INTO media_cache (api, mediaId, locale, data, title, added, updated)
+                   VALUEs (:api, :mediaId, :locale, :data, :title, :added, :updated)";
+    
+            $args['added'] = Date::now()->date();
+            $this->db->exec($q, [
+                'api' => $api, 
+                'mediaId' => $mediaId,
+                'locale' => $locale,
+                'data' => json_encode($data),
+                'title' => $title,
+                'added' =>  Date::now()->date(),
+                'updated' => Date::now()->date()
+            ]);
+        } else {
+            $q = "UPDATE media_cache SET data=:data, title=:title, updated=:updated";
+            $this->db->exec($q, [
+                'data' => json_encode($data),
+                'title' => $title,
+                'updated' => Date::now()->date()
+            ]);
+        }
     }
 }

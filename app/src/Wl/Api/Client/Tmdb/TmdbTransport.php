@@ -62,7 +62,7 @@ class TmdbTransport implements ITransport
     public function search(ISearchQuery $q): ISearchResult
     {
         if (empty($q->getTerm())) {
-            throw new Exception('Term can not be empty'); // this sould't happen normaly
+            throw new Exception('Term can not be empty');
         }
 
         $result = [];
@@ -77,13 +77,17 @@ class TmdbTransport implements ITransport
         return $result;
     }
 
-    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer
+    public function getMediaDetails($mediaId, $locale, $mediaType = null): IApiDataContainer
     {
+        if (empty($mediaId)) {
+            throw new Exception('Media id can not be empty');
+        }
+
         switch ($mediaType) {
             case MediaType::MOVIE:
-                return $this->getMovieDetails($mediaId);
+                return $this->getMovieDetails($mediaId, $locale);
             case MediaType::TV_SERIES:
-                return $this->getTvDetails($mediaId);
+                return $this->getTvDetails($mediaId, $locale);
         }
 
         throw new MediaTypeNotSupportedException('Searching media type "' . ($mediaType ?: 'null') . '" is not supported');
