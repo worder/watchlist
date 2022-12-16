@@ -6,11 +6,13 @@ import listApi from '../api/list/listApi';
 
 import userListCreateDialogSlice from '../app/Dialogs/UserListCreateDialog/userListCreateDialogSlice';
 import addToListDialogSlice from '../app/Dialogs/AddToListDialog/addToListDialogSlice';
+import constsApi from '../api/env/constApi';
 
 const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
     [searchApi.reducerPath]: searchApi.reducer,
     [listApi.reducerPath]: listApi.reducer,
+    [constsApi.reducerPath]: constsApi.reducer,
     dialogs: combineReducers({
         userListCreate: userListCreateDialogSlice,
         addToList: addToListDialogSlice,
@@ -24,6 +26,7 @@ const store = configureStore({
             userApi.middleware,
             searchApi.middleware,
             listApi.middleware,
+            constsApi.middleware,
         ]),
     devTools: true,
 });

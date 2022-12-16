@@ -4,12 +4,8 @@ namespace Wl\Lists\ListItems\ListItemsService;
 
 use Exception;
 use Wl\Db\Pdo\IManipulator;
-use Wl\Lists\ListItems\IListItem;
 use Wl\Lists\ListItems\IListItems;
-use Wl\Lists\ListItems\ListItemFeature\IListItemFeature;
 use Wl\Lists\ListItems\ListItems;
-use Wl\Lists\ListItems\ListItemStatus\IListItemStatus;
-use Wl\Lists\ListItems\ListItemStatus\ListItemsStatus;
 use Wl\Utils\Date\Date;
 
 class ListItemsService implements IListItemsService
@@ -69,7 +65,6 @@ class ListItemsService implements IListItemsService
 
     private function buildListItemFromRow($row)
     {
-        
     }
 
     public function addListItem(int $listId, string $api, int $mediaId, int $statusType, string $date, int $userId): int

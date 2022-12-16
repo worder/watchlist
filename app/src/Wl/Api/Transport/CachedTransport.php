@@ -55,9 +55,9 @@ class CachedTransport implements ITransport
         return $result;
     }
 
-    public function getMediaDetails($mediaId, $mediaType = null): IApiDataContainer
+    public function getMediaDetails($mediaId, $locale, $mediaType = null): IApiDataContainer
     {
-        $qHash = md5("{$mediaId}.{$mediaType}");
+        $qHash = md5("{$mediaId}.{$locale}.{$mediaType}");
         $cachedContainer = $this->storage->get($qHash);
 
         if ($cachedContainer && $cachedContainer instanceof IApiDataContainer) {

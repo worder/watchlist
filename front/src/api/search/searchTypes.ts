@@ -22,23 +22,9 @@ export interface SearchResult {
     total: number;
 }
 
-export interface SearchOptionsMediaType {
-    id: string;
-    name: string;
-}
-
-export interface SearchOptionsApi {
-    id: string;
-    media_types: SearchOptionsMediaType[];
-    name: string;
-    name_short: string;
-}
-
 export interface SearchQueryParams {
     term: string;
     api: string;
     type: string;
     page: number;
 }
-
-export type SearchOptionsResult = SearchOptionsApi[];

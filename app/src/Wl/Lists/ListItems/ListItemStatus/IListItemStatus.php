@@ -16,11 +16,13 @@ interface IListItemStatus
     const STATUS_NOMINATED = 11;
     const STATUS_IN_PROGRESS = 12;
 
-    public function getId(): int;
+        public function getId(): int;
     public function getItemId(): int;
     public function getUserId(): int;
     public function getDate(): IDate; // represents event date, may be retrospective, choosen by user in datepicker
     public function getAdded(): IDate;
     public function getType(): int;
     public function getValue(): string;
+    
+    public static function getAllTypes();
 }

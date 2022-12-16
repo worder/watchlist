@@ -1,6 +1,7 @@
 import { SegmentedControl, Select } from '@mantine/core';
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { Consts, useGetConstsQuery } from '../../../api/env/constApi';
 import { useGetUserListsQuery } from '../../../api/list/listApi';
 import useGetCurrentUserLists from '../../../api/list/useGetCurrentUserLists';
 import { RootState } from '../../../store/store';
@@ -21,6 +22,8 @@ interface Props extends ReduxProps {}
 const AddToListDialog = ({ isVisible, onHide }: Props) => {
     const { data } = useGetCurrentUserLists();
 
+    const { data: consts } = useGetConstsQuery();
+
     let lists: { value: string; label: string }[] = [];
     let defaultList: string | null = null;
     if (data) {
@@ -32,11 +35,12 @@ const AddToListDialog = ({ isVisible, onHide }: Props) => {
         });
     }
 
-    const statuses = [
-        { label: 'Планирую посмотреть', value: 'planned' },
-        { label: 'Посмотрел', value: 'completed' },
-        { label: 'В процессе', value: 'in_progress' },
-    ];
+    let statuses: any = [];
+    if (consts) {
+        consts.list_item_statuses.map((status) => {
+            statuses.push({ label: status[1], value: status[0] });
+        });
+    }
 
     return (
         <Dialog.DialogContainer isVisible={isVisible}>

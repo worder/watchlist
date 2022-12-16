@@ -1,39 +1,32 @@
 import { useState, useEffect } from 'react';
-
-import { useGetSearchOptionsQuery } from '../searchApi';
-
-import {
-    SearchOptionsResult,
-    SearchOptionsApi,
-    SearchOptionsMediaType,
-} from '../searchTypes';
+import { Api, ApiMediaType, Consts, useGetConstsQuery } from '../../env/constApi';
 
 interface UseSearchOptionsResult {
     isReady: boolean;
     isLoading: boolean;
     isError: boolean;
-    apis: SearchOptionsResult;
+    apis: Api[];
     selectApi: (id: string) => void;
     selectMediaType: (id: string) => void;
-    api: SearchOptionsApi | null;
-    mediaType: SearchOptionsMediaType | null;
+    api: Api | null;
+    mediaType: ApiMediaType | null;
 }
 
 const useSearchOptions = (): UseSearchOptionsResult => {
     const { data, isFetching, isLoading, isSuccess, isError } =
-        useGetSearchOptionsQuery();
+        useGetConstsQuery();
 
     const isReady = isSuccess && !isFetching && !isLoading && !isError;
 
-    const [apis, setApis] = useState<SearchOptionsResult>([]);
-    const [api, setApi] = useState<SearchOptionsApi | null>(null);
-    const [mediaType, setMediaType] = useState<SearchOptionsMediaType | null>(
+    const [apis, setApis] = useState<Consts['apis']>([]);
+    const [api, setApi] = useState<Api | null>(null);
+    const [mediaType, setMediaType] = useState<ApiMediaType | null>(
         null
     );
 
     useEffect(() => {
         if (isReady && data !== undefined) {
-            setApis(data);
+            setApis(data.apis);
         }
     }, [data, isReady]);
 

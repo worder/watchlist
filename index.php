@@ -3,10 +3,10 @@
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
 use Wl\Controller\Api\Asset\ProxyController;
+use Wl\Controller\Api\Consts\ConstsController;
 use Wl\Controller\Api\ListEntry\ListController;
 use Wl\Controller\Api\ListEntry\UserListsController;
 use Wl\Controller\Api\Media\MediaController;
-use Wl\Controller\Api\Search\OptionsController;
 use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
@@ -48,7 +48,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
         });
 
         $r->addRoute(['GET'], '/search', SearchController::class);
-        $r->addRoute(['GET'], '/search/options', OptionsController::class);
 
         $r->addRoute(['GET'], '/media', MediaController::class);
         $r->addRoute(['PUT', 'PATCH', 'DELETE'], '/list', ListController::class);
@@ -57,6 +56,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
         $r->addGroup('/asset', function (RouteCollector $r) {
             $r->addRoute(['GET'], '/proxy/{data}', ProxyController::class);
         });
+        $r->addRoute('GET', '/consts', ConstsController::class);
         $r->addRoute('GET', '/test[/opt]', TestController::class);
     });
 });

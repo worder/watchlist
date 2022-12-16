@@ -49,10 +49,12 @@ const SearchTop = () => {
         selectApi,
     } = useSearchOptions();
 
-    const apisList = apis.map((api) => ({
-        value: api.id,
-        label: api.name_short,
-    }));
+    const apisList = apis
+        ? apis.map((api) => ({
+              value: api.id,
+              label: api.name_short,
+          }))
+        : [];
 
     const mediaTypesList = api
         ? api.media_types.map((type) => ({ value: type.id, label: type.name }))

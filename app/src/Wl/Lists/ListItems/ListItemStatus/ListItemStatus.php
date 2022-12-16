@@ -5,8 +5,18 @@ namespace Wl\Lists\ListItems\ListItemStatus;
 use Wl\Utils\Date\Date;
 use Wl\Utils\Date\IDate;
 
-class ListItemsStatus implements IListItemStatus
+class ListItemStatus implements IListItemStatus
 {
+    static $statusMnemonics = [
+        self::STATUS_STASHED => 'STATUS_STASHED',
+        self::STATUS_COMPLETED => 'STATUS_COMPLETED',
+        self::STATUS_PLANNED => 'STATUS_PLANNED',
+        self::STATUS_DROPPED => 'STATUS_DROPPED',
+        self::STATUS_DEFFERED => 'STATUS_DEFFERED',
+        self::STATUS_NOMINATED => 'STATUS_NOMINATED',
+        self::STATUS_IN_PROGRESS => 'STATUS_IN_PROGRESS',
+    ];
+
     private $id;
     private $itemId;
     private $userId;
@@ -50,7 +60,7 @@ class ListItemsStatus implements IListItemStatus
         if (!$this->date) {
             return Date::now();
         }
-        
+
         return Date::fromDate($this->date);
     }
 
@@ -73,5 +83,18 @@ class ListItemsStatus implements IListItemStatus
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public static function getAllTypes()
+    {
+        return [
+            IListItemStatus::STATUS_COMPLETED,
+            IListItemStatus::STATUS_DEFFERED,
+            IListItemStatus::STATUS_DROPPED,
+            IListItemStatus::STATUS_IN_PROGRESS,
+            IListItemStatus::STATUS_NOMINATED,
+            IListItemStatus::STATUS_PLANNED,
+            IListItemStatus::STATUS_STASHED
+        ];
     }
 }
