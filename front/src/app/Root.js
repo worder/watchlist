@@ -7,8 +7,9 @@ import store from '../store/store';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './Page/Login/LoginPage';
 import MainLayout from './MainLayout';
-import AuthProvider from './Auth/AuthContext';
+import AuthProvider from './Components/Auth/AuthContext';
 import IndexPage from './Page/Index/IndexPage';
+import ListViewPage from './Page/List/ListViewPage';
 import { MantineProvider } from '@mantine/core';
 
 const Root = () => (
@@ -18,6 +19,7 @@ const Root = () => (
                 <Routes>
                     <Route path="/" element={<MainLayout />}>
                         <Route index element={<IndexPage />} />
+                        <Route path="list/:listId" element={<ListViewPage />} />
                     </Route>
                     <Route path="/login" element={<LoginPage />} />
                 </Routes>

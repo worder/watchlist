@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
-import { SearchItem } from '../../../api/search/searchTypes';
-import { RootState } from '../../../store/store';
+import { SearchItem } from '../../../../api/search/searchTypes';
+import { RootState } from '../../../../store/store';
 
 import {
     show as showAddToListDialog,
@@ -52,10 +53,7 @@ const connector = connect(
     (state: RootState) => ({
         isVisible: getIsVisible(state),
     }),
-    (dispatch) => ({
-        onShowAddToListDialog: ({ api, mediaId }) =>
-            dispatch(showAddToListDialog({ api, mediaId })),
-    })
+    (dispatch) => bindActionCreators({ showAddToListDialog }, dispatch)
 );
 
 type ReduxProps = ConnectedProps<typeof connector>;
@@ -64,9 +62,13 @@ interface Props extends ReduxProps {
     item: SearchItem;
 }
 
-const SearchResultItem = ({ item, onShowAddToListDialog }: Props) => {
+const SearchResultItem = ({ item, showAddToListDialog }: Props) => {
     const onAddToList = () => {
-        onShowAddToListDialog({ api: item.api, mediaId: item.id });
+        showAddToListDialog({
+            api: item.api,
+            mediaId: item.id,
+            type: item.type,
+        });
         console.log(item.api, item.id);
         return false;
     };

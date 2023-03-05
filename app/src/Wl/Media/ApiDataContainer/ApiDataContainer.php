@@ -51,7 +51,7 @@ class ApiDataContainer implements IApiDataContainer
         return json_encode([$this->data, $this->apiId, $this->metadata]);
     }
 
-    public static function import($data): IApiDataContainer
+    public static function import(string $data): IApiDataContainer
     {
         $decoded = json_decode($data, true);
         $container = new self($decoded[0], $decoded[1]);

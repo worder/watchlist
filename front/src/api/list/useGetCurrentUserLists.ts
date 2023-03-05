@@ -1,4 +1,4 @@
-import { useAuth } from '../../app/Auth/AuthContext';
+import { useAuth } from '../../app/Components/Auth/AuthContext';
 import { useGetUserListsQuery } from './listApi';
 
 const useGetCurrentUserLists = () => {

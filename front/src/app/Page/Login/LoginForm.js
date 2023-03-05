@@ -5,7 +5,7 @@ import { TextInput, PasswordInput, InputWrapper, Button } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
 
-import { useAuth } from '../../Auth/AuthContext';
+import { useAuth } from '../../Components/Auth/AuthContext';
 
 const FormContainer = styled.div`
     width: 400px;

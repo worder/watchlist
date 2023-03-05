@@ -15,11 +15,13 @@ class UserListsController
         $this->lss = $lss;
     }
 
-    public function get($userId)
+    public function get($props)
     {
-        if (!empty($userId)) {
-            $result = $this->lss->getUserSubscriptions((int) $userId);
-        }
+        if (!empty($props['userId'])) {
+            $result = $this->lss->getUserSubscriptions((int) $props['userId']);
+        } else {
+            return ApiResult::error('empty_user_id');
+        }        
 
         $response = [];
         foreach ($result as $sub) {

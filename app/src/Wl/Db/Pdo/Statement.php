@@ -2,6 +2,7 @@
 namespace Wl\Db\Pdo;
 
 use \Exception;
+use \PDO;
 
 class Statement implements IStatement
 {
@@ -11,7 +12,7 @@ class Statement implements IStatement
 
     private $valuesCounter = 1;
 
-    public function __construct($pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -45,7 +46,13 @@ class Statement implements IStatement
         if (!$placeholder) {
             $placeholder = $this->valuesCounter;
         }
-        $this->statement->bindValue($placeholder, $value);
+
+        $type = PDO::PARAM_STR;
+        if (is_numeric($value)) {
+            $type = PDO::PARAM_INT;
+        }
+
+        $this->statement->bindValue($placeholder, $value, $type);
         $this->valuesCounter++;
 
         return $this;

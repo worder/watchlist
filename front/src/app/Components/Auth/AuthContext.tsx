@@ -4,9 +4,9 @@ import userApi, {
     useSigninMutation,
     useGetInfoQuery,
     useSignoutMutation,
-} from '../../api/user/userApi';
+} from '../../../api/user/userApi';
 
-import { User, UserInfoResponse } from '../../api/user/userTypes';
+import { User, UserInfoResponse } from '../../../api/user/userTypes';
 
 
 interface AuthContext {

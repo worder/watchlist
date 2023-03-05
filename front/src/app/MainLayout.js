@@ -3,14 +3,14 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import HeadContainer from './Header/HeadContainer';
-import LogoContainer from './Header/Logo/LogoContainer';
-import UserContainer from './Header/User/UserContainer';
-import SearchTop from './Header/Search/SearchTopContainer';
-import UserLists from './UserLists/UserLists';
+import HeadContainer from './Components/Header/HeadContainer';
+import LogoContainer from './Components/Header/Logo/LogoContainer';
+import UserContainer from './Components/Header/User/UserContainer';
+import SearchTop from './Components/Header/Search/SearchTopContainer';
+import UserLists from './Components/UserLists/UserLists';
 
-import RequireAuth from './Auth/RequireAuth';
-import DialogsCollection from './Dialogs/DialogsCollection';
+import RequireAuth from './Components/Auth/RequireAuth';
+import DialogsCollection from './Components/Dialogs/DialogsCollection';
 
 const GlobalStyle = createGlobalStyle`
     body, html {

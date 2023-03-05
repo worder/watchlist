@@ -6,13 +6,14 @@ use Wl\Controller\Api\Asset\ProxyController;
 use Wl\Controller\Api\Consts\ConstsController;
 use Wl\Controller\Api\ListEntry\ListController;
 use Wl\Controller\Api\ListEntry\UserListsController;
+use Wl\Controller\Api\ListItems\ListItemsController;
 use Wl\Controller\Api\Media\MediaController;
-use Wl\Controller\Api\User\AuthController;
 use Wl\Controller\Api\Search\SearchController;
 use Wl\Controller\Api\TestController;
 use Wl\Controller\Api\User\InfoController;
 use Wl\Controller\Api\User\SignInController;
 use Wl\Controller\Api\User\SignoutController;
+use Wl\Controller\Api\ListItems\IndexListItemsController;
 use Wl\Controller\IndexController;
 use Wl\Mvc\MvcDispatcher;
 use Wl\Mvc\Result\ErrorResult;
@@ -52,6 +53,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
         $r->addRoute(['GET'], '/media', MediaController::class);
         $r->addRoute(['PUT', 'PATCH', 'DELETE'], '/list', ListController::class);
         $r->addRoute(['GET'], '/user-lists/{userId:\d+}', UserListsController::class);
+        $r->addRoute(['GET', 'PUT'], '/list-items/{listId:\d+}', ListItemsController::class);
+        $r->addRoute(["GET"], "/index-list-items/{page:\d+}", IndexListItemsController::class);
 
         $r->addGroup('/asset', function (RouteCollector $r) {
             $r->addRoute(['GET'], '/proxy/{data}', ProxyController::class);

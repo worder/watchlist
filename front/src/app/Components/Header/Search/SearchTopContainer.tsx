@@ -5,8 +5,8 @@ import { TextInput, Select, Button, LoadingOverlay } from '@mantine/core';
 
 import SearchResultList from '../../Search/SearchResultList/SearchResultList';
 
-import useSearch from '../../../api/search/hooks/search';
-import useSearchOptions from '../../../api/search/hooks/searchOptions';
+import useSearch from '../../../../api/search/hooks/search';
+import useSearchOptions from '../../../../api/search/hooks/searchOptions';
 
 const SearchTopContainer = styled.div`
     display: flex;

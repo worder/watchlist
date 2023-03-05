@@ -59,8 +59,11 @@ return [
             $conf->get("DB_MYSQL_PASSWORD"),
         );
     },
-
-    IManipulator::class => get(Manipulator::class),
+  
+    IManipulator::class => function (Manipulator $manipulator) {
+        $manipulator->exec('SET SESSION sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"');
+        return $manipulator;
+    },
 
     IStorage::class => function (IConfig $conf) {
         $mc = new MemcachedClient();

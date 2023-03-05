@@ -13,8 +13,10 @@ export interface Api {
     name_short: string;
 }
 
+export type ListItemStatus = [statusId: number, statusMnemonics: string];
+
 export interface Consts {
-    list_item_statuses: [number, string][];
+    list_item_statuses: ListItemStatus[];
     apis: Api[];
 }
 

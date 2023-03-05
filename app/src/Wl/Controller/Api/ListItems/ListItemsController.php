@@ -5,8 +5,12 @@ namespace Wl\Controller\Api\ListItems;
 use Wl\Api\Factory\ApiAdapterFactory;
 use Wl\Api\Factory\ApiTransportFactory;
 use Wl\Http\HttpService\IHttpService;
+use Wl\Lists\ListItems\IListItem;
+use Wl\Lists\ListItems\ListItemExporter;
+use Wl\Lists\ListItems\ListItemsService\IListItemsService;
 use Wl\Lists\ListItems\ListItemStatus\IListItemStatus;
 use Wl\Lists\ListItems\ListItemStatus\ListItemStatusValidator;
+use Wl\Media\MediaCacheService\IMediaCacheService;
 use Wl\Media\MediaLocale\MediaLocale;
 use Wl\Mvc\Result\ApiResult;
 use Wl\User\AuthService\IAuthService;
@@ -44,18 +48,33 @@ class ListItemsController
      */
     private $statusValidator;
 
-    public function put()
+    /**
+     * @Inject
+     * @var IMediaCacheService
+     */
+    private $mediaCacheService;
+
+    /**
+     * @Inject
+     * @var IListItemsService
+     */
+    private $listItemsService;
+
+    public function put($urlParams)
     {
         if (!$this->authService->account()) {
             return ApiResult::errorAccessDenied();
         }
+
+        $listId = $urlParams['listId'];
+
+        // TODO check list permissions
 
         $params = $this->httpService->request()->post();
 
         $api = $params->get('api');
         $mediaId = $params->get('mediaId');
         $mediaType = $params->get('mediaType');
-        $listId = (int) $params->get('listId');
         $status = (int) $params->get('status');
         $date = $params->get('date');
         $locale = 'ru'; // TODO
@@ -75,22 +94,65 @@ class ListItemsController
         }
 
         try {
+            $parsedDate = Date::fromTimestamp($date);
+
+            // get API transport
             $transport = $this->transportFactory->getTransport($api);
+
+            // fetch api data container with api response
             $data = $transport->getMediaDetails($mediaId, $locale, $mediaType);
+
+            // convert data container to media locale
             $mediaLocale = $this->adapterFactory->getAdapter($api)->buildMediaLocale(new MediaLocale(), $data);
 
-            $this->mediaCacheService->addToCache($api, $mediaId, $locale, $mediaLocale->getTitle(), $data->getData());
+            // upsert data container to media cache database
+            $this->mediaCacheService->addToCache($api, $mediaId, $locale, $mediaLocale->getTitle(), $data);
 
-            $this->listItemsService->addListItem(
+            // add list item record
+            $itemId = $this->listItemsService->addListItem(
                 $listId,
                 $mediaLocale->getMedia()->getApi(),
-                $mediaLocale->getMedia()->getApiMediaId(),
-                IListItemStatus::STATUS_PLANNED,
-                Date::now()->date(),
-                $this->authService->account()->getId()
+                $mediaLocale->getMedia()->getApiMediaId()
             );
+
+            // add intial status
+            $this->listItemsService->addListItemStatus(
+                $itemId,
+                $status,
+                $this->authService->account()->getId(),
+                $parsedDate->date()
+            );
+
+            return ApiResult::success();
         } catch (\Exception $e) {
             return ApiResult::errorInternal($e->getMessage());
         }
+    }
+
+    public function get($urlParams)
+    {
+        $params = $this->httpService->request()->get();
+        
+        $listId = $urlParams['listId'];
+        $locale = 'ru'; // TODO
+        $page = $params->get('page');
+
+        if ((int) $page < 1) {
+            $page = 1;
+        }
+
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+
+        $itemsResult = $this->listItemsService->getListItems($listId, $locale, $perPage, $offset);
+        $items = [];
+        foreach ($itemsResult->getItems() as $item) {
+            $items[] = ListItemExporter::export($item);
+        }
+
+        return ApiResult::success([
+            'total' => $itemsResult->getTotal(),
+            'items' => $items
+        ]);
     }
 }

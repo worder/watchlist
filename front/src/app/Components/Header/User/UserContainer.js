@@ -1,7 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useGetInfoQuery } from '../../../api/user/userApi';
 import { useAuth } from '../../Auth/AuthContext';
 
 const UserInfoPlaceholder = styled.div`

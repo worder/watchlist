@@ -25,23 +25,20 @@ class ListItemStatus implements IListItemStatus
     private $type;
     private $value;
 
-    public function __construct($type, $itemId, $userId, $value = null, $date = null)
+    public function __construct(int $id, int $type, int $itemId, int $userId, $value = null, ?IDate $added, ?IDate $date = null)
     {
+        $this->id = $id;
         $this->type = $type;
-        $this->userid = $userId;
+        $this->userId = $userId;
         $this->itemId = $itemId;
         $this->value = $value;
         $this->date = $date;
+        $this->added = $added;
     }
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getItemId(): int
@@ -61,17 +58,12 @@ class ListItemStatus implements IListItemStatus
             return Date::now();
         }
 
-        return Date::fromDate($this->date);
+        return $this->date;
     }
 
     public function getAdded(): IDate
     {
-        return Date::fromDate($this->added);
-    }
-
-    public function setAdded(string $added)
-    {
-        $this->added = $added;
+        return $this->added;
     }
 
 

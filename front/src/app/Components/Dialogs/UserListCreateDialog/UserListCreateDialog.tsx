@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import {
-    TextInput,
-    PasswordInput,
-    InputWrapper,
-    Button,
-    Textarea,
-} from '@mantine/core';
+import { TextInput, Button, Textarea } from '@mantine/core';
 import { z } from 'zod';
 
 import { getIsVisible, hide } from './userListCreateDialogSlice';
 import { useForm, zodResolver } from '@mantine/form';
-import { useCreateUserListMutation } from '../../../api/list/listApi';
+import { useCreateUserListMutation } from '../../../../api/list/listApi';
 
 import Dialog from '../../Dialog/DialogContainer';
 import DialogTitleContainer from '../../Dialog/DialogTitleContainer';
@@ -50,7 +44,7 @@ const UserListCreateDialog = ({ isVisible, onHide }: Props) => {
     });
 
     const form = useForm({
-        schema: zodResolver(schema),
+        validate: zodResolver(schema),
         initialValues: {
             title: '',
             desc: '',

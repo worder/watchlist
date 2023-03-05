@@ -13,5 +13,5 @@ interface IApiDataContainer
     public function setMetadataParam($key, $value);
 
     public function export(): string;
-    public static function import($data): IApiDataContainer;
+    public static function import(string $data): IApiDataContainer;
 }

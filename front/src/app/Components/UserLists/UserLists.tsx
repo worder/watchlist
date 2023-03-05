@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { useAuth } from '../Auth/AuthContext';
-import { useGetUserListsQuery } from '../../api/list/listApi';
-import { UserListsResult } from '../../api/list/listsTypes';
+import { useGetUserListsQuery } from '../../../api/list/listApi';
+import { UserListsResult } from '../../../api/list/listsTypes';
 
 import { show } from '../Dialogs/UserListCreateDialog/userListCreateDialogSlice';
+import { NavLink } from 'react-router-dom';
 
 const UserListsContainer = styled.div`
 `;
@@ -14,6 +15,11 @@ const UserListsContainer = styled.div`
 const UserListAddButtonContainer = styled.div``;
 
 const UserListAddButton = styled.button``;
+
+const UserListLink = styled(NavLink)`
+    display: block;
+    border: 0px;
+`;
 
 const UserLists = ({ onShowCreateListDialog }) => {
     const auth = useAuth();
@@ -39,7 +45,7 @@ const UserLists = ({ onShowCreateListDialog }) => {
                 <div>
                     <b>user lists:</b>
                     {lists.map((l) => (
-                        <div key={l.listId}>{l.title}</div>
+                        <UserListLink to={'/list/' + l.listId} key={l.listId}>{l.title}</UserListLink>
                     ))}
                 </div>
             )) || <div>Loading...</div>}
